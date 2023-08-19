@@ -2,9 +2,8 @@ CREATE DATABASE demo_db;
 
 USE demo_db;
 
--- Questions: 
-
--- city table
+-- Question-1 to Question-6:
+CITY Table
 
 CREATE TABLE city (
   ID INT ,
@@ -100,33 +99,181 @@ VALUES
   (4058, 'Boulder', 'USA', 'Colorado', 91238),
   (4061, 'Fall River', 'USA', 'Massachusetts', 90555);
 
--- Query all columns for all American cities in the CITY table with populations larger than 100000. The CountryCode for America is USA.
+Q1. Query all columns for all American cities in the CITY table with populations larger than 100000. The CountryCode for America is USA.
 
 SELECT * FROM city
 WHERE countrycode = 'USA' AND population > 100000;
 
--- Query the NAME field for all American cities in the CITY table with populations larger than 120000. The CountryCode for America is USA.
+Q2. Query the NAME field for all American cities in the CITY table with populations larger than 120000. The CountryCode for America is USA.
 
 SELECT name FROM city
 WHERE countrycode = 'USA' AND population > 120000;
 
--- Query all columns (attributes) for every row in the CITY table.
+Q3. Query all columns (attributes) for every row in the CITY table.
 
 SELECT * FROM city;
 
--- Query all columns for a city in CITY with the ID 1661.
+Q4. Query all columns for a city in CITY with the ID 1661.
 
 SELECT * FROM city 
 WHERE id = 1661;
 
--- Query all attributes of every Japanese city in the CITY table. The COUNTRYCODE for Japan is JPN.
+Q5. Query all attributes of every Japanese city in the CITY table. The COUNTRYCODE for Japan is JPN.
 
 SELECT * FROM city
 WHERE countrycode = 'JPN';
 
-Query the names of all the Japanese cities in the CITY table. The COUNTRYCODE for Japan is JPN.
+Q6. Query the names of all the Japanese cities in the CITY table. The COUNTRYCODE for Japan is JPN.
 
 SELECT name FROM city
 WHERE countrycode = 'JPN';
+
+-- Question-7:
+PRODUCT, SALES table
+
+CREATE TABLE Product
+(	product_id INT,
+	product_name VARCHAR(100),
+  unit_price INT,
+	CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE Sales
+(	seller_id INT,
+	product_id INT,
+  buyer_id INT,
+  sale_date DATE,
+	quantity INT,
+  price INT,
+  CONSTRAINT fk FOREIGN KEY (product_id) REFERENCES Product (product_id)
+);
+
+INSERT INTO Product (product_id, product_name, unit_price)
+VALUES (1, 'S8', 1000), (2, 'G4', 800), (3, 'iPhone', 1400);
+
+INSERT INTO Sales (seller_id, product_id, buyer_id, sale_date, quantity, price)
+VALUES
+  (1, 1, 1, '2019-01-21', 2, 2000),
+  (1, 2, 2, '2019-02-17', 1, 800),
+  (2, 2, 3, '2019-06-02', 1, 800),
+  (3, 3, 4, '2019-05-13', 2, 2800);
+
+Q7. Write an SQL query that reports the products that were only sold in the first quarter of 2019. That is, between 2019-01-01 and 2019-03-31 inclusive. Return the result table in any 
+   order.
+
+SELECT p.product_id, product_name
+FROM product p
+INNER JOIN
+(SELECT *,
+MAX(sale_date) OVER(PARTITION BY product_id ORDER BY product_id ASC) AS max_sale_date
+FROM sales) tmp
+ON p.product_id = tmp.product_id
+WHERE tmp.max_sale_date <= "2019-03-31";
+
+-- Question-8:
+VIEWS table
+
+CREATE TABLE Views
+(	article_id INT,
+	author_id INT,
+	viewer_id INT,
+  view_date DATE
+);
+
+INSERT INTO Views (article_id, author_id, viewer_id, view_date)
+VALUES
+  (1, 3, 5, '2019-08-01'),
+  (1, 3, 6, '2019-08-02'),
+  (2, 7, 7, '2019-08-01'),
+  (2, 7, 6, '2019-08-02'),
+  (4, 7, 1, '2019-07-22'),
+  (3, 4, 4, '2019-07-21'),
+  (3, 4, 4, '2019-07-21');
+
+Q8. Write an SQL query to find all the authors that viewed at least one of their own articles. Return the result table sorted by id in ascending order.
+
+SELECT DISTINCT(v2.author_id) AS id
+FROM views v1
+INNER JOIN views v2
+ON v1.viewer_id = v2.author_id
+ORDER BY id ASC;
+
+-- Question-9:
+DELIVERY table
+
+CREATE TABLE Delivery
+(	delivery_id INT,
+	customer_id INT,
+  order_date DATE,
+  customer_pref_delivery_date DATE,
+  CONSTRAINT pk PRIMARY KEY (delivery_id)
+);
+
+INSERT INTO Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date)
+VALUES
+  (1, 1, '2019-08-01', '2019-08-02'),
+  (2, 5, '2019-08-02', '2019-08-02'),
+  (3, 1, '2019-08-11', '2019-08-11'),
+  (4, 3, '2019-08-24', '2019-08-26'),
+  (5, 4, '2019-08-21', '2019-08-22'),
+  (6, 2, '2019-08-11', '2019-08-13');
+
+Q9. Write an SQL query to find the percentage of immediate orders in the table, rounded to 2 decimal places.
+  
+SELECT
+ROUND(((SELECT SUM(CASE 
+				               WHEN order_date = customer_pref_delivery_date THEN 1 
+				               ELSE 0 END)
+				FROM delivery)/(SELECT COUNT(delivery_id) FROM delivery))*100,2
+        ) AS immediate_percentage;
+
+-- Question-10:
+ADS table
+
+CREATE TABLE Ads
+(	ad_id INT,
+	user_id INT,
+	action ENUM ('Clicked', 'Viewed', 'Ignored'),
+  CONSTRAINT pk PRIMARY KEY (ad_id, user_id)
+);
+
+INSERT INTO Ads (ad_id, user_id, action)
+VALUES
+  (1, 1, 'Clicked'),
+  (2, 2, 'Clicked'),
+  (3, 3, 'Viewed'),
+  (5, 5, 'Ignored'),
+  (1, 7, 'Ignored'),
+  (2, 7, 'Viewed'),
+  (3, 5, 'Clicked'),
+  (1, 4, 'Viewed'),
+  (2, 11, 'Viewed'),
+  (1, 2, 'Clicked');
+
+Q10. Write an SQL query to find the ctr of each Ad. Round ctr to two decimal points. Return the result table ordered by ctr in descending order and by ad_id in ascending order in case 
+     of a tie.
+
+SELECT ad_id,
+CASE 
+    WHEN ad_total_clicks + ad_total_views = 0 THEN 0 
+	  ELSE ROUND((ad_total_clicks)/(ad_total_clicks + ad_total_views)*100,2)
+    END AS ctr
+FROM
+    (SELECT ad_id,
+    SUM(CASE WHEN action = 'clicked' THEN 1 ELSE 0 END) AS ad_total_clicks,
+    SUM(CASE WHEN action = 'viewed' THEN 1 ELSE 0 END) AS ad_total_views
+    FROM Ads
+    GROUP BY ad_id) tmp
+ORDER BY ctr DESC, ad_id ASC;
+
+
+
+
+
+
+
+
+
+
 
 
