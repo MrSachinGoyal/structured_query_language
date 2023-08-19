@@ -263,14 +263,413 @@ FROM
     GROUP BY ad_id) tmp
 ORDER BY ctr DESC, ad_id ASC;
 
+-- Question-11:
+EMPLOYEE Table
+
+CREATE TABLE Employee
+(	employee_id INT,
+	team_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO Employee (employee_id, team_id)
+VALUES
+  (1, 8),
+  (2, 8),
+  (3, 8),
+  (4, 7),
+  (5, 9),
+  (6, 9);
+
+Q11. Write an SQL query to find the team size of each of the employees. Return result table in any order.
+
+SELECT employee_id,
+COUNT(employee_id) OVER (PARTITION BY team_id) AS team_size
+FROM employee
+ORDER BY employee_id;
+
+-- Question-12:
+COUNTRIES, WEATHER table
+
+CREATE TABLE countries
+(	country_id INT,
+	country_name VARCHAR(100),
+	CONSTRAINT pk PRIMARY KEY (country_id)
+);
+
+CREATE TABLE weather
+(	country_id INT,
+	weather_state INT,
+    day DATE,
+    CONSTRAINT pk PRIMARY KEY (country_id, day)
+);
+
+INSERT INTO countries (country_id, country_name)
+VALUES
+  (2, 'USA'),
+  (3, 'Australia'),
+  (7, 'Peru'),
+  (5, 'China'),
+  (8, 'Morocco'),
+  (9, 'Spain');
+
+INSERT INTO weather (country_id, weather_state, day)
+VALUES
+  (2, 15, '2019-11-01'),
+  (2, 12, '2019-10-28'),
+  (2, 12, '2019-10-27'),
+  (3, -2, '2019-11-10'),
+  (3, 0, '2019-11-11'),
+  (3, 3, '2019-11-12'),
+  (5, 16, '2019-11-07'),
+  (5, 18, '2019-11-09'),
+  (5, 21, '2019-11-23'),
+  (7, 25, '2019-11-28'),
+  (7, 22, '2019-12-01'),
+  (7, 20, '2019-12-02'),
+  (8, 25, '2019-11-05'),
+  (8, 27, '2019-11-15'),
+  (8, 31, '2019-11-25'),
+  (9, 7, '2019-10-23'),
+  (9, 3, '2019-12-23');
+
+Q12. Write an SQL query to find the type of weather in each country for November 2019.
+
+SELECT country_name, weather_type
+FROM countries c
+INNER JOIN 
+(SELECT country_id,
+CASE WHEN AVG(weather_state) <= 15 THEN 'Cold'
+	 WHEN AVG(weather_state) >= 25 THEN 'Hot'
+     ELSE 'Warm'
+     END AS weather_type
+FROM weather
+WHERE MONTHNAME(day) = 'November'
+GROUP BY country_id) tmp
+ON c.country_id = tmp.country_id
+ORDER BY weather_type;
+
+--Question-13:
+PRICES, UNITSSOLD table
+
+CREATE TABLE prices
+(	product_id INT,
+	start_date DATE,
+    end_date DATE,
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id, start_date, end_date)
+);
+
+CREATE TABLE UnitsSold
+(	product_id INT,
+	purchase_date DATE,
+	units INT
+);
+
+INSERT INTO prices (product_id, start_date, end_date, price)
+VALUES
+  (1, '2019-02-17', '2019-02-28', 5),
+  (1, '2019-03-01', '2019-03-22', 20),
+  (2, '2019-02-01', '2019-02-20', 15),
+  (2, '2019-02-21', '2019-03-31', 30);
+  
+INSERT INTO UnitsSold (product_id, purchase_date, units)
+VALUES
+  (1, '2019-02-25', 100),
+  (1, '2019-03-01', 15),
+  (2, '2019-02-10', 200),
+  (2, '2019-03-22', 30);
+
+Q13. Write an SQL query to find the average selling price for each product. average_price should be rounded to 2 decimal places. Return the result table in any order.
+
+SELECT p.product_id, 
+       ROUND((SUM(p.price * us.units)/SUM(us.units)),2) AS avg_selling_price
+FROM prices p
+INNER JOIN unitssold us
+ON p.product_id = us.product_id AND (purchase_date >= start_date AND purchase_date <= end_date)
+GROUP BY p.product_id;
+
+--Question-14 to Question-15:
+ACTIVITY table
+
+CREATE TABLE activity
+(	player_id INT,
+	device_id INT,
+    event_date DATE,
+    games_played INT,
+	CONSTRAINT pk PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO activity (player_id, device_id, event_date, games_played)
+VALUES
+  (1, 2, '2016-03-01', 5),
+  (1, 2, '2016-05-02', 6),
+  (2, 3, '2017-06-25', 1),
+  (3, 1, '2016-03-02', 0),
+  (3, 4, '2018-07-03', 5);
+
+Q14. Write an SQL query to report the first login date for each player. Return the result table in any order.
+
+SELECT player_id, 
+	   MIN(event_date) AS first_login
+FROM activity
+GROUP BY player_id;
+
+Q15. Write an SQL query to report the device that is first logged in for each player. Return the result table in any order.
+
+SELECT *
+FROM
+	(SELECT player_id,
+	CASE WHEN event_date = first_login_date THEN device_id END AS device_id
+	FROM
+		(SELECT player_id, device_id, event_date,
+		MIN(event_date) OVER(PARTITION BY player_id) AS first_login_date
+		FROM activity) tmp) tmp2
+WHERE device_id IS NOT NULL;
+
+--Question-16: 
+PRODUCTS, ORDERS table
+
+CREATE TABLE products (
+  product_id INT,
+  product_name VARCHAR(100),
+  product_category VARCHAR(100),
+  CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE orders (
+  product_id INT,
+  order_date DATE,
+  unit INT,
+  CONSTRAINT fk1 FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+INSERT INTO products (product_id, product_name, product_category)
+VALUES
+  (1, 'Leetcode Solutions Book', 'Book'),
+  (2, 'Jewels of Stringology Book', 'Book'),
+  (3, 'HP Laptop', 'Laptop'),
+  (4, 'Lenovo Laptop', 'Laptop'),
+  (5, 'Leetcode Kit T-shirt', 'T-shirt');
+  
+INSERT INTO orders (product_id, order_date, unit)
+VALUES
+  (1, '2020-02-05', 60),
+  (1, '2020-02-10', 70),
+  (2, '2020-01-18', 30),
+  (2, '2020-02-11', 80),
+  (3, '2020-02-17', 2),
+  (3, '2020-02-24', 3),
+  (4, '2020-03-01', 20),
+  (4, '2020-03-04', 30),
+  (4, '2020-03-04', 60),
+  (5, '2020-02-25', 50),
+  (5, '2020-02-27', 50),
+  (5, '2020-03-01', 50);
+
+Q16. Write an SQL query to get the names of products that have at least 100 units ordered in February 2020 and their amount. Return result table in any order.
+
+SELECT product_name, total_units_sold
+FROM products p 
+INNER JOIN  
+(SELECT product_id, SUM(unit) AS total_units_sold
+FROM orders
+WHERE MONTHNAME(order_date) = 'February'
+GROUP BY product_id
+HAVING total_units_sold >= 100) tmp
+ON p.product_id = tmp.product_id;
+
+-- Question-17:
+CUSTOMERS, PRODUCT, ORDERS table
+
+CREATE TABLE Customers (
+  customer_id INT,
+  name VARCHAR(100),
+  country VARCHAR(100),
+  CONSTRAINT pk PRIMARY KEY (customer_id)
+);
+
+CREATE TABLE product
+(	product_id INT,
+	description VARCHAR(300),
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE Orders (
+  order_id INT,
+  customer_id INT,
+  product_id INT,
+  order_date DATE,
+  quantity INT,
+  CONSTRAINT pk PRIMARY KEY (order_id)
+);
+
+INSERT INTO Customers (customer_id, name, country)
+VALUES
+  (1, 'Winston', 'USA'),
+  (2, 'Jonathan', 'Peru'),
+  (3, 'Moustafa', 'Egypt');
+
+INSERT INTO Product (product_id, description, price)
+VALUES
+  (10, 'LC Phone', 300),
+  (20, 'LC T-Shirt', 10),
+  (30, 'LC Book', 45),
+  (40, 'LC Keychain', 2);
+
+INSERT INTO Orders (order_id, customer_id, product_id, order_date, quantity)
+VALUES
+  (1, 1, 10, '2020-06-10', 1),
+  (2, 1, 20, '2020-07-01', 1),
+  (3, 1, 30, '2020-07-08', 2),
+  (4, 2, 4, '2020-06-15', 2),
+  (5, 2, 5, '2020-07-01', 10),
+  (6, 3, 20, '2020-06-24', 2),
+  (7, 3, 30, '2020-06-25', 2),
+  (9, 3, 30, '2020-05-08', 3);
+
+Q17. Write an SQL query to report the customer_id and customer_name of customers who have spent at least $100 in each month of June and July 2020. Return the result 
+     table in any order.
+
+SELECT c.customer_id, name 
+FROM customers c
+INNER JOIN
+(SELECT o.customer_id,
+SUM(CASE WHEN MONTHNAME(order_date) = "June" AND YEAR(order_date) = '2020' THEN quantity * price ELSE 0 END) AS june_exp,
+SUM(CASE WHEN MONTHNAME(order_date) = "July" AND YEAR(order_date) = '2020' THEN quantity * price ELSE 0 END) AS july_exp
+FROM orders o
+INNER JOIN product p ON o.product_id = p.product_id
+GROUP BY o.customer_id) tmp
+ON c.customer_id = tmp.customer_id
+WHERE tmp.june_exp >= 100 AND tmp.july_exp >= 100;
+
+--Question-18:
+TVProgram, Content table
+
+CREATE TABLE TVProgram (
+  program_date DATE,
+  content_id INT,
+  channel VARCHAR(300),
+  CONSTRAINT pk PRIMARY KEY (program_date, content_id)
+);
+
+CREATE TABLE Content (
+  content_id VARCHAR(255),
+  title VARCHAR(255),
+  kids_content ENUM('Y', 'N'),
+  content_type VARCHAR(300),
+  CONSTRAINT pk PRIMARY KEY (content_id)
+);
+
+ALTER TABLE TVProgram MODIFY program_date TIMESTAMP;
+
+INSERT INTO TVProgram (program_date, content_id, channel)
+VALUES
+  ('2020-06-10 08:00', '1', 'LC-Channel'),
+  ('2020-05-11 12:00', '2', 'LC-Channel'),
+  ('2020-05-12 12:00', '3', 'LC-Channel'),
+  ('2020-05-13 14:00', '4', 'Disney Ch'),
+  ('2020-06-18 14:00', '4', 'Disney Ch'),
+  ('2020-07-15 16:00', '5', 'Disney Ch');
+
+INSERT INTO Content (content_id, title, Kids_content, content_type)
+VALUES
+  ('1', 'Leetcode Movie', 'N', 'Movies'),
+  ('2', 'Alg. for Kids', 'Y', 'Series'),
+  ('3', 'Database Sols', 'N', 'Series'),
+  ('4', 'Aladdin', 'Y', 'Movies'),
+  ('5', 'Cinderella', 'Y', 'Movies');
+
+Q18. Write an SQL query to report the distinct titles of the kid-friendly movies streamed in June 2020. Return the result table in any order.
+
+SELECT DISTINCT(title) FROM content 
+WHERE kids_content = 'Y'AND content_id IN (SELECT content_id FROM tvprogram
+										   WHERE MONTHNAME(program_date) = 'June' AND 
+										   YEAR(program_date) = '2020');
 
 
 
+--Question-19:
+NPV, Queries table
 
+CREATE TABLE npv (
+  id INT,
+  year INT,
+  npv INT,
+  CONSTRAINT pk PRIMARY KEY (id, year)
+);
 
+CREATE TABLE queries (
+  id INT,
+  year INT
+); 
 
+ALTER TABLE queries ADD CONSTRAINT pk PRIMARY KEY (id, year);
 
+INSERT INTO npv (id, year, npv)
+VALUES 
+    (1, 2018, 100),
+    (7, 2020, 30),
+    (13, 2019, 40),
+    (1, 2019, 113),
+    (2, 2008, 121),
+    (3, 2009, 12),
+    (11, 2020, 99),
+    (7, 2019, 0);
+    
+INSERT INTO queries (id, year)
+VALUES 
+    (1, 2019),
+    (2, 2008),
+    (3, 2009),
+    (7, 2018),
+    (7, 2019),
+    (7, 2020),
+    (13, 2019);
 
+Q19. Write an SQL query to find the npv of each query of the Queries table. Return the result table in any order.
+
+SELECT q.id, q.year, npv
+FROM queries q
+INNER JOIN npv n
+ON q.id = n.id AND q.year = n.year;
+
+--Question-20:
+Employees, Employeeuni table
+
+CREATE TABLE employees (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE employeeuni (
+  id INT,
+  unique_id INT,
+  CONSTRAINT pk PRIMARY KEY (id, unique_id)
+);
+
+INSERT INTO employees (id, name)
+VALUES
+  (1, 'Alice'),
+  (7, 'Bob'),
+  (11, 'Meir'),
+  (90, 'Winston'),
+  (3, 'Jonathan');
+  
+INSERT INTO employeeuni (id, unique_id)
+VALUES
+  (3, 1),
+  (11, 2),
+  (90, 3);
+
+Q20. Write an SQL query to show the unique ID of each user, If a user does not have a unique ID replace just show null. Return the result table in any order.
+
+SELECT unique_id, name
+FROM employeeuni eu
+RIGHT JOIN employees e
+ON e.id = eu.id;
 
 
 
