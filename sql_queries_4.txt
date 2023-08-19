@@ -2,7 +2,8 @@ CREATE DATABASE demo_db2;
 
 USE demo_db2;
 
-#  Q84. 
+# Question-61:
+Advertiser, daily_pay table
 
 CREATE TABLE advertiser (
   user_id VARCHAR(255),
@@ -26,7 +27,17 @@ VALUES
   ('alibaba', 100.00),
   ('target', 13.00);
 
-#  Q85. 
+Q61. Write a query to update the Facebook advertiser's status using the daily_pay table. Advertiser is a two-column table containing the user id and their payment status based on the        last payment and daily_pay table has current information about their payment. Only advertisers who paid will show up in this table. Output the user id and current payment status        sorted by the user id.
+
+SELECT user_id, 
+CASE 
+    WHEN user_id IN (SELECT DISTINCT(user_id) FROM daily_pay) THEN 'Existing'
+	  ELSE 'Churn'
+END AS current_status
+FROM advertiser;
+
+# Question-62:
+Server_utilization table
 
 CREATE TABLE server_utilization (
   server_id INTEGER,
@@ -40,9 +51,22 @@ VALUES
   (1, '2022-08-04 10:00:00', 'stop'),
   (2, '2022-08-17 10:00:00', 'start'),
   (2, '2022-08-24 10:00:00', 'stop');
-  
 
-#  Q86. 
+
+Q62. Amazon Web Services (AWS) is powered by fleets of servers. Senior management has requested data-driven solutions to optimise server usage.
+     Write a query that calculates the total time that the fleet of servers was running. The output should be in units of full days
+
+WITH server_data AS (SELECT server_id, status_time AS server_start_time, 
+          					 LEAD(status_time, 1) OVER(PARTITION BY server_id ORDER BY status_time ASC) as server_stop_time
+                     FROM server_utilization)
+
+SELECT 
+SUM(ROUND((HOUR(TIMEDIFF(server_stop_time, server_start_time)))/24)) AS total_uptime
+FROM server_data
+WHERE server_stop_time IS NOT NULL;
+  
+# Question-63: 
+Merchant_transactions table
 
 CREATE TABLE merchant_transactions (
   transaction_id INTEGER,
@@ -60,7 +84,21 @@ VALUES
   (4, 102, 2, 300, '2022-09-25 12:00:00'),
   (6, 102, 2, 400, '2022-09-25 14:00:00');
 
-#  Q87.
+Q63. Sometimes, payment transactions are repeated by accident; it could be due to user error, API failure or a retry error that causes a credit card to be charged twice. Using the           transactions table, identify any payments made at the same merchant with the same credit card for the same amount within 10 minutes of each other. Count such repeated payments.
+
+WITH transaction_record AS (SELECT transaction_id, 
+                                   merchant_id, 
+                                   credit_card_id,
+              							MINUTE(transaction_timestamp - (LEAD(transaction_timestamp,1) 
+                            OVER(PARTITION BY merchant_id, credit_card_id ORDER BY transaction_timestamp ASC))) AS time_diff_between_two_transactions 
+                            FROM merchant_transactions)
+
+SELECT COUNT(*) AS payment_count
+FROM transaction_record
+WHERE time_diff_between_two_transactions > 0  AND time_diff_between_two_transactions <= 10;
+
+# Question-64:
+Orders5, Customers_data, Trips table
 
 CREATE TABLE orders5 (
   order_id INTEGER,
@@ -106,21 +144,35 @@ VALUES
   (1435, '2022-06-05 00:00:00'),
   (5421, '2022-06-07 00:00:00');
 
-#  Q90. 
+Q64. DoorDash's Growth Team is trying to make sure new users (those who are making orders in their first14 days) have a great experience on all their orders in their 2 weeks on the 
+     platform. Unfortunately, many deliveries are being messed up because:
+      ● the orders are being completed incorrectly (missing items, wrong order, etc.)
+      ● the orders aren't being received (wrong address, wrong drop off spot)
+      ● the orders are being delivered late (the actual delivery time is 30 minutes later than when the order was placed). 
+     Note that the estimated_delivery_timestamp is automatically set to 30 minutes after the order_timestamp.
+    
+    Write a query to find the bad experience rate in the first 14 days for new users who signed up in June 2022. Output the percentage of bad experience rounded to 2 decimal places
 
-CREATE TABLE Numbers (
-    num INT PRIMARY KEY,
-    frequency INT
-);
+WITH order_details AS (SELECT c.*, o.order_id, o.status,
+					   ROUND(TIME_TO_SEC(TIMEDIFF(t.actual_delivery_timestamp, o.order_timestamp))/60) AS time_taken_for_delivery_in_mins
+					   FROM customers_data c
+					   INNER JOIN orders5 o
+					   ON c.customer_id = o.customer_id
+					   INNER JOIN trips t
+					   ON o.trip_id = t.trip_id
+					   WHERE MONTHNAME(signup_timestamp) = 'June' AND YEAR(signup_timestamp) = 2022
+					   AND DATEDIFF(o.order_timestamp, c.signup_timestamp) <= 14)
 
-INSERT INTO Numbers (num, frequency)
-VALUES
-    (0, 7),
-    (1, 1),
-    (2, 3),
-    (3, 1);
+SELECT 
+ROUND((SUM(CASE 
+               WHEN status in ('completed incorrectly', 'never received') OR time_taken_for_delivery_in_mins > 30 THEN 1
+	           ELSE 0
+           END)/COUNT(*))*100,2
+     ) AS bad_experience_pct
+FROM order_details o;
 
-#  Q91. 
+# Question-65: 
+Salary, Employee5 table
 
 CREATE TABLE Salary (
     id INT PRIMARY KEY,
@@ -149,7 +201,28 @@ VALUES
     (2, 2),
     (3, 2);
 
-#  Q92.
+Q65. Write an SQL query to report the comparison result (higher/lower/same) of the average salary of employees in a department to the company's average salary.
+
+WITH salary_details AS (SELECT s.employee_id, s.amount, s.pay_date, e.department_id
+						FROM salary s
+						INNER JOIN 
+						employee5 e
+						ON s.employee_id = e.employee_id)
+
+SELECT distinct pay_date, department_id,
+CASE WHEN monthly_dept_avg_salary = monthly_company_avg_salary THEN 'same'
+     WHEN monthly_dept_avg_salary < monthly_company_avg_salary THEN 'lower'
+     ELSE 'higher'
+END AS comparison
+FROM
+	(SELECT pay_date, department_id, amount,
+	AVG(amount) OVER(PARTITION BY pay_date, department_id) AS monthly_dept_avg_salary,
+	AVG(amount) OVER(PARTITION by pay_date) AS monthly_company_avg_salary
+	FROM salary_details) tmp
+ORDER BY department_id ASC;
+
+# Question-66:
+Activity2 table
 
 CREATE TABLE Activity2 (
     player_id INT,
@@ -167,7 +240,29 @@ VALUES
     (3, 1, '2016-03-01', 0),
     (3, 4, '2016-07-03', 5);
 
-#  Q93. 
+Q66.The install date of a player is the first login day of that player. We define day one retention of some date x to be the number of players whose install date is x and they logged       back in on the day right after x, divided by the number of players whose install date is x, rounded to 2 decimal places.
+    Write an SQL query to report for each install date, the number of players that installed the game on that day, and the day one retention.
+
+WITH login_data AS (SELECT player_id, event_date,
+					LAG(event_date,1,0) OVER(PARTITION BY player_id) AS prev_login_date, 
+					MIN(event_date) OVER(PARTITION BY player_id) AS installation_date
+					FROM activity2)
+   
+SELECT tmp2.*, 
+       ROUND(tmp1.players_login_next_day/tmp2.no_of_installs,2) AS one_day_retention
+FROM
+	(SELECT installation_date, 
+		   SUM(IF((DATEDIFF(event_date, prev_login_date) = 1), 1,0)) AS players_login_next_day
+	FROM login_data
+	GROUP BY installation_date) tmp1
+	INNER JOIN
+	(SELECT installation_date, COUNT(DISTINCT(player_id)) AS no_of_installs
+	FROM login_data
+	GROUP BY installation_date) tmp2
+ON tmp1.installation_date = tmp2.installation_date;
+
+# Question-67:
+Players, Matches table
 
 CREATE TABLE Players (
     player_id INT PRIMARY KEY,
@@ -202,8 +297,41 @@ VALUES
     (4, 40, 20, 5, 2),
     (5, 35, 50, 1, 1);
 
-#  Q94. 
-use bootcamp_assignments;
+Q67. The winner in each group is the player who scored the maximum total points within the group. In the case of a tie, the lowest player_id wins.
+     Write an SQL query to find the winner in each group.
+
+WITH group_player_scores AS (
+							(SELECT p.group_id, tmp.*
+							FROM 
+								(SELECT second_player AS player,  SUM(second_score) AS total_score
+								FROM matches
+								GROUP BY player) tmp
+								INNER JOIN players p
+								ON p.player_id = tmp.player)
+							UNION
+							(SELECT p.group_id, tmp.*
+							FROM 
+								(SELECT first_player,  SUM(first_score) AS total_score
+								FROM matches
+								GROUP BY first_player) tmp
+								INNER JOIN 
+								players p
+								ON p.player_id = tmp.first_player)
+                                )
+                                
+SELECT group_id, player
+FROM 
+	(SELECT group_id, player,
+	ROW_NUMBER() OVER(PARTITION BY group_id) AS row_val
+	FROM
+		(SELECT group_id, player, SUM(total_score) AS player_score
+		FROM group_player_scores
+		GROUP BY group_id, player
+		ORDER BY group_id ASC, player_score DESC, player ASC) t1) t2
+WHERE row_val = 1;
+
+# Question-68:
+Student2, Exam table
 
 CREATE TABLE Student2 (
   student_id int PRIMARY KEY,
@@ -238,7 +366,22 @@ VALUES
   (40, 2, 70),
   (40, 4, 80);
 
-#  Q96. 
+Q68. A quiet student is the one who took at least one exam and did not score the high or the low score. Write an SQL query to report the students (student_id, student_name) being quiet      in all exams. Do not return the student who has never taken any exam. Return the result table ordered by student_id.
+
+WITH topper_list AS (SELECT e.exam_id, e.score, s.*,
+					RANK() OVER(PARTITION BY exam_id ORDER BY score DESC) AS rank_value
+					FROM student2 s
+					INNER JOIN exam e
+					ON s.student_id = e.student_id) 
+                        
+SELECT student_id, student_name 
+FROM student2
+WHERE student_id NOT IN (SELECT DISTINCT(student_id) FROM topper_list
+                         WHERE rank_value = 1 OR rank_value = 3)
+	  AND student_id IN (SELECT DISTINCT(student_id) FROM exam);
+
+# Question-69:
+Songs_history,Songs_weekly table
 
 CREATE TABLE songs_history (
     history_id INTEGER,
@@ -263,7 +406,22 @@ VALUES (777, 1238, '2022-08-01 12:00:00'),
        (125, 9630, '2022-08-04 16:00:00'),
        (695, 9852, '2022-08-07 12:00:00');
 
-#  Q97.
+Q69. Write a query to output the user id, song id, and cumulative count of song plays as of 4 August 2022 sorted in descending order.
+
+WITH song_info AS ((SELECT user_id, song_id, COUNT(*) AS song_plays 
+					FROM songs_weekly
+					WHERE DATE(listen_time) < '2022-08-05'
+					GROUP BY user_id, song_id)
+					UNION ALL
+					(SELECT user_id, song_id, song_plays FROM songs_history))
+
+SELECT user_id, song_id, SUM(song_plays) AS cum_count
+FROM song_info
+GROUP BY user_id, song_id
+ORDER BY cum_count DESC;
+
+# Question-70:
+Emails, texts table
 
 CREATE TABLE emails (
     email_id INTEGER,
@@ -287,7 +445,18 @@ VALUES (6878, 125, 'Confirmed'),
        (6920, 236, 'Not Confirmed'),
        (6994, 236, 'Confirmed');
 
-#  Q98. 
+Q70. New TikTok users sign up with their emails, so each signup requires a text confirmation to activate the new user's account.
+     Write a query to find the confirmation rate of users who confirmed their signups with text messages. Round the result to 2 decimal places.
+
+SELECT 
+ROUND((SUM(CASE WHEN signup_action = 'Confirmed' THEN 1 ELSE 0 END)/COUNT(*)), 2) AS confirmation_rate
+FROM emails e
+LEFT JOIN texts t
+ON e.email_id = t.email_id
+WHERE signup_action IS NOT NULL;
+
+# Question-71:
+Tweets table
 
 CREATE TABLE tweets (
     tweet_id INTEGER,
@@ -302,7 +471,15 @@ VALUES (214252, 111, '2022-06-01 12:00:00'),
        (241425, 254, '2022-06-02 12:00:00'),
        (137374, 111, '2022-06-04 12:00:00');
 
-#  Q99. 
+Q71. Calculate the 3-day rolling average of tweets published by each user for each date that a tweet was posted. Output the user id, tweet date, and rolling averages rounded to 2            decimal places.
+
+SELECT DATE(tweet_date) AS tweet_date, user_id, 
+ROUND(AVG(COUNT(tweet_id)) OVER(PARTITION BY user_id ORDER BY DATE(tweet_date) AS RANGE BETWEEN INTERVAL '3' DAY PRECEDING AND CURRENT ROW), 2) AS rolling_average
+FROM tweets
+GROUP BY tweet_date, user_id;
+
+# Question-72: 
+Activities2, age_breakdown table
 
 CREATE TABLE activities2 (
     activity_id INTEGER,
@@ -329,7 +506,24 @@ VALUES (123, '31-35'),
        (456, '26-30'),
        (789, '21-25');
 
-#  Q100. 
+Q72. Assume you are given the tables below containing information on Snapchat users, their ages, and their time spent sending and opening snaps. Write a query to obtain a breakdown of       the time spent sending vs. opening snaps (as a percentage of total time spent on these activities) for each age group. Output the age bucket and percentage of sending and opening       snaps. Round the percentage to 2 decimal places.
+
+SELECT age_bucket,
+SUM(CASE WHEN activity_type = 'open' THEN ROUND((time_spent/total_time_spent)*100, 2) 
+    END) AS open_pct,
+SUM(CASE WHEN activity_type = 'send' THEN ROUND((time_spent/total_time_spent)*100, 2) 
+    END) AS send_pct
+FROM 
+	(SELECT ab.age_bucket, a.user_id, a.activity_type, a.time_spent,
+	SUM(time_spent) OVER(PARTITION BY age_bucket) AS total_time_spent
+	FROM activities2 a
+	INNER JOIN age_breakdown ab
+	ON a.user_id = ab.user_id
+	WHERE activity_type IN ('send', 'open')) tmp
+GROUP BY age_bucket;
+
+# Question-73:
+Personal_profiles, Employee_company, Company_pages table
 
 CREATE TABLE personal_profiles (
     profile_id INTEGER,
@@ -373,3 +567,25 @@ VALUES (1, 'The Data Science Podcast', 8000),
        (5, 'YouTube', 1600000),
        (6, 'DataScience.Vin', 4500),
        (9, 'Ace The Data Science Interview', 4479);
+
+Q73. The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page. This means that if someone's Linkedin page has more              followers than all the companies they work for, we can safely assume that person is a Power Creator. Keep in mind that if a person works at multiple companies, we should take into      account the company with the most followers. 
+     Write a query to return the IDs of these LinkedIn power creators in ascending order
+
+SELECT power_creators_id
+FROM
+	(SELECT 
+	CASE WHEN emp_followers > company_followers THEN profile_id END AS power_creators_id
+	FROM 
+		(SELECT profile_id, 
+			   MAX(pp.followers) AS emp_followers, MAX(cp.followers) AS company_followers
+		FROM employee_company ec
+		INNER JOIN 
+		company_pages cp
+		ON ec.company_id = cp.company_id
+		INNER JOIN 
+		personal_profiles pp
+		ON ec.personal_profile_id = pp.profile_id
+		GROUP BY profile_id) tmp) tmp2
+WHERE power_creators_id IS NOT NULL
+ORDER BY power_creators_id;
+
