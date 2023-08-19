@@ -1,0 +1,407 @@
+CREATE DATABASE new_db;
+
+USE new_db;
+
+# Question-41:
+Table point
+
+CREATE TABLE point (
+    x INT,
+    CONSTRAINT pk PRIMARY KEY (x)
+);
+
+INSERT INTO point (x)
+VALUES (-1), (0), (2);
+
+Q41. Write an SQL query to report the shortest distance between any two points from the Point table.
+
+SELECT MIN(abs(p1.x - p2.x)) AS shortest_distance
+FROM Point p1
+CROSS JOIN Point p2
+WHERE p1.x != p2.x;
+
+
+# Q62. 
+
+CREATE TABLE ActorDirector (
+    actor_id INT,
+    director_id INT,
+    timestamp INT,
+    CONSTRAINT pk PRIMARY KEY (timestamp)
+);
+
+INSERT INTO actordirector (actor_id, director_id, timestamp)
+VALUES
+    (1, 1, 0),
+    (1, 1, 1),
+    (1, 1, 2),
+    (1, 2, 3),
+    (1, 2, 4),
+    (2, 1, 5),
+    (2, 1, 6);
+
+# Q63. 
+
+CREATE TABLE product4 (
+    product_id INT,
+    product_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE sales2 (
+    sale_id INT,
+    product_id INT,
+    year INT,
+    quantity INT,
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (sale_id, year),
+    CONSTRAINT fk5 FOREIGN KEY (product_id) REFERENCES product4 (product_id)
+);
+
+INSERT INTO sales2 (sale_id, product_id, year, quantity, price)
+VALUES
+    (1, 100, 2008, 10, 5000),
+    (2, 100, 2009, 12, 5000),
+    (7, 200, 2011, 15, 9000);
+
+INSERT INTO product4 (product_id, product_name)
+VALUES
+    (100, 'Nokia'),
+    (200, 'Apple'),
+    (300, 'Samsung');
+
+# Q64.
+
+CREATE TABLE employee2 (
+    employee_id INT,
+    name VARCHAR(255),
+    experience_years INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+CREATE TABLE project1 (
+    project_id INT,
+    employee_id INT,
+    CONSTRAINT pk PRIMARY KEY (project_id, employee_id),
+    CONSTRAINT fk6 FOREIGN KEY (employee_id) REFERENCES employee2 (employee_id)
+); 
+
+INSERT INTO project1 (project_id, employee_id)
+VALUES (1, 1), (1, 2), (1, 3), (2, 1), (2, 4);
+
+INSERT INTO employee2 (employee_id, name, experience_years)
+VALUES
+    (1, 'Khaled', 3),
+    (2, 'Ali', 2),
+    (3, 'John', 1),
+    (4, 'Doe', 2);
+
+# Q65 and Q66
+
+CREATE TABLE product_data (
+    product_id INT,
+    product_name VARCHAR(255),
+    unit_price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE sales_data (
+    seller_id INT,
+    product_id INT,
+    buyer_id INT,
+    sale_date DATE,
+    quantity INT,
+    price INT,
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product_data (product_id)
+);
+
+INSERT INTO product_data (product_id, product_name, unit_price)
+VALUES
+    (1, 'S8', 1000),
+    (2, 'G4', 800),
+    (3, 'iPhone', 1400);
+    
+INSERT INTO sales_data (seller_id, product_id, buyer_id, sale_date, quantity, price)
+VALUES
+    (1, 1, 1, '2019-01-21', 2, 2000),
+    (1, 2, 2, '2019-02-17', 1, 800),
+    (2, 2, 3, '2019-06-02', 1, 800),
+    (3, 3, 4, '2019-05-13', 2, 2800);
+
+# Q67. 
+
+CREATE TABLE customer2 (
+    customer_id INT,
+    name VARCHAR(255),
+    visited_on DATE,
+    amount INT,
+    CONSTRAINT pk PRIMARY KEY (customer_id, visited_on)
+);
+
+INSERT INTO customer2 (customer_id, name, visited_on, amount)
+VALUES
+    (1, 'Jhon', '2019-01-01', 100),
+    (2, 'Daniel', '2019-01-02', 110),
+    (3, 'Jade', '2019-01-03', 120),
+    (4, 'Khaled', '2019-01-04', 130),
+    (5, 'Winston', '2019-01-05', 110),
+    (6, 'Elvis', '2019-01-06', 140),
+    (7, 'Anna', '2019-01-07', 150),
+    (8, 'Maria', '2019-01-08', 80),
+    (9, 'Jaze', '2019-01-09', 110),
+    (1, 'Jhon', '2019-01-10', 130),
+    (3, 'Jade', '2019-01-10', 150);
+
+# 	Q68.
+
+CREATE TABLE scores (
+    player_name VARCHAR(255),
+    gender VARCHAR(10),
+    day DATE,
+    score_points INT,
+    CONSTRAINT pk PRIMARY KEY (gender, day)
+);
+
+INSERT INTO scores (player_name, gender, day, score_points)
+VALUES
+    ('Aron', 'F', '2020-01-01', 17),
+    ('Alice', 'F', '2020-01-07', 23),
+    ('Bajrang', 'M', '2020-01-07', 7),
+    ('Khali', 'M', '2019-12-25', 11),
+    ('Slaman', 'M', '2019-12-30', 13),
+    ('Joe', 'M', '2019-12-31', 3),
+    ('Jose', 'M', '2019-12-18', 2),
+    ('Priya', 'F', '2019-12-31', 23),
+    ('Priyanka', 'F', '2019-12-30', 17);
+
+
+# Q69. 
+
+CREATE TABLE logs (
+    log_id INT,
+    CONSTRAINT pk PRIMARY KEY (log_id)
+);
+
+INSERT INTO logs (log_id)
+VALUES (1), (2), (3), (7), (8), (10);
+
+# Q70. 
+
+CREATE TABLE students_data (
+    student_id INT,
+    student_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (student_id)
+);
+
+CREATE TABLE subjects (
+    subject_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (subject_name)
+);
+
+CREATE TABLE examinations (
+    student_id INT,
+    subject_name VARCHAR(255)
+);
+
+INSERT INTO students_data (student_id, student_name)
+VALUES (1, 'Alice'),
+       (2, 'Bob'),
+       (13, 'John'),
+       (6, 'Alex');
+
+INSERT INTO subjects (subject_name)
+VALUES ('Math'),
+       ('Physics'),
+       ('Programming');
+       
+INSERT INTO examinations (student_id, subject_name)
+VALUES (1, 'Math'),
+       (1, 'Physics'),
+       (1, 'Programming'),
+       (2, 'Programming'),
+       (1, 'Physics'),
+       (1, 'Math'),
+       (13, 'Math'),
+       (13, 'Programming'),
+       (13, 'Physics'),
+       (2, 'Math'),
+       (1, 'Math');
+
+# Q71. 
+
+CREATE TABLE employee3 (
+    employee_id INT,
+    employee_name VARCHAR(255),
+    manager_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO employee3 (employee_id, employee_name, manager_id)
+VALUES (1, 'Boss', 1),
+       (3, 'Alice', 3),
+       (2, 'Bob', 1),
+       (4, 'Daniel', 2),
+       (7, 'Luis', 4),
+       (8, 'Jhon', 3),
+       (9, 'Angela', 8),
+       (77, 'Robert', 1);
+       
+# Q72. 
+
+CREATE TABLE transactions (
+    id INT,
+    country VARCHAR(255),
+    state ENUM('Declined', 'Approved'),
+    amount INT,
+    trans_date DATE,
+    CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO transactions (id, country, state, amount, trans_date)
+VALUES (121, 'US', 'approved', 1000, '2018-12-18'),
+       (122, 'US', 'declined', 2000, '2018-12-19'),
+       (123, 'US', 'approved', 2000, '2019-01-01'),
+       (124, 'DE', 'approved', 2000, '2019-01-07');
+
+# Q73.
+
+CREATE TABLE actions (
+    user_id INT,
+    post_id INT,
+    action_date DATE,
+    action ENUM('view', 'like', 'reaction', 'comment', 'report', 'share'),
+    extra VARCHAR(255)
+);
+
+CREATE TABLE removals (
+    post_id INT,
+    remove_date DATE,
+    CONSTRAINT pk PRIMARY KEY (post_id)
+);
+
+INSERT INTO actions (user_id, post_id, action_date, action, extra)
+VALUES 
+    (1, 1, '2019-07-01', 'view', null),
+    (1, 1, '2019-07-01', 'like', null),
+    (1, 1, '2019-07-01', 'share', null),
+    (2, 2, '2019-07-04', 'view', null),
+    (2, 2, '2019-07-04', 'report ', 'spam'),
+    (3, 4, '2019-07-04', 'view', null),
+    (3, 4, '2019-07-04', 'report', 'spam'),
+    (4, 3, '2019-07-02', 'view', null),
+    (4, 3, '2019-07-02', 'report', 'spam'),
+    (5, 2, '2019-07-03', 'view', null),
+    (5, 2, '2019-07-03', 'report', 'racism'),
+    (5, 5, '2019-07-03', 'view', null),
+    (5, 5, '2019-07-03', 'report', 'racism');
+
+INSERT INTO removals (post_id, remove_date)
+VALUES
+    (2, '2019-07-20'),
+    (3, '2019-07-18');
+
+# Q74.
+
+CREATE TABLE activities (
+    player_id INT,
+    device_id INT,
+    event_date DATE,
+    games_played INT,
+    CONSTRAINT pk PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO activities (player_id, device_id, event_date, games_played)
+VALUES
+    (1, 2, '2016-03-01', 5),
+    (1, 2, '2016-03-02', 6),
+    (2, 3, '2017-06-25', 1),
+    (3, 1, '2016-03-02', 0),
+    (3, 4, '2018-07-03', 5);
+
+# Q76.
+
+CREATE TABLE Salaries (
+    company_id INT,
+    employee_id INT,
+    employee_name VARCHAR(255),
+    salary INT,
+    CONSTRAINT pk PRIMARY KEY (company_id, employee_id)
+);
+
+
+INSERT INTO Salaries (company_id, employee_id, employee_name, salary)
+VALUES
+    (1, 1, 'Tony', 2000),
+    (1, 2, 'Pronub', 21300),
+    (1, 3, 'Tyrrox', 10800),
+    (2, 1, 'Pam', 300),
+    (2, 7, 'Bassem', 450),
+    (2, 9, 'Hermione', 700),
+    (3, 7, 'Bocaben', 100),
+    (3, 2, 'Ognjen', 2200),
+    (3, 13, 'Nyan Cat', 3300),
+    (3, 15, 'Morning Cat', 7777);
+    
+# 	Q77. 
+
+CREATE TABLE Variables (
+  name VARCHAR(255) PRIMARY KEY,
+  value INT
+);
+
+CREATE TABLE Expressions (
+  left_operand VARCHAR(255),
+  operator ENUM('<', '>', '='),
+  right_operand VARCHAR(255),
+  PRIMARY KEY (left_operand, operator, right_operand)
+);
+
+INSERT INTO Variables (name, value)
+VALUES ('x', 66),
+('y', 77);
+
+INSERT INTO Expressions (left_operand, operator, right_operand)
+VALUES 
+    ('x', '>', 'y'),
+    ('x', '<', 'y'),
+    ('x', '=', 'y'),
+    ('y', '>', 'x'),
+    ('y', '<', 'x'),
+    ('x', '=', 'x');
+
+# Q79.
+
+CREATE TABLE employee4
+(	employee_id INT,
+	name VARCHAR(255),
+    months INT,
+    salary INT
+);
+
+INSERT INTO employee4 (employee_id, name, months, salary)
+VALUES (12228, 'Rose', 15, 1968),
+		(33645, 'Angela', 1, 3443),
+        (45692, 'Frank', 17, 1608),
+        (56118, 'Patrick', 7, 1345),
+        (59725, 'Lisa', 11, 2330),
+        (74197, 'Kimberly', 16, 4372),
+        (78454, 'Bonnie', 8, 1771),
+        (83565, 'Michael', 6, 2017),
+        (98607, 'Todd', 5, 3396),
+        (99989, 'Joe', 9, 3573);
+
+# Q80. 
+
+CREATE TABLE user_transactions (
+  transaction_id INTEGER,
+  product_id INTEGER,
+  spend DECIMAL(10, 2),
+  transaction_date DATETIME
+);
+
+INSERT INTO user_transactions (transaction_id, product_id, spend, transaction_date)
+VALUES
+  (1341, 123424, 1500.60, '2019-12-31 12:00:00'),
+  (1423, 123424, 1000.20, '2020-12-31 12:00:00'),
+  (1623, 123424, 1246.44, '2021-12-31 12:00:00'),
+  (1322, 123424, 2145.32, '2022-12-31 12:00:00');
