@@ -21,7 +21,8 @@ CROSS JOIN Point p2
 WHERE p1.x != p2.x;
 
 
-# Q62. 
+# Question-42:
+Actordirector table
 
 CREATE TABLE ActorDirector (
     actor_id INT,
@@ -40,7 +41,16 @@ VALUES
     (2, 1, 5),
     (2, 1, 6);
 
-# Q63. 
+Q42. Write a SQL query for a report that provides the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times. Return the result table in 
+     any order.
+
+SELECT actor_id, director_id
+FROM actordirector
+GROUP BY actor_id, director_id
+HAVING COUNT(*) >= 3;
+
+# Question-43:
+Product4, Sales2 table
 
 CREATE TABLE product4 (
     product_id INT,
@@ -70,7 +80,14 @@ VALUES
     (200, 'Apple'),
     (300, 'Samsung');
 
-# Q64.
+Q43. Write an SQL query that reports the product_name, year, and price for each sale_id in the Sales table. Return the resulting table in any order.
+    
+SELECT product_name, year, price
+FROM sales2 s INNER JOIN product4 p
+ON s.product_id = p.product_id;
+
+# Question-44:
+Employee2, Project1 table
 
 CREATE TABLE employee2 (
     employee_id INT,
@@ -96,7 +113,17 @@ VALUES
     (3, 'John', 1),
     (4, 'Doe', 2);
 
-# Q65 and Q66
+Q44. Write an SQL query that reports the average experience years of all the employees for each project, rounded to 2 digits. Return the result table in any order.
+
+SELECT p.project_id, 
+ROUND(AVG(e.experience_years),2) AS avg_experience
+FROM project1 p
+INNER JOIN employee2 e
+ON p.employee_id = e.employee_id
+GROUP BY p.project_id;
+
+# Question-45 to Question-46:
+Product_data, Sales_data table
 
 CREATE TABLE product_data (
     product_id INT,
@@ -128,7 +155,30 @@ VALUES
     (2, 2, 3, '2019-06-02', 1, 800),
     (3, 3, 4, '2019-05-13', 2, 2800);
 
-# Q67. 
+
+Q45. Write an SQL query that reports the best seller by total sales price, If there is a tie, report them all. Return the result table in any order.
+    
+SELECT seller_id
+FROM (SELECT s.seller_id, 
+      SUM(s.price) AS total_sales_price,
+      RANK() OVER(ORDER BY SUM(s.price) DESC) AS seller_rank_by_total_sales
+      FROM sales_data s
+      GROUP BY seller_id) tmp
+WHERE seller_rank_by_total_sales = 1;
+
+Q46. Write an SQL query that reports the buyers who have bought S8 but not iPhone. Note that S8and iPhone are products present in the Product table. Return the result table in any 
+     order.
+
+SELECT DISTINCT(buyer_id)
+FROM sales_data
+WHERE product_id = ALL(SELECT product_id FROM product_data WHERE product_name = 'S8')
+AND buyer_id 
+NOT IN (SELECT DISTINCT(buyer_id)
+FROM sales_data
+WHERE product_id = ALL(SELECT product_id FROM product_data WHERE product_name = 'iPhone'));
+
+# Question-47:
+Customer2 table
 
 CREATE TABLE customer2 (
     customer_id INT,
@@ -152,7 +202,25 @@ VALUES
     (1, 'Jhon', '2019-01-10', 130),
     (3, 'Jade', '2019-01-10', 150);
 
-# 	Q68.
+
+Q47. You are the restaurant owner and you want to analyse a possible expansion (there will be at least one customer every day). Write an SQL query to compute the moving average of how 
+     much the customer paid in a seven days window (i.e., current day + 6 days before). average_amount should be rounded to two decimal places. Return result table ordered by 
+     visited_on in ascending order.
+
+WITH daily_visitors AS (SELECT visited_on, 
+						SUM(amount) AS daily_revenue,
+                        COUNT(customer_id) AS num_customers_per_day
+						FROM customer2
+						GROUP BY visited_on
+						HAVING num_customers_per_day >= 1)
+                        
+SELECT visited_on, daily_revenue,
+ROUND(AVG(daily_revenue) OVER(ORDER BY visited_on ASC
+				       RANGE BETWEEN INTERVAL '6' DAY PRECEDING AND CURRENT ROW),2) AS weekly_avg_spending
+FROM daily_visitors dv;
+
+# Question-48:
+Scores table
 
 CREATE TABLE scores (
     player_name VARCHAR(255),
@@ -174,18 +242,35 @@ VALUES
     ('Priya', 'F', '2019-12-31', 23),
     ('Priyanka', 'F', '2019-12-30', 17);
 
+Q48. Write an SQL query to find the total score for each gender on each day. Return the result table ordered by gender and day in ascending order.
 
-# Q69. 
+SELECT gender, day,
+	   SUM(score_points) OVER(PARTITION BY gender ORDER BY gender, day) AS total_score_each_day
+FROM scores;
+
+# Question-49:
+Logs table
 
 CREATE TABLE logs (
     log_id INT,
     CONSTRAINT pk PRIMARY KEY (log_id)
+
 );
 
 INSERT INTO logs (log_id)
 VALUES (1), (2), (3), (7), (8), (10);
 
-# Q70. 
+Q49. Write an SQL query to find the start and end number of continuous ranges in the table Logs. Return the result table ordered by start_id.
+
+SELECT MIN(log_id) AS start_id, MAX(log_id) AS end_id
+FROM 
+	(SELECT log_id, log_id - ROW_NUMBER() OVER (ORDER BY log_id) AS grp
+	FROM logs) tmp
+GROUP BY grp
+ORDER BY start_id;
+
+# Question-50:
+Students_data, Subjects, Examinations table
 
 CREATE TABLE students_data (
     student_id INT,
@@ -227,7 +312,21 @@ VALUES (1, 'Math'),
        (2, 'Math'),
        (1, 'Math');
 
-# Q71. 
+Q50. Write an SQL query to find the number of times each student attended each exam. Return the result table ordered by student_id and subject_name.
+
+SELECT tmp.student_id, tmp.student_name, tmp.subject_name,
+		COUNT(e.subject_name) AS attended_exams
+FROM examinations e
+RIGHT JOIN 
+		      (SELECT *
+					 FROM students_data
+					 CROSS JOIN subjects) tmp
+ON e.student_id = tmp.student_id AND e.subject_name = tmp.subject_name
+GROUP BY tmp.student_id, tmp.student_name, tmp.subject_name
+ORDER BY tmp.student_id, tmp.student_name;
+
+# Question-51:
+Employee3 table
 
 CREATE TABLE employee3 (
     employee_id INT,
@@ -245,8 +344,32 @@ VALUES (1, 'Boss', 1),
        (8, 'Jhon', 3),
        (9, 'Angela', 8),
        (77, 'Robert', 1);
+
+Q51. Write an SQL query to find employee_id of all employees that directly or indirectly report their work tothe head of the company. The indirect relation between managers will not 
+     exceed three managers as the company is small. Return the result table in any order.
+
+WITH RECURSIVE org_emp_hir AS
+(	SELECT employee_id, employee_name, manager_id FROM employee3 WHERE employee_id = 1
+	UNION
+	SELECT emp.employee_id, emp.employee_name, emp.manager_id
+  FROM org_emp_hir oeh
+  INNER JOIN 
+  employee3 emp
+  ON oeh.employee_id = emp.manager_id
+)
+
+SELECT DISTINCT(employee_id)
+FROM
+		(SELECT *,
+		(manager_lvl - CAST(FIRST_VALUE(manager_lvl) OVER(ORDER BY manager_id) AS UNSIGNED)) AS manager_level_diff
+		 FROM
+				 (SELECT *,
+					CAST(DENSE_RANK() OVER(ORDER BY manager_id) AS UNSIGNED) AS manager_lvl
+					FROM org_emp_hir) tmp) tmp2
+WHERE employee_id != 1 AND manager_level_diff < 3;
        
-# Q72. 
+# Question-52: 
+Transactions table
 
 CREATE TABLE transactions (
     id INT,
@@ -263,44 +386,26 @@ VALUES (121, 'US', 'approved', 1000, '2018-12-18'),
        (123, 'US', 'approved', 2000, '2019-01-01'),
        (124, 'DE', 'approved', 2000, '2019-01-07');
 
-# Q73.
+Q52. Write an SQL query to find for each month and country, the number of transactions and their total amount, the number of approved transactions and their total amount.
+	 	 Return the result table in any order.
 
-CREATE TABLE actions (
-    user_id INT,
-    post_id INT,
-    action_date DATE,
-    action ENUM('view', 'like', 'reaction', 'comment', 'report', 'share'),
-    extra VARCHAR(255)
-);
+WITH cte1 AS (SELECT CONCAT(YEAR(trans_date), '-', moNTH(trans_date)) AS month, country,
+		      COUNT(id) AS total_transactions, SUM(amount) AS total_trans_amt
+			  FROM transactions
+			  GROUP BY CONCAT(YEAR(trans_date), '-', moNTH(trans_date)), country),
+	cte2 AS (SELECT CONCAT(YEAR(trans_date), '-', MONTH(trans_date)) AS month, country,
+			 COUNT(id) AS approved_transactions, SUM(amount) AS total_approved_amt
+			 FROM transactions 
+			 WHERE state = 'approved'
+			 GROUP BY CONCAT(YEAR(trans_date), '-', MONTH(trans_date)), country)
+            
+SELECT cte1.*, cte2.approved_transactions, cte2.total_approved_amt
+FROM cte1
+INNER JOIN cte2
+ON cte1.month = cte2.month AND cte1.country = cte2.country;
 
-CREATE TABLE removals (
-    post_id INT,
-    remove_date DATE,
-    CONSTRAINT pk PRIMARY KEY (post_id)
-);
-
-INSERT INTO actions (user_id, post_id, action_date, action, extra)
-VALUES 
-    (1, 1, '2019-07-01', 'view', null),
-    (1, 1, '2019-07-01', 'like', null),
-    (1, 1, '2019-07-01', 'share', null),
-    (2, 2, '2019-07-04', 'view', null),
-    (2, 2, '2019-07-04', 'report ', 'spam'),
-    (3, 4, '2019-07-04', 'view', null),
-    (3, 4, '2019-07-04', 'report', 'spam'),
-    (4, 3, '2019-07-02', 'view', null),
-    (4, 3, '2019-07-02', 'report', 'spam'),
-    (5, 2, '2019-07-03', 'view', null),
-    (5, 2, '2019-07-03', 'report', 'racism'),
-    (5, 5, '2019-07-03', 'view', null),
-    (5, 5, '2019-07-03', 'report', 'racism');
-
-INSERT INTO removals (post_id, remove_date)
-VALUES
-    (2, '2019-07-20'),
-    (3, '2019-07-18');
-
-# Q74.
+# Question-53:
+Activities table
 
 CREATE TABLE activities (
     player_id INT,
@@ -318,7 +423,22 @@ VALUES
     (3, 1, '2016-03-02', 0),
     (3, 4, '2018-07-03', 5);
 
-# Q76.
+Q53. Write an SQL query to report the fraction of players that logged in again on the day after the day theyfirst logged in, rounded to 2 decimal places. In other words, you need to 
+     count the number of players that logged in for at least two consecutive days starting from their first login date, then divide that number by the total number of players.
+
+WITH player_login_details AS (SELECT player_id, event_date,
+							  DATEDIFF(event_date, (LAG(event_date, 1) OVER(PARTITION BY player_id ORDER BY event_date ASC))) AS day_diff1,
+							  DATEDIFF((LEAD(event_date, 1) OVER(PARTITION BY player_id ORDER BY event_date ASC)), event_date) AS day_diff2
+							  FROM activities)
+   
+SELECT
+ROUND(((SELECT COUNT(DISTINCT(player_id))
+FROM player_login_details
+WHERE (day_diff1 = 1 AND day_diff2 IS NULL) OR (day_diff1 IS NULL AND day_diff2 = 1))/
+(SELECT count(DISTINCT(player_id)) FROM activities)),2) AS fraction;
+
+# Question-54:
+Salaries table
 
 CREATE TABLE Salaries (
     company_id INT,
@@ -341,8 +461,28 @@ VALUES
     (3, 2, 'Ognjen', 2200),
     (3, 13, 'Nyan Cat', 3300),
     (3, 15, 'Morning Cat', 7777);
-    
-# 	Q77. 
+
+
+Q54. Write an SQL query to find the salaries of the employees after applying taxes. Round the salary to the nearest integer.
+     The tax rate is calculated for each company based on the following criteria:
+		● 0% If the max salary of any employee in the company is less than $1000.
+        ● 24% If the max salary of any employee in the company is in the range [1000, 10000] inclusive. 
+        ● 49% If the max salary of any employee in the company is greater than $10000.
+     Return the result table in any order.
+
+SELECT company_id, employee_id, employee_name,
+ROUND(CASE 
+	      WHEN company_max_salary < 1000 THEN salary
+	      WHEN company_max_salary BETWEEN 1000 AND 10000 THEN (salary * 0.76)
+	      ELSE (salary * 0.51)
+      END) AS post_tax_salary
+FROM
+	(SELECT *,
+	MAX(salary) OVER(PARTITION BY company_id) AS company_max_salary
+	FROM salaries) tmp;
+
+# 	Question-55:
+Variables, Expressions table
 
 CREATE TABLE Variables (
   name VARCHAR(255) PRIMARY KEY,
@@ -369,7 +509,29 @@ VALUES
     ('y', '<', 'x'),
     ('x', '=', 'x');
 
-# Q79.
+Q55. Write an SQL query to evaluate the boolean expressions in Expressions table.
+
+WITH cte AS (SELECT 
+			 CASE 
+				 WHEN left_operand = 'x' THEN (SELECT value FROM variables WHERE name = 'x')
+				 ELSE (SELECT value FROM variables WHERE name = 'y') 
+			 END AS left_operand,
+			 operator,
+			 CASE 
+   				 WHEN right_operand = 'x' THEN (SELECT value FROM variables WHERE name = 'x')
+				 ELSE (SELECT value FROM variables WHERE name = 'y') 
+			END AS right_operand
+			FROM expressions)
+
+SELECT cte.*, 
+CASE WHEN cte.operator = "<" THEN IF((cte.left_operand < cte.right_operand), "True", "False")
+	 WHEN cte.operator = ">" THEN IF((cte.left_operand > cte.right_operand), "True", "False")
+     ELSE IF((cte.left_operand = cte.right_operand), "True", "False")
+END AS expr_evaluation
+FROM cte;
+
+# Question-56:
+Employee4 table
 
 CREATE TABLE employee4
 (	employee_id INT,
@@ -390,7 +552,14 @@ VALUES (12228, 'Rose', 15, 1968),
         (98607, 'Todd', 5, 3396),
         (99989, 'Joe', 9, 3573);
 
-# Q80. 
+Q56. Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table in alphabetical order.
+
+SELECT name AS employee_name 
+FROM employee4
+ORDER BY employee_name;
+
+# Question-57:
+User_transactions table
 
 CREATE TABLE user_transactions (
   transaction_id INTEGER,
@@ -405,3 +574,108 @@ VALUES
   (1423, 123424, 1000.20, '2020-12-31 12:00:00'),
   (1623, 123424, 1246.44, '2021-12-31 12:00:00'),
   (1322, 123424, 2145.32, '2022-12-31 12:00:00');
+
+Q57. Write a query to obtain the year-on-year growth rate for the total spend of each product for each year. Output the year (in ascending order) partitioned by product id, current 		 year's spend, previous year's spend and year-on-year growth rate (percentage rounded to 2 decimal places).
+
+SELECT *,
+ROUND(((current_year_spend - prev_year_spend)/prev_year_spend)*100,2) AS year_on_year_growth_rate
+FROM
+	(SELECT YEAR(transaction_date) AS year, product_id, 
+		   SUM(spend) AS current_year_spend,
+	LAG(SUM(spend), 1) OVER (ORDER BY YEAR(transaction_date)) AS prev_year_spend
+	FROM user_transactions
+	GROUP BY YEAR(transaction_date), product_id) tmp;
+
+# Question-58:
+Inventory table
+
+CREATE TABLE inventory (
+  item_id INTEGER,
+  item_type VARCHAR(255),
+  item_category VARCHAR(255),
+  square_footage DECIMAL(10, 2)
+);
+
+INSERT INTO inventory (item_id, item_type, item_category, square_footage)
+VALUES
+  (1374, 'prime_eligible', 'mini refrigerator', 68.00),
+  (4245, 'not_prime', 'standing lamp', 26.40),
+  (2452, 'prime_eligible', 'television', 85.00),
+  (3255, 'not_prime', 'side table', 22.60),
+  (1672, 'prime_eligible', 'laptop', 8.50);
+
+Q58. Amazon wants to maximise the number of items it can stock in a 500,000 square feet warehouse. It wants to stock as many prime items as possible, and afterwards use the remaining 
+     square footage to stock the most number of non-prime items.
+     Write a SQL query to find the number of prime and non-prime items that can be stored in the 500,000 square feet warehouse. Output the item type and number of items to be stocked.
+
+WITH products AS (SELECT item_type, 
+                  COUNT(item_category) AS num_items,
+				  SUM(square_footage) AS total_sqft, 500000 AS warehouse_area
+				  FROM inventory
+				  GROUP BY item_type)
+
+SELECT item_type,
+FLOOR((area - LAG(area, 1,0) OVER())/total_sqft) * num_items AS item_count
+FROM
+	(SELECT *,
+	 CASE 
+         WHEN item_type = 'prime_eligible' THEN (FLOOR(warehouse_area/total_sqft) * total_sqft)
+	     ELSE warehouse_area 
+     END AS area
+	 FROM products) tmp;
+
+# Question-59:
+User_actions table
+
+CREATE TABLE user_actions (
+  user_id INTEGER,
+  event_id INTEGER,
+  event_type ENUM('sign-in', 'like', 'comment'),
+  event_date DATETIME
+);
+
+INSERT INTO user_actions (user_id, event_id, event_type, event_date)
+VALUES
+  (445, 7765, 'sign-in', '2022-05-31 12:00:00'),
+  (742, 6458, 'sign-in', '2022-06-03 12:00:00'),
+  (445, 3634, 'like', '2022-06-05 12:00:00'),
+  (742, 1374, 'comment', '2022-06-05 12:00:00'),
+  (648, 3124, 'like', '2022-06-18 12:00:00');
+
+Q59. Assume you have the table below containing information on Facebook user actions. Write a query to obtain the active user retention in July 2022. Output the month (in numerical 	 	 format 1, 2, 3) and the number of monthly active users (MAUs).
+
+WITH user_activity AS (SELECT MONTH(event_date) AS month, user_id,
+							  COUNT(*) AS user_activity,
+					   LAG(COUNT(*),1) OVER(PARTITiON BY user_id ORDER BY MONTH(event_date)) AS user_activity_prev_month
+					   FROM user_actions 
+					   GROUP BY MONTH(event_date), user_id
+					   ORDER BY user_id)
+
+SELECT month, 
+       COUNT(user_id) AS monthly_active_user
+FROM user_activity
+WHERE user_activity_prev_month IS NOT NULL
+GROUP BY month;
+
+# Question-60: 
+Search_frequency table
+
+CREATE TABLE search_frequency (
+  searches INTEGER,
+  num_users INTEGER
+);
+
+INSERT INTO search_frequency (searches, num_users)
+VALUES
+  (1, 2),
+  (2, 2),
+  (3, 3),
+  (4, 1);
+
+Q60. Google's marketing team is making a Superbowl commercial and needs a simple statistic to put on their TV ad: the median number of searches a person made last year. However, at 		 Google scale, querying the 2 trillion searches is too costly. Luckily, you have access to the summary table which tells you the number of searches made last year and how many 		 Google users fall into that bucket.
+	 Write a query to report the median of searches made by a user. Round the median to one decimal point
+
+SELECT
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY searches) AS median
+FROM search_frequency;
+
