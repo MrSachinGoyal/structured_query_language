@@ -1,0 +1,775 @@
+CREATE DATABASE sql_db;
+
+USE sql_db;
+
+-- Question-21:
+Users, Rides table
+
+CREATE TABLE users (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE rides (
+  id INT,
+  user_id INT,
+  distance INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO users (id, name)
+VALUES
+  (1, 'Alice'),
+  (2, 'Bob'),
+  (3, 'Alex'),
+  (4, 'Donald'),
+  (7, 'Lee'),
+  (13, 'Jonathan'),
+  (19, 'Elvis');
+  
+INSERT INTO rides (id, user_id, distance)
+VALUES
+  (1, 1, 120),
+  (2, 2, 317),
+  (3, 3, 222),
+  (4, 7, 100),
+  (5, 13, 312),
+  (6, 19, 50),
+  (7, 7, 120),
+  (8, 19, 400),
+  (9, 7, 230);
+
+Q21. Write an SQL query to report the distance travelled by each user. Return the result table ordered by travelled_distance in descending order, if two or more users travelled the 
+     same distance, order them by their name in ascending order
+  
+SELECT name, 
+IFNULL(SUM(distance),0) AS distance_travelled
+FROM users u
+LEFT JOIN rides r
+ON u.id = r.user_id
+GROUP BY name
+ORDER BY distance_travelled DESC, name ASC;
+
+-- Question-22:
+Movies, Users2, Movierating table
+
+CREATE TABLE movies (
+  movie_id INT,
+  title VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (movie_id)
+);
+
+CREATE TABLE users2 (
+  user_id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (user_id)
+);
+
+CREATE TABLE movierating (
+  movie_id INT,
+  user_id INT,
+  rating INT,
+  created_at DATE,
+  CONSTRAINT pk PRIMARY KEY (movie_id,user_id)
+);
+
+INSERT INTO movies (movie_id, title)
+VALUES
+  (1, 'Avengers'),
+  (2, 'Frozen 2'),
+  (3, 'Joker');
+
+INSERT INTO users2 (user_id, name)
+VALUES
+  (1, 'Daniel'),
+  (2, 'Monica'),
+  (3, 'Maria'),
+  (4, 'James');
+  
+INSERT INTO movierating (movie_id, user_id, rating, created_at)
+VALUES
+  (1, 1, 3, '2020-01-12'),
+  (1, 2, 4, '2020-02-11'),
+  (1, 3, 2, '2020-02-12'),
+  (1, 4, 1, '2020-01-01'),
+  (2, 1, 5, '2020-02-17'),
+  (2, 2, 2, '2020-02-01'),
+  (2, 3, 2, '2020-03-01'),
+  (3, 1, 3, '2020-02-22'),
+  (3, 2, 4, '2020-02-25');
+
+Q22. Write an SQL query to: 
+
+A) Find the name of the user who has rated the greatest number of movies. In case of a tie, return the lexicographically smaller user name. 
+
+SELECT u.name
+FROM users2 u
+INNER JOIN movierating mr
+ON u.user_id = mr.user_id
+GROUP BY u.name 
+ORDER BY u.name LIMIT 1;
+
+B) Find the movie name with the highest average rating in February 2020. In case of a tie, return the lexicographically smaller movie name.
+
+WITH CTE AS (SELECT movie_id, AVG(rating) AS avg_rating
+			FROM movierating
+			WHERE MONTHNAME(created_at) = 'February' AND YEAR(created_at) = '2020'
+			GROUP BY movie_id)
+            
+SELECT title AS movie_name
+FROM movies m 
+INNER JOIN cte
+ON m.movie_id = cte.movie_id
+ORDER BY cte.avg_rating DESC, movie_name ASC LIMIT 1;
+
+-- Question-23:
+Departments, Students table
+  
+CREATE TABLE Departments (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE Students (
+  id INT,
+  name VARCHAR(255),
+  department_id INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO Departments (id, name)
+VALUES
+  (1, 'Electrical Engineering'),
+  (7, 'Computer Engineering'),
+  (13, 'Business Administration');
+  
+INSERT INTO Students (id, name, department_id)
+VALUES
+  (23, 'Alice', 1),
+  (1, 'Bob', 7),
+  (5, 'Jennifer', 13),
+  (2, 'John', 14),
+  (4, 'Jasmine', 77),
+  (3, 'Steve', 74),
+  (6, 'Luis', 1),
+  (8, 'Jonathan', 7),
+  (7, 'Daiana', 33),
+  (11, 'Madelynn', 1);
+
+Q23. Write an SQL query to find the id and the name of all students who are enrolled in departments that no longer exist. Return the result table in any order
+  
+SELECT id, name
+FROM students 
+WHERE department_id NOT IN (SELECT DISTINCT(id) FROM departments);
+
+-- Question-24:
+Calls table
+
+CREATE TABLE calls (
+  from_id INT,
+  to_id INT,
+  duration INT
+);
+
+INSERT INTO calls (from_id, to_id, duration)
+VALUES
+(1, 2, 59),
+(2, 1, 11),
+(1, 3, 20),
+(3, 4, 100),
+(3, 4, 200),
+(3, 4, 200),
+(4, 3, 499);
+
+Q24. Write an SQL query to report the number of calls and the total call duration between each pair of distinct persons (person1, person2) where person1 < person2. 
+     Return the result table in any order.
+
+SELECT from_id AS person1, to_id AS person2,
+	   COUNT(duration) AS call_count, SUM(duration) AS total_duration
+FROM
+  	(SELECT * FROM calls 
+  	UNION ALL
+  	SELECT to_id AS from_id, from_id AS to_id, duration FROM Calls) tmp
+WHERE from_id < to_id
+GROUP BY from_id, to_id;
+
+-- Question-25:
+Warehouse, Products2 table
+
+CREATE TABLE Warehouse (
+  name VARCHAR(255),
+  product_id INT,
+  units INT,
+  CONSTRAINT pk PRIMARY KEY (name, product_id)
+);
+
+CREATE TABLE products2 (
+  product_id INT,
+  product_name VARCHAR(255),
+  Width INT,
+  Length INT,
+  Height INT,
+  CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+INSERT INTO warehouse (name, product_id, units)
+VALUES
+  ('LCHouse1', 1, 1),
+  ('LCHouse1', 2, 10),
+  ('LCHouse1', 3, 5),
+  ('LCHouse2', 1, 2),
+  ('LCHouse2', 2, 2),
+  ('LCHouse3', 4, 1);
+  
+INSERT INTO products2 (product_id, product_name, Width, Length, Height)
+VALUES
+  (1, 'LC-TV', 5, 50, 40),
+  (2, 'LC-KeyChain', 5, 5, 5),
+  (3, 'LC-Phone', 2, 10, 10),
+  (4, 'LC-T-Shirt', 4, 10, 20);
+
+Q25. Write an SQL query to report the number of cubic feet of volume the inventory occupies in each warehouse. Return the result table in any order.
+
+SELECT name, SUM(Width * Length * Height * units) AS volume_occupied
+FROM products2 p
+INNER JOIN warehouse w
+ON p.product_id = w.product_id
+GROUP BY name;
+
+-- Question-26:
+Sales table
+  
+CREATE TABLE sales (
+  sale_date DATE,
+  fruit ENUM('apples', 'oranges'),
+  sold_num INT,
+  CONSTRAINT pk PRIMARY KEY (sale_date, fruit)
+);
+
+INSERT INTO sales (sale_date, fruit, sold_num)
+VALUES
+  ('2020-05-01', 'apples', 10),
+  ('2020-05-01', 'oranges', 8),
+  ('2020-05-02', 'apples', 15),
+  ('2020-05-02', 'oranges', 15),
+  ('2020-05-03', 'apples', 20),
+  ('2020-05-03', 'oranges', 0),
+  ('2020-05-04', 'apples', 15),
+  ('2020-05-04', 'oranges', 16);
+
+Q26. Write an SQL query to report the difference between the number of apples and  oranges sold each day. Return the result table ordered by sale_date
+  
+SELECT sale_date,
+(SUM(CASE WHEN fruit = 'apples' THEN sold_num ELSE 0 END) - SUM(CASE WHEN fruit = 'oranges' THEN sold_num ELSE 0 END)) AS difference
+FROM sales
+GROUP BY sale_date;
+
+-- Question-27:
+Employee table
+
+CREATE TABLE employee (
+  id INT,
+  name VARCHAR(255),
+  department VARCHAR(255),
+  managerId INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO employee (id, name, department, managerId)
+VALUES
+  (101, 'John', 'A', NULL),
+  (102, 'Dan', 'A', 101),
+  (103, 'James', 'A', 101),
+  (104, 'Amy', 'A', 101),
+  (105, 'Anne', 'A', 101),
+  (106, 'Ron', 'B', 101);
+
+Q27. Write an SQL query to report the managers with at least five direct reports. Return the result table in any order.
+
+SELECT emp1.name as manager_name
+FROM employee1 emp1
+INNER JOIN employee1 emp2
+ON emp2.managerId = emp1.id
+GROUP BY manager_name
+HAVING COUNT(emp2.id) >= 5;
+
+-- Question-28:
+Student, Department table
+
+CREATE TABLE student (
+  student_id INT,
+  student_name VARCHAR(255),
+  gender VARCHAR(10),
+  dept_id INT,
+  CONSTRAINT pk PRIMARY KEY (student_id)
+);
+
+CREATE TABLE department (
+  dept_id INT,
+  dept_name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (dept_id)
+);
+
+INSERT INTO student (student_id, student_name, gender, dept_id)
+VALUES
+  (1, 'Jack', 'M', 1),
+  (2, 'Jane', 'F', 1),
+  (3, 'Mark', 'M', 2);
+
+INSERT INTO department (dept_id, dept_name)
+VALUES
+  (1, 'Engineering'),
+  (2, 'Science'),
+  (3, 'Law');
+
+Q28. Write an SQL query to report the respective department name and number of students majoring in each department for all departments in the Department 
+     table (even ones with no current students). Return the result table ordered by student_number in descending order. In case of a tie, order them by dept_name alphabetically.
+
+SELECT dept_name, COUNT(student_id) AS student_number
+FROM department d
+LEFT JOIN student s
+ON d.dept_id = s.dept_id
+GROUP BY dept_name;
+
+-- Question-29:
+Customer_data, Product3 table
+
+CREATE TABLE customer_data (
+  customer_id INT,
+  product_key INT
+);
+
+CREATE TABLE product3 (
+  product_key INT,
+  CONSTRAINT pk PRIMARY KEY (product_key)
+);
+
+INSERT INTO customer_data (customer_id, product_key)
+VALUES
+  (1, 5),
+  (2, 6),
+  (3, 5),
+  (3, 6),
+  (1, 6);
+
+INSERT INTO product3 (product_key)
+VALUES (5),
+       (6);
+
+
+Q29. Write an SQL query to report the customer ids from the Customer table that bought all the products in the Product table. Return the result table in any order.
+       
+WITH customer_purchase AS (SELECT customer_id, COUNT(DISTINCT(product_key)) AS products_count 
+            						   FROM customer_data
+            						   GROUP BY customer_id)
+
+SELECT cp.customer_id 
+FROM customer_purchase cp
+WHERE cp.products_count = (SELECT COUNT(product_key) AS total_products FROM product3);
+
+-- Question-30:
+Project, Employee_data table
+
+CREATE TABLE project (
+  project_id INT,
+  employee_id INT,
+  CONSTRAINT pk PRIMARY KEY (project_id, employee_id)
+);
+
+CREATE TABLE employee_data (
+  employee_id INT,
+  name VARCHAR(255),
+  experience_years INT,
+  CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO project (project_id, employee_id)
+VALUES
+  (1, 1),
+  (1, 2),
+  (1, 3),
+  (2, 1),
+  (2, 2),
+  (4, 1);
+
+INSERT INTO employee_data (employee_id, name, experience_years)
+VALUES
+  (1, 'Khaled', 3),
+  (2, 'Ali', 2),
+  (3, 'John', 3),
+  (4, 'Doe', 2);
+
+Q30. Write an SQL query that reports the most experienced employees in each project. In case of a tie, report all employees with the maximum number of experience years. 
+     Return the result table in any order.
+
+SELECT project_id, employee_id
+FROM
+  	(SELECT project_id, ed.employee_id, ed.experience_years,
+  	RANK() OVER(PARTITION BY project_id ORDER BY experience_years DESC) AS most_exp_emp
+  	FROM employee_data ed
+  	INNER JOIN project p
+  	ON ed.employee_id = p.employee_id) tmp
+WHERE tmp.most_exp_emp = 1;
+
+-- Question-31:
+Enrollments Table
+
+CREATE TABLE enrollments (
+  student_id INT,
+  course_id INT,
+  grade INT,
+  CONSTRAINT pk PRIMARY KEY (student_id, course_id)
+);
+
+INSERT INTO enrollments (student_id, course_id, grade)
+VALUES
+  (2, 2, 95),
+  (2, 3, 95),
+  (1, 1, 90),
+  (1, 2, 99),
+  (3, 1, 80),
+  (3, 2, 75),
+  (3, 3, 82);
+
+Q31. Write a SQL query to find the highest grade with its corresponding course for each student. In case of a tie, you should find the course with the smallest course_id. 
+     Return the result table ordered by student_id in ascending order
+
+WITH stu_grade AS (SELECT *,
+        				   RANK() OVER(PARTITION BY student_id ORDER BY grade DESC) AS rank_value
+        				   FROM enrollments)
+                   
+SELECT student_id, MIN(course_id) AS course_id, MIN(grade) AS grade
+FROM stu_grade 
+WHERE rank_value = 1
+GROUP BY student_id;
+
+-- Question-32:
+World table
+  
+CREATE TABLE world (
+  name VARCHAR(255),
+  continent VARCHAR(255),
+  area INT,
+  population INT,
+  gdp INT,
+  CONSTRAINT pk PRIMARY KEY (name)
+);
+
+ALTER TABLE world MODIFY gdp BIGINT;
+
+INSERT INTO world (name, continent, area, population, gdp)
+VALUES
+  ('Afghanistan', 'Asia', 652230, 25500100, 20343000000),
+  ('Albania', 'Europe', 28748, 2831741, 12960000000),
+  ('Algeria', 'Africa', 2381741, 37100000, 188681000000),
+  ('Andorra', 'Europe', 468, 78115, 3712000000),
+  ('Angola', 'Africa', 1246700, 20609294, 100990000000);
+
+Q32. Write an SQL query to report the name, population, and area of the big countries. Return the 
+--      result table in any order.
+  
+SELECT name, population, area
+FROM world
+WHERE area >= 3000000 OR population >= 25000000;
+
+-- Question-33:
+Customer table
+
+CREATE TABLE customer (
+  id INT,
+  name VARCHAR(255),
+  referee_id INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO customer (id, name, referee_id)
+VALUES
+  (1, 'Will', NULL),
+  (2, 'Jane', NULL),
+  (3, 'Alex', 2),
+  (4, 'Bill', NULL),
+  (5, 'Zack', 1),
+  (6, 'Mark', 2);
+
+-- Q33. Write an SQL query to report the names of the customer that are not referred by the customer with id = 2. Return the result table in any order.
+
+SELECT name FROM customer 
+WHERE name NOT IN (SELECT name FROM customer
+				           WHERE referee_id = 2);
+
+-- Question-34:
+Customers1, Orders_data table
+
+CREATE TABLE customers1 (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE orders_data (
+  id INT,
+  customerid INT,
+  CONSTRAINT pk PRIMARY KEY (id),
+  CONSTRAINT fk_cust_id FOREIGN KEY (customerid) REFERENCES customers1 (id)
+);
+
+INSERT INTO customers1 (id, name)
+VALUES
+  (1, 'Joe'),
+  (2, 'Henry'),
+  (3, 'Sam'),
+  (4, 'Max');
+  
+INSERT INTO orders_data (id, customerId)
+VALUES
+  (1, 3),
+  (2, 1);
+  
+Q34. Write an SQL query to report all customers who never order anything. Return the result table in any order.
+  
+SELECT name FROM customers1
+WHERE id NOT IN (SELECT DISTINCT(customerid) FROM orders_data);
+
+-- Question-35:
+Employees_data table
+  
+CREATE TABLE employees_data (
+    employee_id INT,
+    team_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO employees_data (employee_id, team_id)
+VALUES (1, 8), (2, 8), (3, 8), (4, 7), (5, 9), (6, 9);
+
+Q35. Write an SQL query to find the team size of each of the employees. Return result table in any order.
+
+SELECT employee_id, 
+COUNT(employee_id) OVER(PARTITION BY team_id) AS team_size
+FROM employees_data
+ORDER BY employee_id;
+
+-- Question-36:
+Person, Country, Call_data table
+  
+CREATE TABLE person(
+    id INT,
+    name VARCHAR(255),
+    phone_number VARCHAR(20),
+    CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE country (
+    name VARCHAR(255),
+    country_code VARCHAR(20),
+    CONSTRAINT pk PRIMARY KEY (country_code)
+);
+
+CREATE TABLE call_data (
+    caller_id INT,
+    callee_id INT,
+    duration INT
+);
+
+INSERT INTO person (id, name, phone_number)
+VALUES 
+    (3, 'Jonathan', '051-1234567'),
+    (12, 'Elvis', '051-7654321'),
+    (1, 'Moncef', '212-1234567'),
+    (2, 'Maroua', '212-6523651'),
+    (7, 'Meir', '972-1234567'),
+    (9, 'Rachel', '972-0011100');
+
+INSERT INTO country (name, country_code)
+VALUES 
+    ('Peru', '51'),
+    ('Israel', '972'),
+    ('Morocco', '212'),
+    ('Germany', '49'),
+    ('Ethiopia', '251');
+    
+INSERT INTO call_data (caller_id, callee_id, duration)
+VALUES 
+    (1, 9, 33),
+    (2, 9, 4),
+    (1, 2, 59),
+    (3, 12, 102),
+    (3, 12, 330),
+    (12, 3, 5),
+    (7, 9, 13),
+    (7, 1, 3),
+    (9, 7, 1),
+    (7, 7, 7);
+
+Q36. A telecommunications company wants to invest in new countries. The company intends to invest in the countries where the average call duration of the calls in this country is 
+     strictly greater than the global average call duration. Write an SQL query to find the countries where this company can invest. Return the result table in any order.
+
+WITH caller_country AS (SELECT id, c.name AS country_name
+						            FROM
+              							(SELECT id,
+              							CASE 
+              								 WHEN phone_number REGEXP '^[^0]' THEN SUBSTRING_INDEX(phone_number, '-', 1) 
+              								 ELSE REPLACE(SUBSTRING_INDEX(phone_number, '-', 1), '0', '') 
+              								 END AS country_code 
+              							FROM person) tmp
+              						  INNER JOIN country c
+              						  ON tmp.country_code = c.country_code)
+                        
+SELECT t.country_name 
+FROM 
+  	(SELECT cc.country_name AS country_name, 
+              AVG(cd.duration) AS country_avg_call_duration
+  	FROM caller_country cc
+  	INNER JOIN call_data cd
+  	ON cd.caller_id = cc.id
+  	GROUP BY cc.country_name) t
+WHERE country_avg_call_duration > (SELECT AVG(duration) AS global_avg_call_duration FROM call_data);
+
+-- Question-37:
+Orders3 table
+
+CREATE TABLE orders3 (
+    order_number INT,
+    customer_number INT,
+    CONSTRAINT pk PRIMARY KEY (order_number)
+);
+
+INSERT INTO orders3 (order_number, customer_number)
+VALUES (1, 1), (2, 2), (3, 3), (4, 3);
+
+Q37. Write an SQL query to find the customer_number for the customer who has placed the largest number of orders.
+
+SELECT customer_number 
+FROM
+  	(SELECT *,
+  	RANK() OVER(ORDER BY total_orders_by_customer DESC) AS rank_value
+	  FROM
+    		(SELECT customer_number, COUNT(order_number) AS total_orders_by_customer
+    		FROM orders3
+    		GROUP BY customer_number) tmp) tmp2
+WHERE tmp2.rank_value = 1;
+
+-- Question-38:
+Cinema Table
+  
+CREATE TABLE cinema (
+    seat_id INT auto_increment,
+    free BOOLEAN,
+    CONSTRAINT pk PRIMARY KEY (seat_id)
+);
+
+INSERT INTO cinema (free)
+VALUES (1), (0), (1), (1), (1);
+
+Q38: Write an SQL query to report all the consecutive available seats in the cinema. Return the result table ordered by seat_id in ascending order.
+
+SELECT DISTINCT(seat_id)
+FROM
+  	(SELECT *, 
+  	LAG(free, 1) OVER(ORDER BY seat_id) AS prev_seat_status,
+  	LEAD(free, 1) OVER(ORDER BY seat_id) AS next_seat_status
+  	FROM 
+    cinema) tmp
+WHERE free = 1 AND (prev_seat_status = 1 OR next_seat_status = 1)
+ORDER BY seat_id;
+
+-- Question-39:
+Salesperson, Company, Orders4 table 
+  
+CREATE TABLE salesperson (
+    sales_id INT,
+    name VARCHAR(255),
+    salary INT,
+    commission_rate INT,
+    hire_date DATE,
+    CONSTRAINT pk PRIMARY KEY (sales_id)
+);
+
+CREATE TABLE company (
+    com_id INT,
+    name VARCHAR(255),
+    city VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (com_id)
+);
+
+CREATE TABLE orders4 (
+    order_id INT,
+    order_date DATE,
+    com_id INT,
+    sales_id INT,
+    amount INT,
+    CONSTRAINT pk PRIMARY KEY (order_id),
+    CONSTRAINT fk_com_id FOREIGN KEY (com_id) REFERENCES company (com_id),
+    CONSTRAINT fk_sales_id FOREIGN KEY (sales_id) REFERENCES salesperson (sales_id)
+);
+
+INSERT INTO salesperson (sales_id, name, salary, commission_rate, hire_date)
+VALUES 
+    (1, 'John', 100000, 6, '2006-04-01'),
+    (2, 'Amy', 12000, 5, '2010-05-01'),
+    (3, 'Mark', 65000, 12, '2008-12-25'),
+    (4, 'Pam', 25000, 25, '2005-01-01'),
+    (5, 'Alex', 5000, 10, '2007-02-03');
+
+INSERT INTO company (com_id, name, city)
+VALUES 
+    (1, 'RED', 'Boston'),
+    (2, 'ORANGE', 'New York'),
+    (3, 'YELLOW', 'Boston'),
+    (4, 'GREEN', 'Austin');
+    
+INSERT INTO orders4 (order_id, order_date, com_id, sales_id, amount)
+VALUES 
+    (1, '2014-01-01', 3, 4, 10000),
+    (2, '2014-02-01', 4, 5, 5000),
+    (3, '2014-03-01', 1, 1, 50000),
+    (4, '2014-04-01', 1, 4, 25000);
+
+
+Q39. Write an SQL query to report the names of all the salespersons who did not have any orders related to the company with the name "RED". Return the result table in any order.
+
+SELECT name 
+FROM salesperson
+WHERE sales_id NOT IN (SELECT sales_id
+          					   FROM orders4 o
+          					   INNER JOIN company c
+          					   ON o.com_id = c.com_id
+          					   WHERE name = 'RED');
+
+-- Question-40:
+Triangle table
+
+CREATE TABLE triangle (
+    x INT,
+    y INT,
+    z INT,
+    CONSTRAINT pk PRIMARY KEY (x, y, z)
+);
+
+INSERT INTO triangle (x, y, z)
+VALUES 
+    (13, 15, 30),
+    (10, 20, 15);
+
+Q40. Write an SQL query to report for every three line segments whether they can form a triangle. Return the result table in any order
+
+SELECT *, 
+CASE WHEN (x + y > z) AND (y + z > x) AND (x + z > y) THEN 'Yes'
+	   ELSE 'No' 
+END AS triangle
+FROM triangle;
+
+
+
+
+
+
+
+
+
+
+
+
+
