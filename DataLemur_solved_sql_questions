@@ -78,8 +78,8 @@ WITH cte AS (SELECT t1.age_bucket, t2.user_id, t2.activity_type, t2.time_spent,
       			 WHERE activity_type IN ('send', 'open'))
 			
 SELECT age_bucket,
-ROUND(SUM(CASE WHEN activity_type = 'send' THEN (time_spent*100.0)/total_time_spent ELSE NULL END),2) AS send_percent,
-ROUND(SUM(CASE WHEN activity_type = 'open' THEN (time_spent*100.0)/total_time_spent ELSE NULL END),2) AS open_percent
+	   ROUND(SUM(CASE WHEN activity_type = 'send' THEN (time_spent*100.0)/total_time_spent ELSE NULL END),2) AS send_percent,
+	   ROUND(SUM(CASE WHEN activity_type = 'open' THEN (time_spent*100.0)/total_time_spent ELSE NULL END),2) AS open_percent
 FROM cte
 GROUP BY age_bucket;
 
@@ -118,3 +118,81 @@ FROM
 	WHERE EXTRACT(YEAR FROM transaction_date) = 2022
 	GROUP BY 1, 2) tmp
 WHERE rank_by_total_spend < 3;
+
+# Question:
+Assume you're given a table Twitter tweet data, write a query to obtain a histogram of tweets posted per user in 2022. Output the tweet count per user as the bucket and the number of 
+Twitter users who fall into that bucket. In other words, group the users by the number of tweets they posted in 2022 and count the number of users in each group.
+
+>> Creating Table:
+CREATE TABLE tweets (
+    tweet_id INTEGER,
+    user_id INTEGER,
+    msg VARCHAR(1000),
+    tweet_date TIMESTAMP
+);
+
+>> Inserting Data:
+INSERT INTO tweets (tweet_id, user_id, msg, tweet_date)
+	VALUES
+		(214252, 111, 'Am considering taking Tesla private at $420. Funding secured.', '2021-12-30 00:00:00'),
+		(739252, 111, 'Despite the constant negative press covfefe', '2022-01-01 00:00:00'),
+		(846402, 111, 'Following @NickSinghTech on Twitter changed my life!', '2022-02-14 00:00:00'),
+		(241425, 254, 'If the salary is so competitive why won’t you tell me what it is?', '2022-03-01 00:00:00'),
+		(231574, 148, 'I no longer have a manager. I can''t be managed', '2022-03-23 00:00:00');
+
+>> My Solution:
+WITH user_tweet_counts AS (SELECT user_id, 
+						   		  COUNT(tweet_id) AS no_of_tweets_by_user
+						   FROM tweets
+						   WHERE EXTRACT(YEAR FROM tweet_date) = 2022
+						   GROUP BY user_id)
+
+SELECT no_of_tweets_by_user AS tweet_bucket,
+       COUNT(user_id) AS num_users
+FROM user_tweet_counts
+GROUP BY tweet_bucket;
+
+# Question:
+Assume you're given a table containing information on Facebook user actions. 
+Write a query to obtain number of monthly active users (MAUs) in July 2022, including the month in numerical format "1, 2, 3".
+
+Hint: An active user is defined as a user who has performed actions such as 'sign-in', 'like', or 'comment' in both the current month and the previous month
+
+>> Creating Table:
+CREATE TABLE user_actions (
+    user_id INTEGER,
+    event_id INTEGER,
+    event_type VARCHAR(255),
+    event_date TIMESTAMP
+);
+
+>> Inserting Data:
+INSERT INTO user_actions (user_id, event_id, event_type, event_date)
+VALUES
+    (445, 7765, 'sign-in', '2022-05-31 12:00:00'),
+    (742, 6458, 'sign-in', '2022-06-03 12:00:00'),
+    (445, 3634, 'like', '2022-06-05 12:00:00'),
+    (742, 1374, 'comment', '2022-06-05 12:00:00'),
+    (648, 3124, 'like', '2022-06-18 12:00:00');
+
+>> My Solution:
+WITH active_users AS (
+    SELECT user_id, 
+           EXTRACT(month FROM event_date) AS month, 
+           COUNT(EVENT_ID) AS num_events
+    FROM USER_actions
+    WHERE event_type IN ('sign-in', 'like', 'comment')
+    GROUP BY user_id, EXTRACT(month FROM event_date)
+    ORDER BY user_id
+)
+
+SELECT month, 
+       COUNT(user_id) AS monthly_active_users
+FROM (
+    SELECT *,
+           month - LAG(month, 1) OVER(PARTITION BY USER_ID ORDER BY month) AS month_diff
+    FROM active_users
+) tmp
+WHERE month_diff = 1 AND month = 7
+GROUP BY month;
+
