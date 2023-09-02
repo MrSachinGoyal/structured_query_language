@@ -196,3 +196,66 @@ FROM (
 WHERE month_diff = 1 AND month = 7
 GROUP BY month;
 
+# Question:
+Assume there are three Spotify tables: artists, songs, and global_song_rank, which contain information about the artists, songs, and music charts, respectively.
+
+Write a query to find the top 5 artists whose songs appear most frequently in the Top 10 of the global_song_rank table. Display the top 5 artist names in ascending order, 
+along with their song appearance ranking.
+
+Assumptions:
+If two or more artists have the same number of song appearances, they should be assigned the same ranking, and the rank numbers should be continuous (i.e. 1, 2, 2, 3, 4, 5).
+For instance, if both Ed Sheeran and Bad Bunny appear in the Top 10 five times, they should both be ranked 1st and the next artist should be ranked 2nd.
+
+>> Creating Table:
+CREATE TABLE artists (
+    artist_id INTEGER,
+    artist_name VARCHAR(255),
+    label_owner VARCHAR(255)
+);
+
+CREATE TABLE songs (
+    song_id INTEGER PRIMARY KEY,
+    artist_id INTEGER,
+    name VARCHAR(255)
+);
+
+CREATE TABLE global_song_rank (
+    day INTEGER CHECK (day >= 1 AND day <= 52),
+    song_id INTEGER,
+    rank INTEGER CHECK (rank >= 1 AND rank <= 1000000)
+);
+
+>> Inserting data:
+INSERT INTO artists (artist_id, artist_name, label_owner)
+VALUES
+    (101, 'Ed Sheeran', 'Warner Music Group'),
+    (120, 'Drake', 'Warner Music Group'),
+    (125, 'Bad Bunny', 'Rimas Entertainment');
+
+INSERT INTO songs (song_id, artist_id, name)
+VALUES
+    (55511, 101, 'Perfect'),
+    (45202, 101, 'Shape of You'),
+    (22222, 120, 'One Dance'),
+    (19960, 120, 'Hotline Bling');
+
+INSERT INTO global_song_rank (day, song_id, rank)
+VALUES
+    (1, 45202, 5),
+    (3, 45202, 2),
+    (1, 19960, 3),
+    (9, 19960, 15);
+
+>> My Solution:
+WITH top_ten AS (SELECT a.artist_name,
+				         DENSE_RANK() OVER(ORDER BY COUNT(*) DESC) AS rank_by_num_song_appearences
+								 FROM artists a 
+								 INNER JOIN songs s 
+								 ON a.artist_id = s.artist_id
+								 INNER JOIN global_song_rank gsr
+								 ON s.song_id = gsr.song_id
+								 WHERE gsr.rank < 11 
+								 GROUP BY a.artist_name)
+					 
+SELECT * FROM top_ten 
+WHERE rank_by_num_song_appearences < 6;
