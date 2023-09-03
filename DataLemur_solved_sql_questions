@@ -259,3 +259,37 @@ WITH top_ten AS (SELECT a.artist_name,
 					 
 SELECT * FROM top_ten 
 WHERE rank_by_num_song_appearences < 6;
+
+# Question:
+Assume you're given a table containing information about Wayfair user transactions for different products. 
+Write a query to calculate the year-on-year growth rate for the total spend of each product, grouping the results by product ID.
+The output should include the year in ascending order, product ID, current year's spend, previous year's spend and year-on-year growth percentage, rounded to 2 decimal places.
+
+>> Creating Table:
+CREATE TABLE user_transactions (
+    transaction_id INTEGER,
+    product_id INTEGER,
+    spend DECIMAL(10, 2),
+    transaction_date TIMESTAMP
+);
+
+>> Inserting Data:
+INSERT INTO user_transactions (transaction_id, product_id, spend, transaction_date)
+VALUES
+    (1341, 123424, 1500.60, '2019-12-31 12:00:00'),
+    (1423, 123424, 1000.20, '2020-12-31 12:00:00'),
+    (1623, 123424, 1246.44, '2021-12-31 12:00:00'),
+    (1322, 123424, 2145.32, '2022-12-31 12:00:00');
+
+>> My Solution:
+WITH product_spend_cte AS (SELECT EXTRACT(YEAR FROM transaction_date) AS year,
+              								    product_id,
+              								    SUM(spend) AS current_year_spend_on_product,
+              								    LAG(SUM(spend), 1) OVER(PARTITION BY product_id 
+              														                ORDER BY EXTRACT(YEAR FROM transaction_date) ASC) AS previous_year_spend_on_product
+              						 FROM user_transactions
+              						 GROUP BY product_id, EXTRACT(YEAR FROM transaction_date))
+							
+SELECT *, 
+	     ROUND(((current_year_spend_on_product - previous_year_spend_on_product)*100)/previous_year_spend_on_product, 2) AS year_on_year_growth_rate
+FROM product_spend_cte;
