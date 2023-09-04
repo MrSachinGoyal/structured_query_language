@@ -293,3 +293,51 @@ WITH product_spend_cte AS (SELECT EXTRACT(YEAR FROM transaction_date) AS year,
 SELECT *, 
 	     ROUND(((current_year_spend_on_product - previous_year_spend_on_product)*100)/previous_year_spend_on_product, 2) AS year_on_year_growth_rate
 FROM product_spend_cte;
+
+# Question:
+A Microsoft Azure Supercloud customer is defined as a company that purchases at least one product from each product category.
+Write a query that effectively identifies the company ID of such Supercloud customers.
+
+>> Creating Table:
+CREATE TABLE customer_contracts (
+    customer_id INTEGER,
+    product_id INTEGER,
+    amount INTEGER
+);
+
+CREATE TABLE products (
+    product_id INTEGER,
+    product_category VARCHAR(255),
+    product_name VARCHAR(255)
+);
+
+>> Inserting Data:
+INSERT INTO customer_contracts (customer_id, product_id, amount)
+VALUES
+    (1, 1, 1000),
+    (1, 3, 2000),
+    (1, 5, 1500),
+    (2, 2, 3000),
+    (2, 6, 2000);
+
+INSERT INTO products (product_id, product_category, product_name)
+VALUES
+    (1, 'Analytics', 'Azure Databricks'),
+    (2, 'Analytics', 'Azure Stream Analytics'),
+    (4, 'Containers', 'Azure Kubernetes Service'),
+    (5, 'Containers', 'Azure Service Fabric'),
+    (6, 'Compute', 'Virtual Machines'),
+    (7, 'Compute', 'Azure Functions');
+
+>> My Solution:
+WITH buyed_categories AS (SELECT cc.customer_id, 
+              					         p.product_category
+              			      FROM customer_contracts cc
+              			      LEFT JOIN products p
+              			      ON cc.product_id = p.product_id)
+			
+
+SELECT customer_id
+FROM buyed_categories
+GROUP BY customer_id
+HAVING COUNT(DISTINCT(product_category)) = (SELECT COUNT(DISTINCT(product_category)) FROM products);					  				  
