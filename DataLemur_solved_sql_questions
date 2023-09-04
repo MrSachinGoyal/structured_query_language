@@ -330,14 +330,9 @@ VALUES
     (7, 'Compute', 'Azure Functions');
 
 >> My Solution:
-WITH buyed_categories AS (SELECT cc.customer_id, 
-              					         p.product_category
-              			      FROM customer_contracts cc
-              			      LEFT JOIN products p
-              			      ON cc.product_id = p.product_id)
-			
-
-SELECT customer_id
-FROM buyed_categories
-GROUP BY customer_id
-HAVING COUNT(DISTINCT(product_category)) = (SELECT COUNT(DISTINCT(product_category)) FROM products);					  				  
+SELECT cc.customer_id
+FROM customer_contracts cc
+INNER JOIN products p
+ON cc.product_id = p.product_id
+GROUP BY cc.customer_id
+HAVING COUNT(DISTINCT p.product_category) = (SELECT COUNT(DISTINCT product_category) FROM products);
