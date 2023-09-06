@@ -367,3 +367,50 @@ GROUP BY candidate_id
 HAVING SUM(CASE WHEN skill in ('Python', 'Tableau', 'PostgreSQL') THEN 1 ELSE 0 END) = 3
 ORDER BY candidate_id;
 
+# Question:
+Amazon wants to maximize the number of items it can stock in a 500,000 square feet warehouse. It wants to stock as many prime items as possible, and afterwards use the remaining 
+square footage to stock the most number of non-prime items.
+
+Write a query to find the number of prime and non-prime items that can be stored in the 500,000 square feet warehouse. Output the item type with prime_eligible followed by not_prime 
+and the maximum number of items that can be stocked.
+
+Assumptions:
+Prime and non-prime items have to be stored in equal amounts, regardless of their size or square footage. This implies that prime items will be stored separately from non-prime items in their respective containers, but within each container, all items must be in the same amount.
+Non-prime items must always be available in stock to meet customer demand, so the non-prime item count should never be zero.
+Item count should be whole numbers (integers).
+
+>> Creating Table:
+CREATE TABLE inventory (
+    item_id INTEGER,
+    item_type VARCHAR(255),
+    item_category VARCHAR(255),
+    square_footage DECIMAL
+);
+
+>> Inserting Data:
+INSERT INTO inventory (item_id, item_type, item_category, square_footage)
+VALUES
+    (1374, 'prime_eligible', 'mini refrigerator', 68.00),
+    (4245, 'not_prime', 'standing lamp', 26.40),
+    (2452, 'prime_eligible', 'television', 85.00),
+    (3255, 'not_prime', 'side table', 22.60),
+    (1672, 'prime_eligible', 'laptop', 8.50);
+
+>> My Solution:
+WITH cte AS (SELECT item_type, COUNT(*) AS no_of_items,
+			 SUM(square_footage) AS container_space, 500000 as total_sq_foot
+			 FROM inventory
+			 GROUP BY item_type
+			 ORDER BY item_type DESC)
+			 
+SELECT item_type,
+CASE WHEN item_type = 'prime_eligible' THEN FLOOR((total_sq_foot/container_space)) * no_of_items
+ELSE FLOOR(
+        	 (total_sq_foot - ( 
+                					   SELECT container_space * FLOOR((total_sq_foot/container_space))
+                					   FROM cte
+                					   WHERE item_type = 'prime_eligible'
+                					  )
+        	 )/container_space
+        	 ) * no_of_items
+END AS item_count;
