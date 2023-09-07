@@ -375,9 +375,10 @@ Write a query to find the number of prime and non-prime items that can be stored
 and the maximum number of items that can be stocked.
 
 Assumptions:
-Prime and non-prime items have to be stored in equal amounts, regardless of their size or square footage. This implies that prime items will be stored separately from non-prime items in their respective containers, but within each container, all items must be in the same amount.
-Non-prime items must always be available in stock to meet customer demand, so the non-prime item count should never be zero.
-Item count should be whole numbers (integers).
+-- Prime and non-prime items have to be stored in equal amounts, regardless of their size or square footage. This implies that prime items will be stored separately from non-prime 
+   items in their respective containers, but within each container, all items must be in the same amount.
+-- Non-prime items must always be available in stock to meet customer demand, so the non-prime item count should never be zero.
+-- Item count should be whole numbers (integers).
 
 >> Creating Table:
 CREATE TABLE inventory (
@@ -414,3 +415,34 @@ ELSE FLOOR(
         	 )/container_space
         	 ) * no_of_items
 END AS item_count;
+
+# Question:
+Tesla is investigating production bottlenecks and they need your help to extract the relevant data. 
+Write a query to determine which parts have begun the assembly process but are not yet finished.
+
+Assumptions:
+-- parts_assembly table contains all parts currently in production, each at varying stages of the assembly process.
+-- An unfinished part is one that lacks a finish_date.
+
+>> Creating Table:
+CREATE TABLE parts_assembly (
+    part VARCHAR(255),      
+    finish_date TIMESTAMP,   
+    assembly_step INT    
+);
+
+>> Inserting Table:
+INSERT INTO parts_assembly (part, finish_date, assembly_step)
+VALUES ('battery', '2022-01-22 00:00:00', 1),
+       ('battery', '2022-02-22 00:00:00', 2),
+       ('battery', '2022-03-22 00:00:00', 3),
+       ('bumper', '2022-01-22 00:00:00', 1),
+       ('bumper', '2022-02-22 00:00:00', 2),
+       ('bumper', NULL, 3),
+       ('bumper', NULL, 4);
+	   
+>> My Solution:
+SELECT part,
+	     assembly_step
+FROM parts_assembly
+WHERE finish_date IS NULL;
