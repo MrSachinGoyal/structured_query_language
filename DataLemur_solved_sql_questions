@@ -554,10 +554,64 @@ FROM cte
 GROUP BY measurement_day
 ORDER BY measurement_day;
 
+# Question:
+New TikTok users sign up with their emails. They confirmed their signup by replying to the text confirmation to activate their accounts. Users may receive multiple text messages 
+for account confirmation until they have confirmed their new account.
+A senior analyst is interested to know the activation rate of specified users in the emails table. Write a query to find the activation rate. Round the percentage to 2 decimal places.
 
+Definitions:
+emails table contain the information of user signup details.
+texts table contains the users' activation information.
 
+Assumptions:
+The analyst is interested in the activation rate of specific users in the emails table, which may not include all users that could potentially be found in the texts table.
+For example, user 123 in the emails table may not be in the texts table and vice versa.
 
+>> Creating Table:
+CREATE TABLE emails (
+    email_id INTEGER,
+    user_id INTEGER,
+    signup_date TIMESTAMP
+);
 
+CREATE TABLE texts (
+    text_id INTEGER,
+    email_id INTEGER,
+    signup_action VARCHAR(255) 
+);
+
+>> Inserting Data:
+INSERT INTO emails (email_id, user_id, signup_date)
+VALUES
+    (125, 7771, '2022-06-14 00:00:00'),
+    (236, 6950, '2022-07-01 00:00:00'),
+    (433, 1052, '2022-07-09 00:00:00');
+
+INSERT INTO texts (text_id, email_id, signup_action)
+VALUES
+    (6878, 125, 'Confirmed'),
+    (6920, 236, 'Not Confirmed'),
+    (6994, 236, 'Confirmed');
+
+>> My Solution:
+WITH user_activation_status AS (
+    SELECT e.user_id, t.signup_action
+    FROM emails e
+    LEFT JOIN texts t ON e.email_id = t.email_id
+    WHERE e.email_id IS NOT NULL 
+),    
+cte1 AS (
+    SELECT COUNT(user_id) AS total_confirmed_users
+    FROM user_activation_status
+    WHERE signup_action = 'Confirmed'
+),
+cte2 AS (
+    SELECT COUNT(DISTINCT user_id) AS total_num_users
+    FROM user_activation_status
+)
+
+SELECT ROUND(CAST(total_confirmed_users AS DECIMAL) / total_num_users, 2) AS activation_percentage
+FROM cte1, cte2;
 
 
 
