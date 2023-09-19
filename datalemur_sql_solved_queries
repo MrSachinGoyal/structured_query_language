@@ -613,5 +613,83 @@ cte2 AS (
 SELECT ROUND(CAST(total_confirmed_users AS DECIMAL) / total_num_users, 2) AS activation_percentage
 FROM cte1, cte2;
 
+# Question:
+Assume you're given the table on user viewership categorised by device type where the three types are laptop, tablet, and phone.
+Write a query that calculates the total viewership for laptops and mobile devices where mobile is defined as the sum of tablet and phone viewership. 
+Output the total viewership for laptops as laptop_reviews and the total viewership for mobile devices as mobile_views.
 
+>> Creating Table:
+CREATE TABLE viewership (
+    user_id INT,
+    device_type VARCHAR(255), -- You can adjust the maximum length as needed
+    view_time TIMESTAMP
+);
+
+>> Inserting Data:
+INSERT INTO viewership (user_id, device_type, view_time)
+VALUES
+    (123, 'tablet', '2022-01-02 00:00:00'),
+    (125, 'laptop', '2022-01-07 00:00:00'),
+    (128, 'laptop', '2022-02-09 00:00:00'),
+    (129, 'phone', '2022-02-09 00:00:00'),
+    (145, 'tablet', '2022-02-24 00:00:00');
+
+>> My Solution:
+SELECT
+COUNT(CASE WHEN device_type = 'laptop' THEN 1 ELSE NULL END) AS laptop_views,
+COUNT(CASE WHEN device_type IN ('tablet', 'phone') THEN 1 ELSE NULL END) AS mobile_views
+FROM viewership;
+
+
+# Question: 
+A phone call is considered an international call when the person calling is in a different country than the person receiving the call.
+What percentage of phone calls are international? Round the result to 1 decimal.
+	
+Assumption: The caller_id in phone_info table refers to both the caller and receiver.
+
+>> Creating table:
+	CREATE TABLE phone_calls (
+    caller_id INT,
+    receiver_id INT,
+    call_time TIMESTAMP
+);
+
+CREATE TABLE phone_info (
+    caller_id INTEGER,
+    country VARCHAR(255),
+    network VARCHAR(255),
+    phone_number CHAR(20) 
+);
+
+>> Inserting Data:
+INSERT INTO phone_calls (caller_id, receiver_id, call_time)
+VALUES
+    (1, 2, '2022-07-04 10:13:49'),
+    (1, 5, '2022-08-21 23:54:56'),
+    (5, 1, '2022-05-13 17:24:06'),
+    (5, 6, '2022-03-18 12:11:49');
+
+INSERT INTO phone_info (caller_id, country, network, phone_number)
+VALUES
+    (1, 'US', 'Verizon', '+1-212-897-1964'),
+    (2, 'US', 'Verizon', '+1-703-346-9529'),
+    (3, 'US', 'Verizon', '+1-650-828-4774'),
+    (4, 'US', 'Verizon', '+1-415-224-6663'),
+    (5, 'IN', 'Vodafone', '+91 7503-907302'),
+    (6, 'IN', 'Vodafone', '+91 2287-664895');
+
+>> My Solution:
+SELECT 
+	   ROUND(
+      100 * SUM(CASE 
+                 WHEN caller_info.country_id <> receiver_info.country_id
+                 THEN 1 ELSE NULL END)
+            /COUNT(*),1
+          ) AS int_calls_percent
+FROM phone_calls pc
+LEFT JOIN phone_info caller_info
+ON pc.caller_id = caller_info.caller_id
+LEFT JOIN phone_info receiver_info
+ON pc.receiver_id = receiver_info.caller_id;
+	
 
