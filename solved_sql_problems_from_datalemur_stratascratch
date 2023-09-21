@@ -737,3 +737,57 @@ GROUP BY
     transaction_date, user_id
 ORDER BY
     transaction_date;
+
+# Question: 
+You have been asked to find the 5 most lucrative products in terms of total revenue for the first half of 2022 (from January to June inclusive).
+Output their IDs and the total revenue.
+
+>> Link to Question: https://platform.stratascratch.com/coding/2119-most-lucrative-products?code_type=3
+
+>> Expected Output:
+
+| product_id | revenue |
+|------------|---------|
+|     2      |   207   |
+|     3      |   201   |
+|     5      |   199   |
+|     1      |    65   |
+|     6      |    56   |
+
+>> My Solution:
+SELECT product_id,
+       SUM(cost_in_dollars * units_sold) AS total_revenue
+FROM 
+    online_orders
+WHERE 
+    (MONTH(date) >= 1) AND (MONTH(date) <= 6)
+GROUP BY 
+    product_id
+ORDER BY 
+    total_revenue DESC
+LIMIT 
+    5;
+
+# Question:
+Find the second highest salary of employees.
+
+>> Link to Question: https://platform.stratascratch.com/coding/9892-second-highest-salary?code_type=3
+
+>> Expected Output:
+
+|  salary   |
+|-----------|
+|  200,000  |
+
+
+>> My Solution:
+SELECT salary AS second_highest_salary
+FROM 
+    (
+    SELECT salary, 
+            RANK() OVER(ORDER BY salary DESC) AS salary_rank
+    FROM 
+        employee
+    ) tmp
+WHERE 
+    salary_rank = 2;
