@@ -867,3 +867,71 @@ FROM
 WHERE 
     business_rank_by_num_reviews < 6;
 
+# Question:
+Find the email activity rank for each user. Email activity rank is defined by the total number of emails sent. The user with the highest number of emails sent will 
+have a rank of 1, and so on. Output the user, total emails, and their activity rank. Order records by the total emails in descending order. Sort users with the same 
+number of emails in alphabetical order.
+In your rankings, return a unique value (i.e., a unique rank) even if multiple users have the same number of emails. For tie breaker use alphabetical order of the user usernames.
+
+>> Link to Question: https://platform.stratascratch.com/coding/10351-activity-rank?code_type=3
+
+>> Expected Output:
++------------------+--------------+----------------------------------+
+|    from_user    | total_emails | activity_rank                     |
++------------------+--------------+----------------------------------+
+| 32ded68d89443e808 |     19       |                1                 |
+| ef5fe98c6b9f313075 |     19       |                2                 |
+| 5b8754928306a18b68 |     18       |                3                 |
+| 55e60cfcc9dc49c17e |     16       |                4                 |
+| 91f59516cb9dee1e88 |     16       |                5                 |
++------------------+--------------+----------------------------------+
+
+>> My Solution:
+SELECT from_user AS user,
+       COUNT(id) AS total_emails_sent_by_user,
+       ROW_NUMBER() OVER(ORDER BY COUNT(id) DESC, from_user ASC) AS user_activity_rank
+       -- row number will give unique rank to each user by considering total_emails_sent_by_user
+FROM 
+    google_gmail_emails
+GROUP BY 
+    from_user;
+
+# Question:
+Find the top 5 states with the most 5 star businesses. Output the state name along with the number of 5-star businesses and order records by the number of 5-star businesses 
+in descending order. In case there are ties in the number of businesses, return all the unique states. If two states have the same result, sort them in alphabetical order.
+
+>> Link to Question: https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=3
+
+>> Expected Output:
+All required columns and the first 5 rows of the solution are shown
++-------+------------------+
+| state | five_star_counts |
++-------+------------------+
+|  AZ   |       10         |
+|  ON   |        5         |
+|  NV   |        4         |
+|  IL   |        3         |
+|  OH   |        3         |
++-------+------------------+
+
+>> My Solution:
+WITH state_businesses AS
+(SELECT state,
+       COUNT(business_id) AS num_5_star_businesses,
+       RANK() OVER(ORDER BY COUNT(business_id) DESC) AS state_rank
+       -- RANK() function calculates state rank depending on number of 5 star business in that particular state
+FROM 
+    yelp_business
+WHERE 
+    stars = 5    -- filter the 5 star businesses from table
+GROUP BY 
+    state
+ORDER BY 
+    num_5_star_businesses DESC, state ASC)
+    
+SELECT state,
+    num_5_star_businesses
+FROM 
+    state_businesses
+WHERE
+    state_rank <= 5;
