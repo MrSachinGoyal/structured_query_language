@@ -935,3 +935,54 @@ FROM
     state_businesses
 WHERE
     state_rank <= 5;
+
+# Question:
+The election is conducted in a city and everyone can vote for one or more candidates, or choose not to vote at all. Each person has 1 vote so if they vote for multiple candidates, 
+their vote gets equally split across these candidates. For example, if a person votes for 2 candidates, these candidates receive an equivalent of 0.5 vote each.
+Find out who got the most votes and won the election. Output the name of the candidate or multiple names in case of a tie. To avoid issues with a floating-point error you can 
+round the number of votes received by a candidate to 3 decimal places.
+
+>> Link to Question: https://platform.stratascratch.com/coding/2099-election-results?code_type=3
+
+>> Expected Output:
+All required columns and the first 5 rows of the solution are shown
+
++--------------+
+|   Candidate   |
++--------------+
+|   Christine   |
++--------------+
+
+
+>> My Solution:
+WITH cte1 AS
+(SELECT voter, 
+       candidate,
+       ROW_NUMBER() OVER(PARTITION BY voter) AS num
+       -- it will calculate how many candidates a voter has cast his vote for
+FROM voting_results
+WHERE candidate IS NOT NULL
+       -- it will filter the rows where candidates choose not to vote at all
+     ),
+
+cte2 AS
+(SELECT voter, 
+        candidate,
+        ROUND(1/MAX(num) OVER(PARTITION BY voter),3) AS votes
+        -- it will split the vote equally among multiple candidates
+FROM cte1),
+
+cte3 AS
+(SELECT candidate, 
+        RANK() OVER(ORDER BY SUM(votes) DESC) AS candidate_rank_by_total_votes
+        -- it will rank the candidate by total_votes  
+FROM cte2 
+GROUP BY candidate
+)
+
+SELECT candidate 
+FROM 
+    cte3
+WHERE 
+    candidate_rank_by_total_votes = 1;
+
