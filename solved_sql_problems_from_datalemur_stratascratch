@@ -986,3 +986,48 @@ FROM
 WHERE 
     candidate_rank_by_total_votes = 1;
 
+# Question:
+Select the most popular client_id based on a count of the number of users who have at least 50% of their events from the following list: 'video call received', 'video call sent', 
+'voice call received', 'voice call sent'.
+
+>> Link to Question: https://platform.stratascratch.com/coding/2029-the-most-popular-client_id-among-users-using-video-and-voice-calls?code_type=3
+
+>> Expected Output:
++-----------+
+| client_id |
++-----------+
+| desktop   |
++-----------+
+
+>> My Solution:
+WITH cte1 AS 
+(SELECT user_id, 
+       client_id,
+       SUM(CASE WHEN event_type IN ('video call received', 'video call sent', 'voice call   received', 'voice call sent')
+           THEN 1 ELSE 0 END) AS desired_event,
+       -- calculating number of desired events by user from each client
+       COUNT(event_type) AS total_events
+       -- calculating total number of events by user from each client
+FROM fact_events
+GROUP BY client_id, user_id
+),
+cte2 AS
+(SELECT user_id, 
+        client_id, 
+        (desired_event/total_events)*100 AS desired_event_percentage
+	-- calculating desired_event_percentage by each user from each client
+FROM cte1
+)
+cte3 AS
+(SELECT client_id, 
+        COUNT(user_id) AS desired_users,
+        -- counting the number of users having atleast 50 % desired_event_percentage for each client 
+        RANK() OVER(ORDER BY COUNT(user_id) DESC) AS client_rank
+        -- ranking the client on the basis of count of users with atleast 50 % desired_event_percentage
+FROM cte2
+WHERE desired_event_percentage >= 50 
+GROUP BY client_id)
+
+SELECT client_id 
+FROM cte3
+WHERE client_rank = 1; 
