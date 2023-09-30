@@ -1074,3 +1074,56 @@ SELECT user_id,
 					 ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
 		   2) AS rolling_average
 FROM tweets;
+
+# Question:
+Sometimes, payment transactions are repeated by accident; it could be due to user error, API failure or a retry error that causes a credit card to be charged twice.
+Using the transactions table, identify any payments made at the same merchant with the same credit card for the same amount within 10 minutes of each other. 
+Count such repeated payments.
+
+Assumptions:
+The first transaction of such payments should not be counted as a repeated payment. This means, if there are two transactions performed by a merchant with the same credit card 
+and for the same amount within 10 minutes, there will only be 1 repeated payment.
+
+>> Script:
+CREATE TABLE transactions (
+    transaction_id INT,
+    merchant_id INT,
+    credit_card_id INT,
+    amount INT,
+    transaction_timestamp TIMESTAMP
+);
+
+INSERT INTO transactions (transaction_id, merchant_id, credit_card_id, amount, transaction_timestamp)
+VALUES
+    (1, 101, 1, 100, '2022-09-25 12:00:00'),
+    (2, 101, 1, 100, '2022-09-25 12:08:00'),
+    (3, 101, 1, 100, '2022-09-25 12:28:00'),
+    (4, 102, 2, 300, '2022-09-25 12:00:00'),
+    (6, 102, 2, 400, '2022-09-25 14:00:00');
+
+>> Expected Output:
+-------------------
+|   payment_count  |
+|------------------|
+|         1        |      
+-------------------
+
+>> My Solution:
+WITH payment_cte AS 
+(
+ SELECT merchant_id,
+        credit_card_id, 
+        amount,
+        transaction_timestamp - (LAG(transaction_timestamp, 1) OVER(PARTITION BY merchant_id, credit_card_id, amount
+						      		    ORDER BY transaction_timestamp)
+				) AS time_diff
+ FROM 
+    transactions
+)
+ 
+SELECT COUNT(*) AS payment_count
+FROM 
+    payment_cte
+WHERE 
+    time_diff <= '00:10:00'; 
+
