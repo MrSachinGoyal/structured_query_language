@@ -1127,3 +1127,42 @@ FROM
 WHERE 
     time_diff <= '00:10:00'; 
 
+# Question:
+You're given a table containing the item count for each order on Alibaba, along with the frequency of orders that have the same item count. 
+Write a query to retrieve the mode of the order occurrences. Additionally, if there are multiple item counts with the same mode, the results should be sorted in ascending order.
+
+>> Script:
+CREATE TABLE items_per_order (
+    item_count INT,
+    order_occurrences INT
+);
+
+INSERT INTO items_per_order (item_count, order_occurrences)
+VALUES
+    (1, 500),
+    (2, 1000),
+    (3, 800);
+
+>> Expected Output:
++--------+
+|  mode  |
++--------+
+|   2    |
++--------+
+
+>> My Solution:
+WITH cte AS 
+(
+ SELECT *,
+	RANK() OVER(ORDER BY order_occurrences DESC) AS rank_by_order_occurences
+ FROM
+    items_per_order
+)
+
+SELECT item_count AS mode
+FROM
+    cte
+WHERE 
+    rank_by_order_occurences = 1
+ORDER BY
+    mode ASC;
