@@ -1166,3 +1166,25 @@ WHERE
     rank_by_order_occurences = 1
 ORDER BY
     mode ASC;
+
+# Question:
+Find the percentage of shipable orders. Consider an order is shipable if the customer's address is known.
+
+>> Link to Question: https://platform.stratascratch.com/coding/10090-find-the-percentage-of-shipable-orders?code_type=3
+
+>> Expected Output:
++------------------+
+| percent_shipable |
++------------------+
+|        28        |
++------------------+
+
+>> My Solution:
+SELECT 
+SUM(CASE WHEN c.address IS NULL THEN 0 ELSE 1 END)/COUNT(*) * 100 AS percent_shipable
+FROM 
+    orders o
+INNER JOIN 
+    customers c
+ON 
+    o.cust_id = c.id;
