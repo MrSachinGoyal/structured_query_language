@@ -1188,3 +1188,45 @@ INNER JOIN
     customers c
 ON 
     o.cust_id = c.id;
+
+# Question:
+Find the date with the highest total energy consumption from the Meta/Facebook data centers. Output the date along with the total energy consumption across all data centers.
+
+>> Link to Question: https://platform.stratascratch.com/coding/10064-highest-energy-consumption?code_type=3
+
+>> Expected Output:
+All required columns and the first 5 rows of the solution are shown
+---------------------------------
+|    date      |  consumption  |
+|-------------- |-------------- |
+|  2020-01-07  |     1250      |
+|  2020-01-06  |     1250      |
+---------------------------------
+
+>> My Solution:
+WITH all_data_centers AS 
+(
+ SELECT * FROM fb_eu_energy
+ UNION ALL
+ SELECT * FROM fb_asia_energy
+ UNION ALL
+ SELECT * FROM fb_na_energy
+ ),
+
+date_wise_consumption AS
+(
+SELECT date, 
+       SUM(consumption) AS total_energy_consumption,
+       RANK() OVER(ORDER BY SUM(consumption) DESC) rank_by_total_energy_consumption
+FROM 
+    all_data_centers
+GROUP BY 
+    date
+)
+
+SELECT date, 
+       total_energy_consumption
+FROM 
+    date_wise_consumption
+WHERE 
+    rank_by_total_energy_consumption = 1;
