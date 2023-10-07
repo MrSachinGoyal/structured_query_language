@@ -1312,3 +1312,33 @@ ON
     lp.title = tec.title
 WHERE 
     tec.prorated_emp_expense > lp.budget;
+
+# Question:
+Write a solution to find the nth highest salary from the Employee table. If there is no nth highest salary, return null.
+
+>> Link to Question: https://leetcode.com/problems/nth-highest-salary/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+Create table If Not Exists Employee
+(Id int,
+Salary int);
+
+insert into Employee (id, salary)
+values ('1', '100'),
+('2', '200'),
+('3', '300');
+
+#Solution:
+WITH CTE AS (
+SELECT Salary,
+  RANK() OVER(ORDER BY Salary DESC) AS salary_rank
+FROM 
+Employee
+)
+SELECT Salary
+FROM 
+CTE 
+WHERE 
+salary_rank = 3 -- input the N value here to receive Nth Highest Salary
+LIMIT 1;
+
