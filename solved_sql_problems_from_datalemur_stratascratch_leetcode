@@ -1328,7 +1328,7 @@ values ('1', '100'),
 ('2', '200'),
 ('3', '300');
 
-#Solution:
+>> My Solution:
 WITH CTE AS (
 SELECT Salary,
   RANK() OVER(ORDER BY Salary DESC) AS salary_rank
@@ -1341,4 +1341,37 @@ CTE
 WHERE 
 salary_rank = 3 -- input the N value here to receive Nth Highest Salary
 LIMIT 1;
+
+# Question:
+Write a solution to find all the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times.
+Return the result table in any order.
+
+>> Link to Question: https://leetcode.com/problems/actors-and-directors-who-cooperated-at-least-three-times/description/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS ActorDirector (
+    actor_id INT,
+    director_id INT,
+    timestamp INT
+);
+
+INSERT INTO ActorDirector (actor_id, director_id, timestamp)
+VALUES
+    ('1', '1', '0'),
+    ('1', '1', '1'),
+    ('1', '1', '2'),
+    ('1', '2', '3'),
+    ('1', '2', '4'),
+    ('2', '1', '5'),
+    ('2', '1', '6');
+
+>> My Solution:
+SELECT actor_id, 
+	director_id
+FROM 
+	ActorDirector
+GROUP BY 
+	1, 2
+HAVING 
+	COUNT(*) >= 3;
 
