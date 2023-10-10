@@ -1403,3 +1403,52 @@ FROM
 	activity
 GROUP BY
 	player_id;
+
+# Question:
+Write a solution to find the number of times each student attended each exam. Return the result table ordered by student_id and subject_name.
+
+>> Link to Question: https://leetcode.com/problems/students-and-examinations/description/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS Students (
+    student_id INT,
+    student_name VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Subjects (
+    subject_name VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS Examinations (
+    student_id INT,
+    subject_name VARCHAR(20)
+);
+
+INSERT INTO Students (student_id, student_name) 
+VALUES ('1', 'Alice'), ('2', 'Bob'), ('13', 'John'), ('6', 'Alex');
+
+INSERT INTO Subjects (subject_name) 
+VALUES ('Math'), ('Physics'), ('Programming');
+
+INSERT INTO Examinations (student_id, subject_name) 
+VALUES ('1', 'Math'), ('1', 'Physics'), ('1', 'Programming'), ('2', 'Programming'),
+	('1', 'Physics'), ('1', 'Math'), ('13', 'Math'), ('13', 'Programming'),
+       ('13', 'Physics'), ('2', 'Math'), ('1', 'Math');
+
+>> My Solution:
+WITH CTE_1 AS (SELECT *
+FROM students 
+CROSS JOIN subjects
+),
+
+CTE_2 AS (SELECT student_id, subject_name, COUNT(*) AS attended_exams
+FROM examinations
+GROUP BY 1, 2
+)
+
+SELECT CTE_1.*, 
+       IFNULL(CTE_2.attended_exams,0) AS attended_exams
+FROM CTE_1
+LEFT JOIN CTE_2
+ON CTE_1.student_id = CTE_2.student_id AND CTE_1.subject_name = CTE_2.subject_name
+ORDER BY student_id, student_name;
