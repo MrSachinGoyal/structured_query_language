@@ -1525,3 +1525,39 @@ FROM
 	CTE
 WHERE 
 	num_direct_reportee >= 5;
+
+# Question:
+Write a solution to delete all duplicate emails, keeping only one unique email with the smallest id.
+
+>> Link to Question: https://leetcode.com/problems/delete-duplicate-emails/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS Person (Id INT, Email VARCHAR(255));
+
+INSERT INTO Person (Id, Email)
+VALUES
+    (1, 'john@example.com'),
+    (2, 'bob@example.com'),
+    (3, 'john@example.com');
+
+>> My Solution:
+# creating temporary table to store the output data
+CREATE TABLE temp_person AS
+SELECT id, 
+	   email
+FROM 
+	(SELECT *,
+		    ROW_NUMBER() OVER (PARTITION BY Email ORDER BY Id) AS row_num
+            # using row_number to identify duplicate emails
+	FROM Person) tmp
+WHERE row_num = 1;
+
+# removing all records from Person table
+TRUNCATE TABLE person;
+
+# copying the data from temporary table to the original 'Person' table
+INSERT INTO Person (Id, email)
+SELECT Id, email FROM temp_person;
+
+# deleting the temporary table
+DROP TABLE temp_person;
