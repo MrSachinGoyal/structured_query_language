@@ -1561,3 +1561,32 @@ SELECT Id, email FROM temp_person;
 
 # deleting the temporary table
 DROP TABLE temp_person;
+
+# Question:
+Write a solution to find the customer_number for the customer who has placed the largest number of orders.
+
+>> Link to Question: https://leetcode.com/problems/customer-placing-the-largest-number-of-orders/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS orders 
+(	order_number INT, 
+	customer_number INT
+);
+
+INSERT INTO orders (order_number, customer_number)
+VALUES
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '3');
+
+>> My Solution:
+SELECT customer_number
+FROM 
+	orders
+GROUP BY 
+	customer_number
+ORDER BY 
+	COUNT(*) DESC 
+LIMIT 
+	1;
