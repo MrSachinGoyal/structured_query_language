@@ -1590,3 +1590,35 @@ ORDER BY
 	COUNT(*) DESC 
 LIMIT 
 	1;
+
+# Question:
+Write a solution to find all the classes that have at least five students. Return the result table in any order.
+
+>> Link to Question: https://leetcode.com/problems/classes-more-than-5-students/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS Courses (
+    student VARCHAR(255),
+    class VARCHAR(255)
+);
+
+INSERT INTO Courses (student, class)
+VALUES
+    ('A', 'Math'),
+    ('B', 'English'),
+    ('C', 'Math'),
+    ('D', 'Biology'),
+    ('E', 'Math'),
+    ('F', 'Computer'),
+    ('G', 'Math'),
+    ('H', 'Math'),
+    ('I', 'Math');
+
+>> My Solution:
+SELECT class
+FROM 
+	courses
+GROUP BY 
+	class
+HAVING 
+	COUNT(student) >= 5;
