@@ -1691,3 +1691,40 @@ GROUP BY
 	sell_date
 ORDER BY 
 	sell_date;
+# Question:
+Write a solution to show the unique ID of each user, If a user does not have a unique ID replace just show null. Return the result table in any order.
+
+>> Link to Question: https://leetcode.com/problems/replace-employee-id-with-the-unique-identifier/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS Employees (
+    id INT,
+    name VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS EmployeeUNI (
+    id INT,
+    unique_id INT
+);
+
+-- Insert data into Employees table
+INSERT INTO Employees (id, name) VALUES (1, 'Alice');
+INSERT INTO Employees (id, name) VALUES (7, 'Bob');
+INSERT INTO Employees (id, name) VALUES (11, 'Meir');
+INSERT INTO Employees (id, name) VALUES (90, 'Winston');
+INSERT INTO Employees (id, name) VALUES (3, 'Jonathan');
+
+-- Insert data into EmployeeUNI table
+INSERT INTO EmployeeUNI (id, unique_id) VALUES (3, 1);
+INSERT INTO EmployeeUNI (id, unique_id) VALUES (11, 2);
+INSERT INTO EmployeeUNI (id, unique_id) VALUES (90, 3);
+
+>> My Solution:
+SELECT empUni.unique_id, 
+       emp.name	
+FROM 
+	employeeUni empUni
+RIGHT JOIN 
+	employees emp
+ON 
+	empUni.id = emp.id;
