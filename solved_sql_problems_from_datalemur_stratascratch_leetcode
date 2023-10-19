@@ -1728,3 +1728,77 @@ RIGHT JOIN
 	employees emp
 ON 
 	empUni.id = emp.id;
+
+# Question:
+Write a solution to find the names of all the salespersons who did not have any orders related to the company with the name "RED". 
+Return the result table in any order.
+
+>> Link to Question: https://leetcode.com/problems/sales-person/description/?envType=study-plan-v2&envId=30-days-of-pandas&lang=pythondata
+
+>> Script:
+CREATE TABLE IF NOT EXISTS SalesPerson (
+    sales_id INT,
+    name VARCHAR(255),
+    salary INT,
+    commission_rate INT,
+    hire_date DATE
+);
+
+CREATE TABLE IF NOT EXISTS Company (
+    com_id INT,
+    name VARCHAR(255),
+    city VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS Orders (
+    order_id INT,
+    order_date DATE,
+    com_id INT,
+    sales_id INT,
+    amount INT
+);
+
+
+-- Insert into SalesPerson table
+INSERT INTO SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+VALUES 
+    ('1', 'John', '100000', '6', '2006-04-01'),
+    ('2', 'Amy', '12000', '5', '2010-05-01'),
+    ('3', 'Mark', '65000', '12', '2008-12-25'),
+    ('4', 'Pam', '25000', '25', '2005-01-01'),
+    ('5', 'Alex', '5000', '10', '2007-02-03');
+
+-- Insert into Company table
+INSERT INTO Company (com_id, name, city)
+VALUES 
+    ('1', 'RED', 'Boston'),
+    ('2', 'ORANGE', 'New York'),
+    ('3', 'YELLOW', 'Boston'),
+    ('4', 'GREEN', 'Austin');
+
+-- Insert into Orders table
+INSERT INTO Orders (order_id, order_date, com_id, sales_id, amount)
+VALUES 
+    ('1', '2014-01-01', '3', '4', '10000'),
+    ('2', '2014-02-01', '4', '5', '5000'),
+    ('3', '2014-03-01', '1', '1', '50000'),
+    ('4', '2014-04-01', '1', '4', '25000');
+
+>> My Solution:
+SELECT name 
+FROM 
+	salesperson  
+WHERE 
+	name NOT IN (SELECT p.name AS sales_person
+				 FROM 
+					company c
+				 INNER JOIN 
+					orders o
+				 ON 
+					c.com_id = o.com_id
+				 RIGHT JOIN 
+					salesperson p 
+				 ON 
+					o.sales_id = p.sales_id
+				 WHERE c.name = 'RED');
+                 
