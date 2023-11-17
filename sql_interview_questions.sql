@@ -2,7 +2,6 @@
 
 # DAY 1
 -- Question 1 Link: https://platform.stratascratch.com/coding/9726-classify-business-type?code_type=3
-
 -- Solution: 
 SELECT DISTINCT(business_name),
 	   CASE WHEN business_name LIKE '%restaurant%' THEN 'restaurant'
@@ -14,7 +13,6 @@ FROM sf_restaurant_health_violations;
 
 # DAY 2
 -- Question 2 Link: https://www.hackerrank.com/challenges/binary-search-tree-1/problem?isFullScreen=true
-
 -- Solution:
 SELECT N,
        CASE WHEN P IS NULL THEN 'Root'
@@ -26,7 +24,6 @@ ORDER BY N;
 
 # DAY 3
 -- Question 3 Link: https://www.hackerrank.com/challenges/the-company/problem?isFullScreen=true
-
 -- Solution:
 SELECT c.company_code, 
        c.founder AS founder_name,
@@ -45,3 +42,15 @@ LEFT JOIN employee emp
 ON mgr.manager_code = emp.manager_code
 GROUP BY c.company_code, c.founder
 ORDER BY c.company_code;
+
+# DAY 4
+-- Question 4 Link: https://www.hackerrank.com/challenges/the-report/problem?isFullScreen=true
+-- Solution: 
+SELECT 
+CASE WHEN grades.grade >= 8 THEN stu.name ELSE NULL END AS Name, 
+grades.grade AS grade, 
+stu.marks AS mark
+FROM students stu
+INNER JOIN grades 
+ON grades.min_mark <= stu.marks AND grades.max_mark >= stu.marks
+ORDER BY grade DESC, Name ASC,marks ASC;
