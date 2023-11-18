@@ -31,17 +31,28 @@ SELECT c.company_code,
        COUNT(DISTINCT(sm.senior_manager_code)) AS senior_manager_count,
        COUNT(DISTINCT(mgr.manager_code)) AS manager_count,
        COUNT(DISTINCT(emp.employee_code)) AS emp_count
-FROM company c
-INNER JOIN lead_manager lm
-ON c.company_code = lm.company_code
-LEFT JOIN senior_manager sm
-ON lm.lead_manager_code = sm.lead_manager_code
-LEFT JOIN manager mgr
-ON sm.senior_manager_code = mgr.senior_manager_code
-LEFT JOIN employee emp
-ON mgr.manager_code = emp.manager_code
-GROUP BY c.company_code, c.founder
-ORDER BY c.company_code;
+FROM 
+	company c
+INNER JOIN 
+	lead_manager lm
+ON 
+	c.company_code = lm.company_code
+LEFT JOIN 
+	senior_manager sm
+ON 
+	lm.lead_manager_code = sm.lead_manager_code
+LEFT JOIN 
+	manager mgr
+ON 
+	sm.senior_manager_code = mgr.senior_manager_code
+LEFT JOIN 
+	employee emp
+ON 
+	mgr.manager_code = emp.manager_code
+GROUP BY 
+	c.company_code, c.founder
+ORDER BY 
+	c.company_code;
 
 # DAY 4
 -- Question 4 Link: https://www.hackerrank.com/challenges/the-report/problem?isFullScreen=true
@@ -50,7 +61,39 @@ SELECT
 CASE WHEN grades.grade >= 8 THEN stu.name ELSE NULL END AS Name, 
 grades.grade AS grade, 
 stu.marks AS mark
-FROM students stu
-INNER JOIN grades 
-ON grades.min_mark <= stu.marks AND grades.max_mark >= stu.marks
-ORDER BY grade DESC, Name ASC,marks ASC;
+FROM 
+	students stu
+INNER JOIN 
+	grades 
+ON 
+	grades.min_mark <= stu.marks AND grades.max_mark >= stu.marks
+ORDER BY 
+	grade DESC, Name ASC,marks ASC;
+
+# DAY 5
+-- Question 5 Link: https://www.hackerrank.com/challenges/full-score/problem?isFullScreen=true
+-- Solution:
+SELECT sub.hacker_id AS hacker_id, 
+       hackers.name AS hacker_name
+FROM 
+	difficulty diff
+INNER JOIN 
+	challenges ch
+ON 
+	diff.difficulty_level = ch.difficulty_level
+INNER JOIN 
+	submissions sub
+ON 
+	ch.challenge_id = sub.challenge_id
+INNER JOIN 
+	hackers 
+ON 
+	hackers.hacker_id = sub.hacker_id
+WHERE 
+	sub.score = diff.score
+GROUP BY 
+	sub.hacker_id, hackers.name
+HAVING 
+	COUNT(*) > 1
+ORDER BY 
+	COUNT(*) DESC, hacker_id ASC;
