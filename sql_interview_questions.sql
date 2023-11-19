@@ -97,3 +97,29 @@ HAVING
 	COUNT(*) > 1
 ORDER BY 
 	COUNT(*) DESC, hacker_id ASC;
+    
+# DAY 6:
+-- Question Link: https://www.hackerrank.com/challenges/occupations/problem?isFullScreen=true
+-- Solution:
+
+WITH CTE AS 
+(SELECT occupation, 
+       name,
+       ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY Name ASC) AS name_order 
+FROM occupations),
+
+CTE_2 AS 
+(SELECT name_order,
+        MIN(CASE WHEN occupation = 'Doctor' THEN name END) AS 'Doctor',
+        MIN(CASE WHEN occupation = 'Professor' THEN name END) AS 'Professor',
+        MIN(CASE WHEN occupation = 'Singer' THEN name END) AS 'Singer',
+        MIN(CASE WHEN occupation = 'Actor' THEN name END) AS 'Actor'
+FROM
+     CTE
+GROUP BY name_order)
+    
+SELECT Doctor, 
+       Professor, 
+       Singer, 
+       Actor 
+FROM CTE_2;
