@@ -1,5 +1,3 @@
-
-
 # DAY 1
 -- Question 1 Link: https://platform.stratascratch.com/coding/9726-classify-business-type?code_type=3
 -- Solution: 
@@ -123,3 +121,24 @@ SELECT Doctor,
        Singer, 
        Actor 
 FROM CTE_2;
+
+# DAY 7
+-- Question Link: https://www.hackerrank.com/challenges/challenges/problem?isFullScreen=false
+-- Solution:
+WITH CTE AS (SELECT h.hacker_id, 
+       h.name, 
+       COUNT(c.challenge_id) AS challenges_created,
+       COUNT(COUNT(c.challenge_id)) OVER(PARTITION BY COUNT(c.challenge_id)) AS num_hackers_created_same_num_challenges
+       -- calculating number of hackers who created same number of challenges
+FROM hackers h
+INNER JOIN 
+hacker_challenges c
+ON h.hacker_id = c.hacker_id
+GROUP BY h.hacker_id, h.name
+ORDER BY challenges_created DESC, h.hacker_id ASC)
+
+SELECT hacker_id,
+	   name,
+       challenges_created
+FROM cte
+WHERE challenges_created = (SELECT MAX(challenges_created) FROM CTE) OR num_hackers_created_same_num_challenges = 1;
