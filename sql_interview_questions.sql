@@ -1,16 +1,19 @@
 # DAY 1
 -- Question 1 Link: https://platform.stratascratch.com/coding/9726-classify-business-type?code_type=3
+
 -- Solution: 
 SELECT DISTINCT(business_name),
-	   CASE WHEN business_name LIKE '%restaurant%' THEN 'restaurant'
-		    WHEN (business_name LIKE '%cafe%') OR (business_name LIKE '%café%') OR (business_name LIKE '%coffee%') THEN 'cafe'
-		    WHEN business_name LIKE '%school%' THEN 'school'
-		    ELSE 'other'
+       CASE WHEN business_name LIKE '%restaurant%' THEN 'restaurant'
+            WHEN (business_name LIKE '%cafe%') OR (business_name LIKE '%café%') OR (business_name LIKE '%coffee%') THEN 'cafe'
+            WHEN business_name LIKE '%school%' THEN 'school'
+	    ELSE 'other'
       END AS business_type
 FROM sf_restaurant_health_violations;
 
+
 # DAY 2
 -- Question 2 Link: https://www.hackerrank.com/challenges/binary-search-tree-1/problem?isFullScreen=true
+
 -- Solution:
 SELECT N,
        CASE WHEN P IS NULL THEN 'Root'
@@ -20,8 +23,10 @@ SELECT N,
 FROM BST
 ORDER BY N;
 
+
 # DAY 3
 -- Question 3 Link: https://www.hackerrank.com/challenges/the-company/problem?isFullScreen=true
+
 -- Solution:
 SELECT c.company_code, 
        c.founder AS founder_name,
@@ -51,9 +56,11 @@ GROUP BY
 	c.company_code, c.founder
 ORDER BY 
 	c.company_code;
+    
 
 # DAY 4
 -- Question 4 Link: https://www.hackerrank.com/challenges/the-report/problem?isFullScreen=true
+
 -- Solution: 
 SELECT 
 CASE WHEN grades.grade >= 8 THEN stu.name ELSE NULL END AS Name, 
@@ -67,9 +74,11 @@ ON
 	grades.min_mark <= stu.marks AND grades.max_mark >= stu.marks
 ORDER BY 
 	grade DESC, Name ASC,marks ASC;
+    
 
 # DAY 5
 -- Question 5 Link: https://www.hackerrank.com/challenges/full-score/problem?isFullScreen=true
+
 -- Solution:
 SELECT sub.hacker_id AS hacker_id, 
        hackers.name AS hacker_name
@@ -96,8 +105,10 @@ HAVING
 ORDER BY 
 	COUNT(*) DESC, hacker_id ASC;
     
+    
 # DAY 6:
 -- Question Link: https://www.hackerrank.com/challenges/occupations/problem?isFullScreen=true
+
 -- Solution:
 
 WITH CTE AS 
@@ -122,8 +133,10 @@ SELECT Doctor,
        Actor 
 FROM CTE_2;
 
+
 # DAY 7
 -- Question Link: https://www.hackerrank.com/challenges/challenges/problem?isFullScreen=false
+
 -- Solution:
 WITH CTE AS (SELECT h.hacker_id, 
        h.name, 
@@ -142,3 +155,26 @@ SELECT hacker_id,
        challenges_created
 FROM cte
 WHERE challenges_created = (SELECT MAX(challenges_created) FROM CTE) OR num_hackers_created_same_num_challenges = 1;
+
+
+# DAY 8 - Contest Leaderboard
+-- Question Link: https://www.hackerrank.com/challenges/contest-leaderboard/problem?isFullScreen=true
+
+-- Solution:
+WITH hacker_max_score AS
+(SELECT hacker_id,
+       challenge_id,
+       MAX(score) AS maximum_score
+FROM submissions
+GROUP BY hacker_id, challenge_id)
+
+SELECT h.hacker_id,
+       h.name,
+       SUM(hms.maximum_score) AS total_score
+FROM hackers h 
+INNER JOIN hacker_max_score hms
+ON h.hacker_id = hms.hacker_id
+GROUP BY h.hacker_id, h.name
+HAVING SUM(hms.maximum_score) > 0 
+ORDER BY total_score DESC, h.hacker_id ASC;
+
