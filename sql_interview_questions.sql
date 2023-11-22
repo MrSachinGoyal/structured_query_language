@@ -178,3 +178,29 @@ GROUP BY h.hacker_id, h.name
 HAVING SUM(hms.maximum_score) > 0 
 ORDER BY total_score DESC, h.hacker_id ASC;
 
+# DAY 9 - Placements
+-- Question Link: https://www.hackerrank.com/challenges/placements/problem?isFullScreen=true
+
+-- Solution:
+WITH std_salary AS
+(SELECT s.ID AS student_id,
+       s.name AS student_name,
+       p.salary AS student_salary
+FROM Students s
+INNER JOIN Packages p
+ON s.ID = p.ID),
+
+best_friend_salary AS
+(SELECT f.id AS student_id, 
+       f.Friend_ID AS best_friend_id,
+       p.salary AS best_friend_salary
+FROM Friends f
+INNER JOIN Packages p
+ON f.Friend_ID = p.ID)
+
+SELECT ss.student_name
+FROM std_salary ss
+INNER JOIN best_friend_salary bss
+ON ss.student_id = bss.student_id
+WHERE bss.best_friend_salary > ss.student_salary
+ORDER BY bss.best_friend_salary;
