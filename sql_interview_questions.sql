@@ -204,3 +204,20 @@ INNER JOIN best_friend_salary bss
 ON ss.student_id = bss.student_id
 WHERE bss.best_friend_salary > ss.student_salary
 ORDER BY bss.best_friend_salary;
+
+# DAY 10 - The PADS
+-- Question Link: https://www.hackerrank.com/challenges/the-pads/problem?isFullScreen=true
+
+-- Solution:
+SELECT CONCAT(name, '(', LEFT(occupation, 1), ')') AS name_with_occupation_initial
+FROM occupations
+ORDER BY name ASC;
+
+SELECT CONCAT('There are a total of', ' ', COUNT(*), ' ',  lower(Occupation), 's', '.') AS output
+FROM occupations
+GROUP BY occupation
+ORDER BY COUNT(*);
+
+
+
+
