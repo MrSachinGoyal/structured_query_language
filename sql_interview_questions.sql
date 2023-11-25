@@ -218,6 +218,50 @@ FROM occupations
 GROUP BY occupation
 ORDER BY COUNT(*);
 
+# Day 11 - 15 Days of Learning SQL
+-- Question Link: https://www.hackerrank.com/challenges/15-days-of-learning-sql/problem?isFullScreen=true
 
+-- Solution:
+WITH recursive cte  AS
+(   SELECT distinct submission_date, hacker_id 
+    FROM submissions
+    WHERE submission_date = (SELECT MIN(submission_date) FROM submissions)
+    
+    UNION
+    
+    SELECT s.submission_date, s.hacker_id
+    FROM submissions s
+    INNER JOIN cte
+    ON cte.hacker_id = s.hacker_id
+    WHERE s.submission_date = DATE_ADD(cte.submission_date, INTERVAL 1 DAY) AND (s.submission_date <= (SELECT MAX(submission_date) FROM submissions))
+),
+
+unique_hackers AS 
+(SELECT submission_date, COUNT(*) AS no_of_unique_hackers
+ FROM cte
+ GROUP BY submission_date
+),
+
+SubmissionCounts AS (
+    SELECT
+        sub.submission_date, sub.hacker_id, h.name,
+        COUNT(sub.submission_id) AS num_submissions,
+        MAX(COUNT(sub.submission_id)) OVER (PARTITION BY sub.submission_date) AS max_submission_id
+    FROM submissions sub
+    INNER JOIN hackers h ON sub.hacker_id = h.hacker_id
+    GROUP BY sub.submission_date, sub.hacker_id, h.name
+),
+RankedSubmissions AS (
+    SELECT submission_date, hacker_id, name,
+           RANK() OVER (PARTITION BY submission_date ORDER BY hacker_id) AS rank_num
+    FROM SubmissionCounts
+    WHERE num_submissions = max_submission_id
+)
+
+SELECT uh.submission_date, uh.no_of_unique_hackers, rs.hacker_id, rs.name
+FROM RankedSubmissions rs
+INNER JOIN unique_hackers uh
+ON uh.submission_date = rs.submission_date
+WHERE rs.rank_num = 1;
 
 
