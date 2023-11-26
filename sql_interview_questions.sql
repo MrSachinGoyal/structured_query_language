@@ -157,7 +157,7 @@ FROM cte
 WHERE challenges_created = (SELECT MAX(challenges_created) FROM CTE) OR num_hackers_created_same_num_challenges = 1;
 
 
-# DAY 8 - Contest Leaderboard
+# DAY 8 
 -- Question Link: https://www.hackerrank.com/challenges/contest-leaderboard/problem?isFullScreen=true
 
 -- Solution:
@@ -178,7 +178,7 @@ GROUP BY h.hacker_id, h.name
 HAVING SUM(hms.maximum_score) > 0 
 ORDER BY total_score DESC, h.hacker_id ASC;
 
-# DAY 9 - Placements
+# DAY 9 
 -- Question Link: https://www.hackerrank.com/challenges/placements/problem?isFullScreen=true
 
 -- Solution:
@@ -205,7 +205,7 @@ ON ss.student_id = bss.student_id
 WHERE bss.best_friend_salary > ss.student_salary
 ORDER BY bss.best_friend_salary;
 
-# DAY 10 - The PADS
+# DAY 10
 -- Question Link: https://www.hackerrank.com/challenges/the-pads/problem?isFullScreen=true
 
 -- Solution:
@@ -218,7 +218,7 @@ FROM occupations
 GROUP BY occupation
 ORDER BY COUNT(*);
 
-# Day 11 - 15 Days of Learning SQL
+# Day 11
 -- Question Link: https://www.hackerrank.com/challenges/15-days-of-learning-sql/problem?isFullScreen=true
 
 -- Solution:
@@ -264,4 +264,45 @@ INNER JOIN unique_hackers uh
 ON uh.submission_date = rs.submission_date
 WHERE rs.rank_num = 1;
 
+# Day 12
+-- Question Link: https://www.hackerrank.com/challenges/interviews/problem?isFullScreen=true
 
+-- Solution:
+WITH submission_agg AS (SELECT challenge_id,
+	    SUM(total_submissions) AS total_submissions,
+        SUM(total_accepted_submissions) AS total_accepted_submissions
+FROM submission_stats
+GROUP BY challenge_id ),
+
+view_agg AS 
+(SELECT challenge_id,
+		SUM(total_views) AS total_views,
+        SUM(total_unique_views) AS total_unique_views
+FROM view_stats
+GROUP BY challenge_id
+),
+
+views_submission_agg AS 
+(SELECT va.challenge_id, total_submissions, total_accepted_submissions, total_views, total_unique_views
+FROM view_agg va LEFT JOIN submission_agg sa
+ON va.challenge_id = sa.challenge_id),
+
+contest_level_agg AS 
+(SELECT ct.contest_id, ct.hacker_id, ct.name,
+       IFNULL(SUM(vsa.total_submissions), 0) AS total_submissions,
+       IFNULL(SUM(vsa.total_accepted_submissions), 0) AS total_accepted_submissions,
+	   IFNULL(SUM(vsa.total_views), 0) AS total_views,
+	   IFNULL(SUM(vsa.total_unique_views), 0) AS total_unique_views
+FROM contests ct
+INNER JOIN colleges co
+ON ct.contest_id = co.contest_id
+INNER JOIN challenges ch
+ON ch.college_id = co.college_id
+LEFT JOIN views_submission_agg vsa
+ON ch.challenge_id = vsa.challenge_id
+GROUP BY ct.contest_id, ct.hacker_id, ct.name)
+
+SELECT *
+FROM contest_level_agg 
+WHERE (total_submissions + total_accepted_submissions + total_views + total_unique_views) != 0
+ORDER BY contest_id;
