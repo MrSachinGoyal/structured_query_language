@@ -306,3 +306,14 @@ SELECT *
 FROM contest_level_agg 
 WHERE (total_submissions + total_accepted_submissions + total_views + total_unique_views) != 0
 ORDER BY contest_id;
+
+# Day 13 
+-- Question Link: https://platform.stratascratch.com/coding/10134-spam-posts?code_type=3
+
+-- Solution:
+SELECT fbp.post_date,
+       (100 * SUM(CASE WHEN fbp.post_keywords LIKE '%spam%' THEN 1 ELSE 0 END)) / COUNT(*) AS spam_percent
+FROM facebook_posts fbp
+INNER JOIN facebook_post_views pv
+ON fbp.post_id = pv.post_id
+GROUP BY fbp.post_date;
