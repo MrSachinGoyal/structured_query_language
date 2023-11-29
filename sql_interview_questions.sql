@@ -317,3 +317,30 @@ FROM facebook_posts fbp
 INNER JOIN facebook_post_views pv
 ON fbp.post_id = pv.post_id
 GROUP BY fbp.post_date;
+
+# Day 14
+-- Question Link: https://platform.stratascratch.com/coding/10300-premium-vs-freemium?code_type=3
+
+-- Solution:
+WITH downloads AS
+(SELECT mdf.date, 
+       SUM(CASE WHEN mad.paying_customer = 'yes' THEN mdf.downloads ELSE 0 END) AS paying_users_download,
+       SUM(CASE WHEN mad.paying_customer = 'no' THEN mdf.downloads ELSE 0 END) AS non_paying_users_download
+FROM 
+    ms_download_facts mdf
+INNER JOIN 
+    ms_user_dimension mud
+ON 
+    mdf.user_id = mud.user_id
+INNER JOIN 
+    ms_acc_dimension mad
+ON 
+    mud.acc_id = mad.acc_id
+GROUP BY
+    mdf.date
+ORDER BY
+    mdf.date)
+    
+SELECT * 
+FROM downloads
+WHERE non_paying_users_download > paying_users_download;
