@@ -344,3 +344,28 @@ ORDER BY
 SELECT * 
 FROM downloads
 WHERE non_paying_users_download > paying_users_download;
+
+# DAY 15
+
+-- Question Link: https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=3
+
+-- Solution:
+WITH CTE AS
+(SELECT user1 AS user_1, 
+        user2 AS user_2
+FROM 
+    facebook_friends
+UNION ALL
+SELECT user2 AS user_1, 
+       user1 AS user_2
+FROM 
+    facebook_friends)
+
+SELECT user_1, 
+       (100 * COUNT(*))/(SELECT COUNT(DISTINCT(user_1)) FROM CTE) AS popularity_percentage
+FROM 
+    CTE
+GROUP BY 
+    user_1
+ORDER BY 
+    user_1;
