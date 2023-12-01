@@ -346,7 +346,6 @@ FROM downloads
 WHERE non_paying_users_download > paying_users_download;
 
 # DAY 15
-
 -- Question Link: https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=3
 
 -- Solution:
@@ -369,3 +368,16 @@ GROUP BY
     user_1
 ORDER BY 
     user_1;
+    
+# DAY 16
+-- Question Link: https://platform.stratascratch.com/coding/10141-apple-product-counts?code_type=3
+
+-- Solution:
+SELECT users.language,
+	   COUNT(DISTINCT CASE WHEN events.device IN ('macbook pro', 'iphone 5s', 'ipad air') THEN events.user_id ELSE NULL END) AS num_apple_users,
+       COUNT(DISTINCT events.user_id) AS num_total_users
+FROM playbook_events events
+INNER JOIN playbook_users users
+ON events.user_id = users.user_id
+GROUP BY users.language
+ORDER BY num_total_users DESC;
