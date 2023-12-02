@@ -381,3 +381,12 @@ INNER JOIN playbook_users users
 ON events.user_id = users.user_id
 GROUP BY users.language
 ORDER BY num_total_users DESC;
+
+# DAY 17
+-- Question: https://platform.stratascratch.com/coding/2005-share-of-active-users?code_type=3
+
+-- Solution:
+SELECT 
+	  COUNT(CASE WHEN status = 'open' THEN user_id ELSE NULL END)/(SELECT COUNT(*) FROM fb_active_users WHERE country = "USA") AS active_users
+FROM fb_active_users
+WHERE country = "USA";
