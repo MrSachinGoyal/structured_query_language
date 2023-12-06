@@ -390,3 +390,57 @@ SELECT
 	  COUNT(CASE WHEN status = 'open' THEN user_id ELSE NULL END)/(SELECT COUNT(*) FROM fb_active_users WHERE country = "USA") AS active_users
 FROM fb_active_users
 WHERE country = "USA";
+
+# Day 18
+-- Question - https://platform.stratascratch.com/coding/9633-city-with-most-amenities/official-solution?code_type=3
+
+-- Solution:
+SELECT city
+FROM airbnb_search_details
+GROUP BY city
+ORDER BY SUM(LENGTH(amenities)) DESC LIMIT 1;
+
+# DAY 19
+-- Question: https://platform.stratascratch.com/coding/9632-host-popularity-rental-prices?code_type=3
+
+-- Solution:
+-- CTE to assign popularity rating to each host_id
+WITH CTE AS (
+  SELECT
+    CONCAT(price, room_type, host_since, zipcode, number_of_reviews) AS host_id,
+    CASE
+      WHEN number_of_reviews = 0 THEN 'New'
+      WHEN number_of_reviews BETWEEN 1 AND 5 THEN 'Rising'
+      WHEN number_of_reviews BETWEEN 6 AND 15 THEN 'Trending Up'
+      WHEN number_of_reviews BETWEEN 16 AND 40 THEN 'Popular'
+      ELSE 'Hot'
+    END AS host_popularity_rating,
+    price
+  FROM
+    airbnb_host_searches
+),
+
+-- CTE2 to calculate min, avg, and max price for each host_id
+CTE2 AS (
+  SELECT
+    host_id,
+    host_popularity_rating,
+    MIN(price) AS min_price,
+    AVG(price) AS avg_price,
+    MAX(price) AS max_price
+  FROM
+    CTE
+  GROUP BY
+    host_id, host_popularity_rating
+)
+
+-- Final query to calculate min, avg, and max price for each host_popularity_rating category
+SELECT
+  host_popularity_rating,
+  MIN(min_price) AS min_price,
+  AVG(avg_price) AS avg_price,
+  MAX(max_price) AS max_price
+FROM
+  CTE2
+GROUP BY
+  host_popularity_rating;
