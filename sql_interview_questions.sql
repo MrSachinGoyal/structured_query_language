@@ -464,3 +464,4 @@ FROM airbnb_hosts hosts
 INNER JOIN airbnb_guests guests
 ON (hosts.nationality = guests.nationality) AND (hosts.gender = guests.gender);
 
+
