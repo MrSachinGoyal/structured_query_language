@@ -383,7 +383,7 @@ GROUP BY users.language
 ORDER BY num_total_users DESC;
 
 # DAY 17
--- Question: https://platform.stratascratch.com/coding/2005-share-of-active-users?code_type=3
+-- Question Link: https://platform.stratascratch.com/coding/2005-share-of-active-users?code_type=3
 
 -- Solution:
 SELECT 
@@ -392,7 +392,7 @@ FROM fb_active_users
 WHERE country = "USA";
 
 # Day 18
--- Question - https://platform.stratascratch.com/coding/9633-city-with-most-amenities/official-solution?code_type=3
+-- Question Link: https://platform.stratascratch.com/coding/9633-city-with-most-amenities/official-solution?code_type=3
 
 -- Solution:
 SELECT city
@@ -401,7 +401,7 @@ GROUP BY city
 ORDER BY SUM(LENGTH(amenities)) DESC LIMIT 1;
 
 # DAY 19
--- Question: https://platform.stratascratch.com/coding/9632-host-popularity-rental-prices?code_type=3
+-- Question Link: https://platform.stratascratch.com/coding/9632-host-popularity-rental-prices?code_type=3
 
 -- Solution:
 -- CTE to assign popularity rating to each host_id
@@ -444,3 +444,23 @@ FROM
   CTE2
 GROUP BY
   host_popularity_rating;
+
+# DAY 20
+-- Question Link: https://platform.stratascratch.com/coding/10318-new-products?code_type=3
+
+-- Solution:
+SELECT company_name,
+       (SUM(CASE WHEN year = 2020 THEN 1 ELSE 0 END) - SUM(CASE WHEN year = 2019 THEN 1 ELSE 0 END)) AS net_diff
+FROM car_launches
+GROUP BY company_name;
+
+# DAY 21
+-- Question Link: https://platform.stratascratch.com/coding/10078-find-matching-hosts-and-guests-in-a-way-that-they-are-both-of-the-same-gender-and-nationality?code_type=3
+
+-- Solution:
+SELECT 
+      DISTINCT hosts.host_id, guests.guest_id
+FROM airbnb_hosts hosts
+INNER JOIN airbnb_guests guests
+ON (hosts.nationality = guests.nationality) AND (hosts.gender = guests.gender);
+
