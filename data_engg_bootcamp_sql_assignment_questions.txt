@@ -1,0 +1,3039 @@
+CREATE DATABASE demo_db;
+
+USE demo_db;
+
+-- Question-1 to Question-6:
+CITY Table
+
+CREATE TABLE city (
+  ID INT ,
+  NAME VARCHAR(50),
+  COUNTRYCODE VARCHAR(3),
+  DISTRICT VARCHAR(50),
+  POPULATION INT
+);
+
+INSERT INTO city (ID, NAME, COUNTRYCODE, DISTRICT, POPULATION)
+VALUES
+  (6, 'Rotterdam', 'NLD', 'Zuid-Holland', NULL),
+  (19, 'Zaanstad', 'NLD', 'Noord-Holland', 135621),
+  (214, 'Porto Alegre', 'BRA', 'Rio Grande do Sul', 1314032),
+  (397, 'Lauro de Freitas', 'BRA', 'Bahia', 109236),
+  (547, 'Dobric', 'BGR', 'Varna', 100399),
+  (552, 'Bujumbura', 'BDI', 'Bujumbura', 300000),
+  (554, 'Santiago de Chile', 'CHL', 'Santiago', 4703954),
+  (626, 'al-Minya', 'EGY', 'al-Minya', 201360),
+  (646, 'Santa Ana', 'SLV', 'Santa Ana', 139389),
+  (762, 'Bahir Dar', 'ETH', 'Amhara', 96140),
+  (796, 'Baguio', 'PHL', 'CAR', 252386),
+  (896, 'Malungon', 'PHL', 'Southern Mindanao', 93232),
+  (904, 'Banjul', 'GMB', 'Banjul', 42326),
+  (924, 'Villa Nueva', 'GTM', 'Guatemala', 101295),
+  (990, 'Waru', 'IDN', 'East Java', 124300),
+  (1155, 'Latur', 'IND', 'Maharashtra', 197408),
+  (1222, 'Tenali', 'IND', 'Andhra Pradesh', 143726),
+  (1235, 'Tirunelveli', 'IND', 'Tamil Nadu', 135825),
+  (1256, 'Alandur', 'IND', 'Tamil Nadu', 125244),
+  (1279, 'Neyveli', 'IND', 'Tamil Nadu', 118080),
+  (1293, 'Pallavaram', 'IND', 'Tamil Nadu', 111866),
+  (1350, 'Dehri', 'IND', 'Bihar', 94526),
+  (1383, 'Tabriz', 'IRN', 'East Azerbaidzan', 1191043),
+  (1385, 'Karaj', 'IRN', 'Tehran', 940968),
+  (1508, 'Bolzano', 'ITA', 'Trentino-Alto Adige', 97232),
+  (1520, 'Cesena', 'ITA', 'Emilia-Romagna', 89852),
+  (1613, 'Neyagawa', 'JPN', 'Osaka', 257315),
+  (1630, 'Ageo', 'JPN', 'Saitama', 209442),
+  (1661, 'Sayama', 'JPN', 'Saitama', 162472),
+  (1681, 'Omuta', 'JPN', 'Fukuoka', 142889),
+  (1739, 'Tokuyama', 'JPN', 'Yamaguchi', 107078),
+  (1793, 'Novi Sad', 'YUG', 'Vojvodina', 179626),
+  (1857, 'Kelowna', 'CAN', 'British Columbia', 89442),
+  (1895, 'Harbin', 'CHN', 'Heilongjiang', 4289800),
+  (1900, 'Changchun', 'CHN', 'Jilin', 2812000),
+  (1913, 'Lanzhou', 'CHN', 'Gansu', 1565800),
+  (1947, 'Changzhou', 'CHN', 'Jiangsu', 530000),
+  (2070, 'Dezhou', 'CHN', 'Shandong', 195485),
+  (2081, 'Heze', 'CHN', 'Shandong', 189293),
+  (2111, 'Chenzhou', 'CHN', 'Hunan', 169400),
+  (2153, 'Xianning', 'CHN', 'Hubei', 136811),
+  (2192, 'Lhasa', 'CHN', 'Tibet', 120000),
+  (2193, 'Lianyuan', 'CHN', 'Hunan', 118858),
+  (2227, 'Xingcheng', 'CHN', 'Liaoning', 102384),
+  (2273, 'Villavicencio', 'COL', 'Meta', 273140),
+  (2384, 'Tong-yong', 'KOR', 'Kyongsangnam', 131717),
+  (2386, 'Yongju', 'KOR', 'Kyongsangbuk', 131097),
+  (2387, 'Chinhae', 'KOR', 'Kyongsangnam', 125997),
+  (2388, 'Sangju', 'KOR', 'Kyongsangbuk', 124116),
+  (2406, 'Herakleion', 'GRC', 'Crete', 116178),
+  (2440, 'Monrovia', 'LBR', 'Montserrado', 850000),
+  (2462, 'Lilongwe', 'MWI', 'Lilongwe', 435964),
+  (2505, 'Taza', 'MAR', 'Taza-Al Hoceima-Taou', 92700),
+  (2555, 'Xalapa', 'MEX', 'Veracruz', 390058),
+  (2602, 'Ocosingo', 'MEX', 'Chiapas', 171495),
+  (2609, 'Nogales', 'MEX', 'Sonora', 159103),
+  (2670, 'San Pedro Cholula', 'MEX', 'Puebla', 99734),
+  (2689, 'Palikir', 'FSM', 'Pohnpei', 8600),
+  (2706, 'Tete', 'MOZ', 'Tete', 101984),
+  (2716, 'Sittwe (Akyab)', 'MMR', 'Rakhine', 137600),
+  (2922, 'Carolina', 'PRI', 'Carolina', 186076),
+  (2967, 'Grudziadz', 'POL', 'Kujawsko-Pomorskie', 102434),
+  (2972, 'Malabo', 'GNQ', 'Bioko', 40000),
+  (3073, 'Essen', 'DEU', 'Nordrhein-Westfalen', 599515),
+  (3169, 'Apia', 'WSM', 'Upolu', 35900),
+  (3198, 'Dakar', 'SEN', 'Cap-Vert', 785071),
+  (3253, 'Hama', 'SYR', 'Hama', 343361),
+  (3288, 'Luchou', 'TWN', 'Taipei', 160516),
+  (3309, 'Tanga', 'TZA', 'Tanga', 137400),
+  (3353, 'Sousse', 'TUN', 'Sousse', 145900),
+  (3377, 'Kahramanmaras', 'TUR', 'Kahramanmaras', 245772),
+  (3430, 'Odesa', 'UKR', 'Odesa', 1011000),
+  (3581, 'St Petersburg', 'RUS', 'Pietari', 4694000),
+  (3770, 'Hanoi', 'VNM', 'Hanoi', 1410000),
+  (3815, 'El Paso', 'USA', 'Texas', 563662),
+  (3878, 'Scottsdale', 'USA', 'Arizona', 202705),
+  (3965, 'Corona', 'USA', 'California', 124966),
+  (3973, 'Concord', 'USA', 'California', 121780),
+  (3977, 'Cedar Rapids', 'USA', 'Iowa', 120758),
+  (3982, 'Coral Springs', 'USA', 'Florida', 117549),
+  (4054, 'Fairfield', 'USA', 'California', 92256),
+  (4058, 'Boulder', 'USA', 'Colorado', 91238),
+  (4061, 'Fall River', 'USA', 'Massachusetts', 90555);
+
+Q1. Query all columns for all American cities in the CITY table with populations larger than 100000. The CountryCode for America is USA.
+
+SELECT * FROM city
+WHERE countrycode = 'USA' AND population > 100000;
+
+Q2. Query the NAME field for all American cities in the CITY table with populations larger than 120000. The CountryCode for America is USA.
+
+SELECT name FROM city
+WHERE countrycode = 'USA' AND population > 120000;
+
+Q3. Query all columns (attributes) for every row in the CITY table.
+
+SELECT * FROM city;
+
+Q4. Query all columns for a city in CITY with the ID 1661.
+
+SELECT * FROM city 
+WHERE id = 1661;
+
+Q5. Query all attributes of every Japanese city in the CITY table. The COUNTRYCODE for Japan is JPN.
+
+SELECT * FROM city
+WHERE countrycode = 'JPN';
+
+Q6. Query the names of all the Japanese cities in the CITY table. The COUNTRYCODE for Japan is JPN.
+
+SELECT name FROM city
+WHERE countrycode = 'JPN';
+
+-- Question-7:
+PRODUCT, SALES table
+
+CREATE TABLE Product
+(	product_id INT,
+	product_name VARCHAR(100),
+  unit_price INT,
+	CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE Sales
+(	seller_id INT,
+	product_id INT,
+  buyer_id INT,
+  sale_date DATE,
+	quantity INT,
+  price INT,
+  CONSTRAINT fk FOREIGN KEY (product_id) REFERENCES Product (product_id)
+);
+
+INSERT INTO Product (product_id, product_name, unit_price)
+VALUES (1, 'S8', 1000), (2, 'G4', 800), (3, 'iPhone', 1400);
+
+INSERT INTO Sales (seller_id, product_id, buyer_id, sale_date, quantity, price)
+VALUES
+  (1, 1, 1, '2019-01-21', 2, 2000),
+  (1, 2, 2, '2019-02-17', 1, 800),
+  (2, 2, 3, '2019-06-02', 1, 800),
+  (3, 3, 4, '2019-05-13', 2, 2800);
+
+Q7. Write an SQL query that reports the products that were only sold in the first quarter of 2019. That is, between 2019-01-01 and 2019-03-31 inclusive. Return the result table in any 
+   order.
+
+SELECT p.product_id, product_name
+FROM product p
+INNER JOIN
+(SELECT *,
+MAX(sale_date) OVER(PARTITION BY product_id ORDER BY product_id ASC) AS max_sale_date
+FROM sales) tmp
+ON p.product_id = tmp.product_id
+WHERE tmp.max_sale_date <= "2019-03-31";
+
+-- Question-8:
+VIEWS table
+
+CREATE TABLE Views
+(	article_id INT,
+	author_id INT,
+	viewer_id INT,
+  view_date DATE
+);
+
+INSERT INTO Views (article_id, author_id, viewer_id, view_date)
+VALUES
+  (1, 3, 5, '2019-08-01'),
+  (1, 3, 6, '2019-08-02'),
+  (2, 7, 7, '2019-08-01'),
+  (2, 7, 6, '2019-08-02'),
+  (4, 7, 1, '2019-07-22'),
+  (3, 4, 4, '2019-07-21'),
+  (3, 4, 4, '2019-07-21');
+
+Q8. Write an SQL query to find all the authors that viewed at least one of their own articles. Return the result table sorted by id in ascending order.
+
+SELECT DISTINCT(v2.author_id) AS id
+FROM views v1
+INNER JOIN views v2
+ON v1.viewer_id = v2.author_id
+ORDER BY id ASC;
+
+-- Question-9:
+DELIVERY table
+
+CREATE TABLE Delivery
+(	delivery_id INT,
+	customer_id INT,
+  order_date DATE,
+  customer_pref_delivery_date DATE,
+  CONSTRAINT pk PRIMARY KEY (delivery_id)
+);
+
+INSERT INTO Delivery (delivery_id, customer_id, order_date, customer_pref_delivery_date)
+VALUES
+  (1, 1, '2019-08-01', '2019-08-02'),
+  (2, 5, '2019-08-02', '2019-08-02'),
+  (3, 1, '2019-08-11', '2019-08-11'),
+  (4, 3, '2019-08-24', '2019-08-26'),
+  (5, 4, '2019-08-21', '2019-08-22'),
+  (6, 2, '2019-08-11', '2019-08-13');
+
+Q9. Write an SQL query to find the percentage of immediate orders in the table, rounded to 2 decimal places.
+  
+SELECT
+ROUND(((SELECT SUM(CASE WHEN order_date = customer_pref_delivery_date THEN 1 ELSE 0 END)FROM delivery)/(SELECT COUNT(delivery_id) FROM delivery))*100,2) 
+      AS immediate_percentage;
+
+-- Question-10:
+ADS table
+
+CREATE TABLE Ads
+(	ad_id INT,
+	user_id INT,
+	action ENUM ('Clicked', 'Viewed', 'Ignored'),
+  CONSTRAINT pk PRIMARY KEY (ad_id, user_id)
+);
+
+INSERT INTO Ads (ad_id, user_id, action)
+VALUES
+  (1, 1, 'Clicked'),
+  (2, 2, 'Clicked'),
+  (3, 3, 'Viewed'),
+  (5, 5, 'Ignored'),
+  (1, 7, 'Ignored'),
+  (2, 7, 'Viewed'),
+  (3, 5, 'Clicked'),
+  (1, 4, 'Viewed'),
+  (2, 11, 'Viewed'),
+  (1, 2, 'Clicked');
+
+Q10. Write an SQL query to find the ctr of each Ad. Round ctr to two decimal points. Return the result table ordered by ctr in descending order and by ad_id in ascending order in case 
+     of a tie.
+
+SELECT ad_id,
+CASE 
+    WHEN ad_total_clicks + ad_total_views = 0 THEN 0 
+	  ELSE ROUND((ad_total_clicks)/(ad_total_clicks + ad_total_views)*100,2)
+    END AS ctr
+FROM
+    (SELECT ad_id,
+    SUM(CASE WHEN action = 'clicked' THEN 1 ELSE 0 END) AS ad_total_clicks,
+    SUM(CASE WHEN action = 'viewed' THEN 1 ELSE 0 END) AS ad_total_views
+    FROM Ads
+    GROUP BY ad_id) tmp
+ORDER BY ctr DESC, ad_id ASC;
+
+-- Question-11:
+EMPLOYEE Table
+
+CREATE TABLE Employee
+(	employee_id INT,
+	team_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO Employee (employee_id, team_id)
+VALUES
+  (1, 8),
+  (2, 8),
+  (3, 8),
+  (4, 7),
+  (5, 9),
+  (6, 9);
+
+Q11. Write an SQL query to find the team size of each of the employees. Return result table in any order.
+
+SELECT employee_id,
+COUNT(employee_id) OVER (PARTITION BY team_id) AS team_size
+FROM employee
+ORDER BY employee_id;
+
+-- Question-12:
+COUNTRIES, WEATHER table
+
+CREATE TABLE countries
+(	country_id INT,
+	country_name VARCHAR(100),
+	CONSTRAINT pk PRIMARY KEY (country_id)
+);
+
+CREATE TABLE weather
+(	country_id INT,
+	weather_state INT,
+    day DATE,
+    CONSTRAINT pk PRIMARY KEY (country_id, day)
+);
+
+INSERT INTO countries (country_id, country_name)
+VALUES
+  (2, 'USA'),
+  (3, 'Australia'),
+  (7, 'Peru'),
+  (5, 'China'),
+  (8, 'Morocco'),
+  (9, 'Spain');
+
+INSERT INTO weather (country_id, weather_state, day)
+VALUES
+  (2, 15, '2019-11-01'),
+  (2, 12, '2019-10-28'),
+  (2, 12, '2019-10-27'),
+  (3, -2, '2019-11-10'),
+  (3, 0, '2019-11-11'),
+  (3, 3, '2019-11-12'),
+  (5, 16, '2019-11-07'),
+  (5, 18, '2019-11-09'),
+  (5, 21, '2019-11-23'),
+  (7, 25, '2019-11-28'),
+  (7, 22, '2019-12-01'),
+  (7, 20, '2019-12-02'),
+  (8, 25, '2019-11-05'),
+  (8, 27, '2019-11-15'),
+  (8, 31, '2019-11-25'),
+  (9, 7, '2019-10-23'),
+  (9, 3, '2019-12-23');
+
+Q12. Write an SQL query to find the type of weather in each country for November 2019.
+
+SELECT country_name, weather_type
+FROM countries c
+INNER JOIN 
+(SELECT country_id,
+CASE WHEN AVG(weather_state) <= 15 THEN 'Cold'
+	 WHEN AVG(weather_state) >= 25 THEN 'Hot'
+     ELSE 'Warm'
+     END AS weather_type
+FROM weather
+WHERE MONTHNAME(day) = 'November'
+GROUP BY country_id) tmp
+ON c.country_id = tmp.country_id
+ORDER BY weather_type;
+
+--Question-13:
+PRICES, UNITSSOLD table
+
+CREATE TABLE prices
+(	product_id INT,
+	start_date DATE,
+    end_date DATE,
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id, start_date, end_date)
+);
+
+CREATE TABLE UnitsSold
+(	product_id INT,
+	purchase_date DATE,
+	units INT
+);
+
+INSERT INTO prices (product_id, start_date, end_date, price)
+VALUES
+  (1, '2019-02-17', '2019-02-28', 5),
+  (1, '2019-03-01', '2019-03-22', 20),
+  (2, '2019-02-01', '2019-02-20', 15),
+  (2, '2019-02-21', '2019-03-31', 30);
+  
+INSERT INTO UnitsSold (product_id, purchase_date, units)
+VALUES
+  (1, '2019-02-25', 100),
+  (1, '2019-03-01', 15),
+  (2, '2019-02-10', 200),
+  (2, '2019-03-22', 30);
+
+Q13. Write an SQL query to find the average selling price for each product. average_price should be rounded to 2 decimal places. Return the result table in any order.
+
+SELECT p.product_id, 
+       ROUND((SUM(p.price * us.units)/SUM(us.units)),2) AS avg_selling_price
+FROM prices p
+INNER JOIN unitssold us
+ON p.product_id = us.product_id AND (purchase_date >= start_date AND purchase_date <= end_date)
+GROUP BY p.product_id;
+
+--Question-14 to Question-15:
+ACTIVITY table
+
+CREATE TABLE activity
+(	player_id INT,
+	device_id INT,
+    event_date DATE,
+    games_played INT,
+	CONSTRAINT pk PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO activity (player_id, device_id, event_date, games_played)
+VALUES
+  (1, 2, '2016-03-01', 5),
+  (1, 2, '2016-05-02', 6),
+  (2, 3, '2017-06-25', 1),
+  (3, 1, '2016-03-02', 0),
+  (3, 4, '2018-07-03', 5);
+
+Q14. Write an SQL query to report the first login date for each player. Return the result table in any order.
+
+SELECT player_id, 
+	   MIN(event_date) AS first_login
+FROM activity
+GROUP BY player_id;
+
+Q15. Write an SQL query to report the device that is first logged in for each player. Return the result table in any order.
+
+SELECT *
+FROM
+	(SELECT player_id,
+	CASE WHEN event_date = first_login_date THEN device_id END AS device_id
+	FROM
+		(SELECT player_id, device_id, event_date,
+		MIN(event_date) OVER(PARTITION BY player_id) AS first_login_date
+		FROM activity) tmp) tmp2
+WHERE device_id IS NOT NULL;
+
+--Question-16: 
+PRODUCTS, ORDERS table
+
+CREATE TABLE products (
+  product_id INT,
+  product_name VARCHAR(100),
+  product_category VARCHAR(100),
+  CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE orders (
+  product_id INT,
+  order_date DATE,
+  unit INT,
+  CONSTRAINT fk1 FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+INSERT INTO products (product_id, product_name, product_category)
+VALUES
+  (1, 'Leetcode Solutions Book', 'Book'),
+  (2, 'Jewels of Stringology Book', 'Book'),
+  (3, 'HP Laptop', 'Laptop'),
+  (4, 'Lenovo Laptop', 'Laptop'),
+  (5, 'Leetcode Kit T-shirt', 'T-shirt');
+  
+INSERT INTO orders (product_id, order_date, unit)
+VALUES
+  (1, '2020-02-05', 60),
+  (1, '2020-02-10', 70),
+  (2, '2020-01-18', 30),
+  (2, '2020-02-11', 80),
+  (3, '2020-02-17', 2),
+  (3, '2020-02-24', 3),
+  (4, '2020-03-01', 20),
+  (4, '2020-03-04', 30),
+  (4, '2020-03-04', 60),
+  (5, '2020-02-25', 50),
+  (5, '2020-02-27', 50),
+  (5, '2020-03-01', 50);
+
+Q16. Write an SQL query to get the names of products that have at least 100 units ordered in February 2020 and their amount. Return result table in any order.
+
+SELECT product_name, total_units_sold
+FROM products p 
+INNER JOIN  
+(SELECT product_id, SUM(unit) AS total_units_sold
+FROM orders
+WHERE MONTHNAME(order_date) = 'February'
+GROUP BY product_id
+HAVING total_units_sold >= 100) tmp
+ON p.product_id = tmp.product_id;
+
+-- Question-17:
+CUSTOMERS, PRODUCT, ORDERS table
+
+CREATE TABLE Customers (
+  customer_id INT,
+  name VARCHAR(100),
+  country VARCHAR(100),
+  CONSTRAINT pk PRIMARY KEY (customer_id)
+);
+
+CREATE TABLE product
+(	product_id INT,
+	description VARCHAR(300),
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE Orders (
+  order_id INT,
+  customer_id INT,
+  product_id INT,
+  order_date DATE,
+  quantity INT,
+  CONSTRAINT pk PRIMARY KEY (order_id)
+);
+
+INSERT INTO Customers (customer_id, name, country)
+VALUES
+  (1, 'Winston', 'USA'),
+  (2, 'Jonathan', 'Peru'),
+  (3, 'Moustafa', 'Egypt');
+
+INSERT INTO Product (product_id, description, price)
+VALUES
+  (10, 'LC Phone', 300),
+  (20, 'LC T-Shirt', 10),
+  (30, 'LC Book', 45),
+  (40, 'LC Keychain', 2);
+
+INSERT INTO Orders (order_id, customer_id, product_id, order_date, quantity)
+VALUES
+  (1, 1, 10, '2020-06-10', 1),
+  (2, 1, 20, '2020-07-01', 1),
+  (3, 1, 30, '2020-07-08', 2),
+  (4, 2, 4, '2020-06-15', 2),
+  (5, 2, 5, '2020-07-01', 10),
+  (6, 3, 20, '2020-06-24', 2),
+  (7, 3, 30, '2020-06-25', 2),
+  (9, 3, 30, '2020-05-08', 3);
+
+Q17. Write an SQL query to report the customer_id and customer_name of customers who have spent at least $100 in each month of June and July 2020. Return the result 
+     table in any order.
+
+SELECT c.customer_id, name 
+FROM customers c
+INNER JOIN
+(SELECT o.customer_id,
+SUM(CASE WHEN MONTHNAME(order_date) = "June" AND YEAR(order_date) = '2020' THEN quantity * price ELSE 0 END) AS june_exp,
+SUM(CASE WHEN MONTHNAME(order_date) = "July" AND YEAR(order_date) = '2020' THEN quantity * price ELSE 0 END) AS july_exp
+FROM orders o
+INNER JOIN product p ON o.product_id = p.product_id
+GROUP BY o.customer_id) tmp
+ON c.customer_id = tmp.customer_id
+WHERE tmp.june_exp >= 100 AND tmp.july_exp >= 100;
+
+--Question-18:
+TVProgram, Content table
+
+CREATE TABLE TVProgram (
+  program_date DATE,
+  content_id INT,
+  channel VARCHAR(300),
+  CONSTRAINT pk PRIMARY KEY (program_date, content_id)
+);
+
+CREATE TABLE Content (
+  content_id VARCHAR(255),
+  title VARCHAR(255),
+  kids_content ENUM('Y', 'N'),
+  content_type VARCHAR(300),
+  CONSTRAINT pk PRIMARY KEY (content_id)
+);
+
+ALTER TABLE TVProgram MODIFY program_date TIMESTAMP;
+
+INSERT INTO TVProgram (program_date, content_id, channel)
+VALUES
+  ('2020-06-10 08:00', '1', 'LC-Channel'),
+  ('2020-05-11 12:00', '2', 'LC-Channel'),
+  ('2020-05-12 12:00', '3', 'LC-Channel'),
+  ('2020-05-13 14:00', '4', 'Disney Ch'),
+  ('2020-06-18 14:00', '4', 'Disney Ch'),
+  ('2020-07-15 16:00', '5', 'Disney Ch');
+
+INSERT INTO Content (content_id, title, Kids_content, content_type)
+VALUES
+  ('1', 'Leetcode Movie', 'N', 'Movies'),
+  ('2', 'Alg. for Kids', 'Y', 'Series'),
+  ('3', 'Database Sols', 'N', 'Series'),
+  ('4', 'Aladdin', 'Y', 'Movies'),
+  ('5', 'Cinderella', 'Y', 'Movies');
+
+Q18. Write an SQL query to report the distinct titles of the kid-friendly movies streamed in June 2020. Return the result table in any order.
+
+SELECT DISTINCT(title) FROM content 
+WHERE kids_content = 'Y'AND content_id IN (SELECT content_id FROM tvprogram
+										   WHERE MONTHNAME(program_date) = 'June' AND 
+										   YEAR(program_date) = '2020');
+
+
+
+--Question-19:
+NPV, Queries table
+
+CREATE TABLE npv (
+  id INT,
+  year INT,
+  npv INT,
+  CONSTRAINT pk PRIMARY KEY (id, year)
+);
+
+CREATE TABLE queries (
+  id INT,
+  year INT
+); 
+
+ALTER TABLE queries ADD CONSTRAINT pk PRIMARY KEY (id, year);
+
+INSERT INTO npv (id, year, npv)
+VALUES 
+    (1, 2018, 100),
+    (7, 2020, 30),
+    (13, 2019, 40),
+    (1, 2019, 113),
+    (2, 2008, 121),
+    (3, 2009, 12),
+    (11, 2020, 99),
+    (7, 2019, 0);
+    
+INSERT INTO queries (id, year)
+VALUES 
+    (1, 2019),
+    (2, 2008),
+    (3, 2009),
+    (7, 2018),
+    (7, 2019),
+    (7, 2020),
+    (13, 2019);
+
+Q19. Write an SQL query to find the npv of each query of the Queries table. Return the result table in any order.
+
+SELECT q.id, q.year, npv
+FROM queries q
+INNER JOIN npv n
+ON q.id = n.id AND q.year = n.year;
+
+--Question-20:
+Employees, Employeeuni table
+
+CREATE TABLE employees (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE employeeuni (
+  id INT,
+  unique_id INT,
+  CONSTRAINT pk PRIMARY KEY (id, unique_id)
+);
+
+INSERT INTO employees (id, name)
+VALUES
+  (1, 'Alice'),
+  (7, 'Bob'),
+  (11, 'Meir'),
+  (90, 'Winston'),
+  (3, 'Jonathan');
+  
+INSERT INTO employeeuni (id, unique_id)
+VALUES
+  (3, 1),
+  (11, 2),
+  (90, 3);
+
+Q20. Write an SQL query to show the unique ID of each user, If a user does not have a unique ID replace just show null. Return the result table in any order.
+
+SELECT unique_id, name
+FROM employeeuni eu
+RIGHT JOIN employees e
+ON e.id = eu.id;
+
+
+
+
+CREATE DATABASE sql_db;
+
+USE sql_db;
+
+-- Question-21:
+Users, Rides table
+
+CREATE TABLE users (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE rides (
+  id INT,
+  user_id INT,
+  distance INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO users (id, name)
+VALUES
+  (1, 'Alice'),
+  (2, 'Bob'),
+  (3, 'Alex'),
+  (4, 'Donald'),
+  (7, 'Lee'),
+  (13, 'Jonathan'),
+  (19, 'Elvis');
+  
+INSERT INTO rides (id, user_id, distance)
+VALUES
+  (1, 1, 120),
+  (2, 2, 317),
+  (3, 3, 222),
+  (4, 7, 100),
+  (5, 13, 312),
+  (6, 19, 50),
+  (7, 7, 120),
+  (8, 19, 400),
+  (9, 7, 230);
+
+Q21. Write an SQL query to report the distance travelled by each user. Return the result table ordered by travelled_distance in descending order, if two or more users travelled the 
+     same distance, order them by their name in ascending order
+  
+SELECT name, 
+IFNULL(SUM(distance),0) AS distance_travelled
+FROM users u
+LEFT JOIN rides r
+ON u.id = r.user_id
+GROUP BY name
+ORDER BY distance_travelled DESC, name ASC;
+
+-- Question-22:
+Movies, Users2, Movierating table
+
+CREATE TABLE movies (
+  movie_id INT,
+  title VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (movie_id)
+);
+
+CREATE TABLE users2 (
+  user_id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (user_id)
+);
+
+CREATE TABLE movierating (
+  movie_id INT,
+  user_id INT,
+  rating INT,
+  created_at DATE,
+  CONSTRAINT pk PRIMARY KEY (movie_id,user_id)
+);
+
+INSERT INTO movies (movie_id, title)
+VALUES
+  (1, 'Avengers'),
+  (2, 'Frozen 2'),
+  (3, 'Joker');
+
+INSERT INTO users2 (user_id, name)
+VALUES
+  (1, 'Daniel'),
+  (2, 'Monica'),
+  (3, 'Maria'),
+  (4, 'James');
+  
+INSERT INTO movierating (movie_id, user_id, rating, created_at)
+VALUES
+  (1, 1, 3, '2020-01-12'),
+  (1, 2, 4, '2020-02-11'),
+  (1, 3, 2, '2020-02-12'),
+  (1, 4, 1, '2020-01-01'),
+  (2, 1, 5, '2020-02-17'),
+  (2, 2, 2, '2020-02-01'),
+  (2, 3, 2, '2020-03-01'),
+  (3, 1, 3, '2020-02-22'),
+  (3, 2, 4, '2020-02-25');
+
+Q22. Write an SQL query to: 
+
+A) Find the name of the user who has rated the greatest number of movies. In case of a tie, return the lexicographically smaller user name. 
+
+SELECT u.name
+FROM users2 u
+INNER JOIN movierating mr
+ON u.user_id = mr.user_id
+GROUP BY u.name 
+ORDER BY u.name LIMIT 1;
+
+B) Find the movie name with the highest average rating in February 2020. In case of a tie, return the lexicographically smaller movie name.
+
+WITH CTE AS (SELECT movie_id, AVG(rating) AS avg_rating
+			FROM movierating
+			WHERE MONTHNAME(created_at) = 'February' AND YEAR(created_at) = '2020'
+			GROUP BY movie_id)
+            
+SELECT title AS movie_name
+FROM movies m 
+INNER JOIN cte
+ON m.movie_id = cte.movie_id
+ORDER BY cte.avg_rating DESC, movie_name ASC LIMIT 1;
+
+-- Question-23:
+Departments, Students table
+  
+CREATE TABLE Departments (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE Students (
+  id INT,
+  name VARCHAR(255),
+  department_id INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO Departments (id, name)
+VALUES
+  (1, 'Electrical Engineering'),
+  (7, 'Computer Engineering'),
+  (13, 'Business Administration');
+  
+INSERT INTO Students (id, name, department_id)
+VALUES
+  (23, 'Alice', 1),
+  (1, 'Bob', 7),
+  (5, 'Jennifer', 13),
+  (2, 'John', 14),
+  (4, 'Jasmine', 77),
+  (3, 'Steve', 74),
+  (6, 'Luis', 1),
+  (8, 'Jonathan', 7),
+  (7, 'Daiana', 33),
+  (11, 'Madelynn', 1);
+
+Q23. Write an SQL query to find the id and the name of all students who are enrolled in departments that no longer exist. Return the result table in any order
+  
+SELECT id, name
+FROM students 
+WHERE department_id NOT IN (SELECT DISTINCT(id) FROM departments);
+
+-- Question-24:
+Calls table
+
+CREATE TABLE calls (
+  from_id INT,
+  to_id INT,
+  duration INT
+);
+
+INSERT INTO calls (from_id, to_id, duration)
+VALUES
+(1, 2, 59),
+(2, 1, 11),
+(1, 3, 20),
+(3, 4, 100),
+(3, 4, 200),
+(3, 4, 200),
+(4, 3, 499);
+
+Q24. Write an SQL query to report the number of calls and the total call duration between each pair of distinct persons (person1, person2) where person1 < person2. 
+     Return the result table in any order.
+
+SELECT from_id AS person1, to_id AS person2,
+	   COUNT(duration) AS call_count, SUM(duration) AS total_duration
+FROM
+  	(SELECT * FROM calls 
+  	UNION ALL
+  	SELECT to_id AS from_id, from_id AS to_id, duration FROM Calls) tmp
+WHERE from_id < to_id
+GROUP BY from_id, to_id;
+
+-- Question-25:
+Warehouse, Products2 table
+
+CREATE TABLE Warehouse (
+  name VARCHAR(255),
+  product_id INT,
+  units INT,
+  CONSTRAINT pk PRIMARY KEY (name, product_id)
+);
+
+CREATE TABLE products2 (
+  product_id INT,
+  product_name VARCHAR(255),
+  Width INT,
+  Length INT,
+  Height INT,
+  CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+INSERT INTO warehouse (name, product_id, units)
+VALUES
+  ('LCHouse1', 1, 1),
+  ('LCHouse1', 2, 10),
+  ('LCHouse1', 3, 5),
+  ('LCHouse2', 1, 2),
+  ('LCHouse2', 2, 2),
+  ('LCHouse3', 4, 1);
+  
+INSERT INTO products2 (product_id, product_name, Width, Length, Height)
+VALUES
+  (1, 'LC-TV', 5, 50, 40),
+  (2, 'LC-KeyChain', 5, 5, 5),
+  (3, 'LC-Phone', 2, 10, 10),
+  (4, 'LC-T-Shirt', 4, 10, 20);
+
+Q25. Write an SQL query to report the number of cubic feet of volume the inventory occupies in each warehouse. Return the result table in any order.
+
+SELECT name, SUM(Width * Length * Height * units) AS volume_occupied
+FROM products2 p
+INNER JOIN warehouse w
+ON p.product_id = w.product_id
+GROUP BY name;
+
+-- Question-26:
+Sales table
+  
+CREATE TABLE sales (
+  sale_date DATE,
+  fruit ENUM('apples', 'oranges'),
+  sold_num INT,
+  CONSTRAINT pk PRIMARY KEY (sale_date, fruit)
+);
+
+INSERT INTO sales (sale_date, fruit, sold_num)
+VALUES
+  ('2020-05-01', 'apples', 10),
+  ('2020-05-01', 'oranges', 8),
+  ('2020-05-02', 'apples', 15),
+  ('2020-05-02', 'oranges', 15),
+  ('2020-05-03', 'apples', 20),
+  ('2020-05-03', 'oranges', 0),
+  ('2020-05-04', 'apples', 15),
+  ('2020-05-04', 'oranges', 16);
+
+Q26. Write an SQL query to report the difference between the number of apples and  oranges sold each day. Return the result table ordered by sale_date
+  
+SELECT sale_date,
+(SUM(CASE WHEN fruit = 'apples' THEN sold_num ELSE 0 END) - SUM(CASE WHEN fruit = 'oranges' THEN sold_num ELSE 0 END)) AS difference
+FROM sales
+GROUP BY sale_date;
+
+-- Question-27:
+Employee table
+
+CREATE TABLE employee (
+  id INT,
+  name VARCHAR(255),
+  department VARCHAR(255),
+  managerId INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO employee (id, name, department, managerId)
+VALUES
+  (101, 'John', 'A', NULL),
+  (102, 'Dan', 'A', 101),
+  (103, 'James', 'A', 101),
+  (104, 'Amy', 'A', 101),
+  (105, 'Anne', 'A', 101),
+  (106, 'Ron', 'B', 101);
+
+Q27. Write an SQL query to report the managers with at least five direct reports. Return the result table in any order.
+
+SELECT emp1.name as manager_name
+FROM employee1 emp1
+INNER JOIN employee1 emp2
+ON emp2.managerId = emp1.id
+GROUP BY manager_name
+HAVING COUNT(emp2.id) >= 5;
+
+-- Question-28:
+Student, Department table
+
+CREATE TABLE student (
+  student_id INT,
+  student_name VARCHAR(255),
+  gender VARCHAR(10),
+  dept_id INT,
+  CONSTRAINT pk PRIMARY KEY (student_id)
+);
+
+CREATE TABLE department (
+  dept_id INT,
+  dept_name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (dept_id)
+);
+
+INSERT INTO student (student_id, student_name, gender, dept_id)
+VALUES
+  (1, 'Jack', 'M', 1),
+  (2, 'Jane', 'F', 1),
+  (3, 'Mark', 'M', 2);
+
+INSERT INTO department (dept_id, dept_name)
+VALUES
+  (1, 'Engineering'),
+  (2, 'Science'),
+  (3, 'Law');
+
+Q28. Write an SQL query to report the respective department name and number of students majoring in each department for all departments in the Department 
+     table (even ones with no current students). Return the result table ordered by student_number in descending order. In case of a tie, order them by dept_name alphabetically.
+
+SELECT dept_name, COUNT(student_id) AS student_number
+FROM department d
+LEFT JOIN student s
+ON d.dept_id = s.dept_id
+GROUP BY dept_name;
+
+-- Question-29:
+Customer_data, Product3 table
+
+CREATE TABLE customer_data (
+  customer_id INT,
+  product_key INT
+);
+
+CREATE TABLE product3 (
+  product_key INT,
+  CONSTRAINT pk PRIMARY KEY (product_key)
+);
+
+INSERT INTO customer_data (customer_id, product_key)
+VALUES
+  (1, 5),
+  (2, 6),
+  (3, 5),
+  (3, 6),
+  (1, 6);
+
+INSERT INTO product3 (product_key)
+VALUES (5),
+       (6);
+
+
+Q29. Write an SQL query to report the customer ids from the Customer table that bought all the products in the Product table. Return the result table in any order.
+       
+WITH customer_purchase AS (SELECT customer_id, COUNT(DISTINCT(product_key)) AS products_count 
+            						   FROM customer_data
+            						   GROUP BY customer_id)
+
+SELECT cp.customer_id 
+FROM customer_purchase cp
+WHERE cp.products_count = (SELECT COUNT(product_key) AS total_products FROM product3);
+
+-- Question-30:
+Project, Employee_data table
+
+CREATE TABLE project (
+  project_id INT,
+  employee_id INT,
+  CONSTRAINT pk PRIMARY KEY (project_id, employee_id)
+);
+
+CREATE TABLE employee_data (
+  employee_id INT,
+  name VARCHAR(255),
+  experience_years INT,
+  CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO project (project_id, employee_id)
+VALUES
+  (1, 1),
+  (1, 2),
+  (1, 3),
+  (2, 1),
+  (2, 2),
+  (4, 1);
+
+INSERT INTO employee_data (employee_id, name, experience_years)
+VALUES
+  (1, 'Khaled', 3),
+  (2, 'Ali', 2),
+  (3, 'John', 3),
+  (4, 'Doe', 2);
+
+Q30. Write an SQL query that reports the most experienced employees in each project. In case of a tie, report all employees with the maximum number of experience years. 
+     Return the result table in any order.
+
+SELECT project_id, employee_id
+FROM
+  	(SELECT project_id, ed.employee_id, ed.experience_years,
+  	RANK() OVER(PARTITION BY project_id ORDER BY experience_years DESC) AS most_exp_emp
+  	FROM employee_data ed
+  	INNER JOIN project p
+  	ON ed.employee_id = p.employee_id) tmp
+WHERE tmp.most_exp_emp = 1;
+
+-- Question-31:
+Enrollments Table
+
+CREATE TABLE enrollments (
+  student_id INT,
+  course_id INT,
+  grade INT,
+  CONSTRAINT pk PRIMARY KEY (student_id, course_id)
+);
+
+INSERT INTO enrollments (student_id, course_id, grade)
+VALUES
+  (2, 2, 95),
+  (2, 3, 95),
+  (1, 1, 90),
+  (1, 2, 99),
+  (3, 1, 80),
+  (3, 2, 75),
+  (3, 3, 82);
+
+Q31. Write a SQL query to find the highest grade with its corresponding course for each student. In case of a tie, you should find the course with the smallest course_id. 
+     Return the result table ordered by student_id in ascending order
+
+WITH stu_grade AS (SELECT *,
+        				   RANK() OVER(PARTITION BY student_id ORDER BY grade DESC) AS rank_value
+        				   FROM enrollments)
+                   
+SELECT student_id, MIN(course_id) AS course_id, MIN(grade) AS grade
+FROM stu_grade 
+WHERE rank_value = 1
+GROUP BY student_id;
+
+-- Question-32:
+World table
+  
+CREATE TABLE world (
+  name VARCHAR(255),
+  continent VARCHAR(255),
+  area INT,
+  population INT,
+  gdp INT,
+  CONSTRAINT pk PRIMARY KEY (name)
+);
+
+ALTER TABLE world MODIFY gdp BIGINT;
+
+INSERT INTO world (name, continent, area, population, gdp)
+VALUES
+  ('Afghanistan', 'Asia', 652230, 25500100, 20343000000),
+  ('Albania', 'Europe', 28748, 2831741, 12960000000),
+  ('Algeria', 'Africa', 2381741, 37100000, 188681000000),
+  ('Andorra', 'Europe', 468, 78115, 3712000000),
+  ('Angola', 'Africa', 1246700, 20609294, 100990000000);
+
+Q32. Write an SQL query to report the name, population, and area of the big countries. Return the 
+--      result table in any order.
+  
+SELECT name, population, area
+FROM world
+WHERE area >= 3000000 OR population >= 25000000;
+
+-- Question-33:
+Customer table
+
+CREATE TABLE customer (
+  id INT,
+  name VARCHAR(255),
+  referee_id INT,
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO customer (id, name, referee_id)
+VALUES
+  (1, 'Will', NULL),
+  (2, 'Jane', NULL),
+  (3, 'Alex', 2),
+  (4, 'Bill', NULL),
+  (5, 'Zack', 1),
+  (6, 'Mark', 2);
+
+-- Q33. Write an SQL query to report the names of the customer that are not referred by the customer with id = 2. Return the result table in any order.
+
+SELECT name FROM customer 
+WHERE name NOT IN (SELECT name FROM customer
+				           WHERE referee_id = 2);
+
+-- Question-34:
+Customers1, Orders_data table
+
+CREATE TABLE customers1 (
+  id INT,
+  name VARCHAR(255),
+  CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE orders_data (
+  id INT,
+  customerid INT,
+  CONSTRAINT pk PRIMARY KEY (id),
+  CONSTRAINT fk_cust_id FOREIGN KEY (customerid) REFERENCES customers1 (id)
+);
+
+INSERT INTO customers1 (id, name)
+VALUES
+  (1, 'Joe'),
+  (2, 'Henry'),
+  (3, 'Sam'),
+  (4, 'Max');
+  
+INSERT INTO orders_data (id, customerId)
+VALUES
+  (1, 3),
+  (2, 1);
+  
+Q34. Write an SQL query to report all customers who never order anything. Return the result table in any order.
+  
+SELECT name FROM customers1
+WHERE id NOT IN (SELECT DISTINCT(customerid) FROM orders_data);
+
+-- Question-35:
+Employees_data table
+  
+CREATE TABLE employees_data (
+    employee_id INT,
+    team_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO employees_data (employee_id, team_id)
+VALUES (1, 8), (2, 8), (3, 8), (4, 7), (5, 9), (6, 9);
+
+Q35. Write an SQL query to find the team size of each of the employees. Return result table in any order.
+
+SELECT employee_id, 
+COUNT(employee_id) OVER(PARTITION BY team_id) AS team_size
+FROM employees_data
+ORDER BY employee_id;
+
+-- Question-36:
+Person, Country, Call_data table
+  
+CREATE TABLE person(
+    id INT,
+    name VARCHAR(255),
+    phone_number VARCHAR(20),
+    CONSTRAINT pk PRIMARY KEY (id)
+);
+
+CREATE TABLE country (
+    name VARCHAR(255),
+    country_code VARCHAR(20),
+    CONSTRAINT pk PRIMARY KEY (country_code)
+);
+
+CREATE TABLE call_data (
+    caller_id INT,
+    callee_id INT,
+    duration INT
+);
+
+INSERT INTO person (id, name, phone_number)
+VALUES 
+    (3, 'Jonathan', '051-1234567'),
+    (12, 'Elvis', '051-7654321'),
+    (1, 'Moncef', '212-1234567'),
+    (2, 'Maroua', '212-6523651'),
+    (7, 'Meir', '972-1234567'),
+    (9, 'Rachel', '972-0011100');
+
+INSERT INTO country (name, country_code)
+VALUES 
+    ('Peru', '51'),
+    ('Israel', '972'),
+    ('Morocco', '212'),
+    ('Germany', '49'),
+    ('Ethiopia', '251');
+    
+INSERT INTO call_data (caller_id, callee_id, duration)
+VALUES 
+    (1, 9, 33),
+    (2, 9, 4),
+    (1, 2, 59),
+    (3, 12, 102),
+    (3, 12, 330),
+    (12, 3, 5),
+    (7, 9, 13),
+    (7, 1, 3),
+    (9, 7, 1),
+    (7, 7, 7);
+
+Q36. A telecommunications company wants to invest in new countries. The company intends to invest in the countries where the average call duration of the calls in this country is 
+     strictly greater than the global average call duration. Write an SQL query to find the countries where this company can invest. Return the result table in any order.
+
+WITH caller_country AS (SELECT id, c.name AS country_name
+						            FROM
+              							(SELECT id,
+              							CASE 
+              								 WHEN phone_number REGEXP '^[^0]' THEN SUBSTRING_INDEX(phone_number, '-', 1) 
+              								 ELSE REPLACE(SUBSTRING_INDEX(phone_number, '-', 1), '0', '') 
+              								 END AS country_code 
+              							FROM person) tmp
+              						  INNER JOIN country c
+              						  ON tmp.country_code = c.country_code)
+                        
+SELECT t.country_name 
+FROM 
+  	(SELECT cc.country_name AS country_name, 
+              AVG(cd.duration) AS country_avg_call_duration
+  	FROM caller_country cc
+  	INNER JOIN call_data cd
+  	ON cd.caller_id = cc.id
+  	GROUP BY cc.country_name) t
+WHERE country_avg_call_duration > (SELECT AVG(duration) AS global_avg_call_duration FROM call_data);
+
+-- Question-37:
+Orders3 table
+
+CREATE TABLE orders3 (
+    order_number INT,
+    customer_number INT,
+    CONSTRAINT pk PRIMARY KEY (order_number)
+);
+
+INSERT INTO orders3 (order_number, customer_number)
+VALUES (1, 1), (2, 2), (3, 3), (4, 3);
+
+Q37. Write an SQL query to find the customer_number for the customer who has placed the largest number of orders.
+
+SELECT customer_number 
+FROM
+  	(SELECT *,
+  	RANK() OVER(ORDER BY total_orders_by_customer DESC) AS rank_value
+	  FROM
+    		(SELECT customer_number, COUNT(order_number) AS total_orders_by_customer
+    		FROM orders3
+    		GROUP BY customer_number) tmp) tmp2
+WHERE tmp2.rank_value = 1;
+
+-- Question-38:
+Cinema Table
+  
+CREATE TABLE cinema (
+    seat_id INT auto_increment,
+    free BOOLEAN,
+    CONSTRAINT pk PRIMARY KEY (seat_id)
+);
+
+INSERT INTO cinema (free)
+VALUES (1), (0), (1), (1), (1);
+
+Q38: Write an SQL query to report all the consecutive available seats in the cinema. Return the result table ordered by seat_id in ascending order.
+
+SELECT DISTINCT(seat_id)
+FROM
+  	(SELECT *, 
+  	LAG(free, 1) OVER(ORDER BY seat_id) AS prev_seat_status,
+  	LEAD(free, 1) OVER(ORDER BY seat_id) AS next_seat_status
+  	FROM 
+    cinema) tmp
+WHERE free = 1 AND (prev_seat_status = 1 OR next_seat_status = 1)
+ORDER BY seat_id;
+
+-- Question-39:
+Salesperson, Company, Orders4 table 
+  
+CREATE TABLE salesperson (
+    sales_id INT,
+    name VARCHAR(255),
+    salary INT,
+    commission_rate INT,
+    hire_date DATE,
+    CONSTRAINT pk PRIMARY KEY (sales_id)
+);
+
+CREATE TABLE company (
+    com_id INT,
+    name VARCHAR(255),
+    city VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (com_id)
+);
+
+CREATE TABLE orders4 (
+    order_id INT,
+    order_date DATE,
+    com_id INT,
+    sales_id INT,
+    amount INT,
+    CONSTRAINT pk PRIMARY KEY (order_id),
+    CONSTRAINT fk_com_id FOREIGN KEY (com_id) REFERENCES company (com_id),
+    CONSTRAINT fk_sales_id FOREIGN KEY (sales_id) REFERENCES salesperson (sales_id)
+);
+
+INSERT INTO salesperson (sales_id, name, salary, commission_rate, hire_date)
+VALUES 
+    (1, 'John', 100000, 6, '2006-04-01'),
+    (2, 'Amy', 12000, 5, '2010-05-01'),
+    (3, 'Mark', 65000, 12, '2008-12-25'),
+    (4, 'Pam', 25000, 25, '2005-01-01'),
+    (5, 'Alex', 5000, 10, '2007-02-03');
+
+INSERT INTO company (com_id, name, city)
+VALUES 
+    (1, 'RED', 'Boston'),
+    (2, 'ORANGE', 'New York'),
+    (3, 'YELLOW', 'Boston'),
+    (4, 'GREEN', 'Austin');
+    
+INSERT INTO orders4 (order_id, order_date, com_id, sales_id, amount)
+VALUES 
+    (1, '2014-01-01', 3, 4, 10000),
+    (2, '2014-02-01', 4, 5, 5000),
+    (3, '2014-03-01', 1, 1, 50000),
+    (4, '2014-04-01', 1, 4, 25000);
+
+
+Q39. Write an SQL query to report the names of all the salespersons who did not have any orders related to the company with the name "RED". Return the result table in any order.
+
+SELECT name 
+FROM salesperson
+WHERE sales_id NOT IN (SELECT sales_id
+          					   FROM orders4 o
+          					   INNER JOIN company c
+          					   ON o.com_id = c.com_id
+          					   WHERE name = 'RED');
+
+-- Question-40:
+Triangle table
+
+CREATE TABLE triangle (
+    x INT,
+    y INT,
+    z INT,
+    CONSTRAINT pk PRIMARY KEY (x, y, z)
+);
+
+INSERT INTO triangle (x, y, z)
+VALUES 
+    (13, 15, 30),
+    (10, 20, 15);
+
+Q40. Write an SQL query to report for every three line segments whether they can form a triangle. Return the result table in any order
+
+SELECT *, 
+CASE WHEN (x + y > z) AND (y + z > x) AND (x + z > y) THEN 'Yes'
+	   ELSE 'No' 
+END AS triangle
+FROM triangle;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE DATABASE new_db;
+
+USE new_db;
+
+# Question-41:
+Table point
+
+CREATE TABLE point (
+    x INT,
+    CONSTRAINT pk PRIMARY KEY (x)
+);
+
+INSERT INTO point (x)
+VALUES (-1), (0), (2);
+
+Q41. Write an SQL query to report the shortest distance between any two points from the Point table.
+
+SELECT MIN(abs(p1.x - p2.x)) AS shortest_distance
+FROM Point p1
+CROSS JOIN Point p2
+WHERE p1.x != p2.x;
+
+
+# Question-42:
+Actordirector table
+
+CREATE TABLE ActorDirector (
+    actor_id INT,
+    director_id INT,
+    timestamp INT,
+    CONSTRAINT pk PRIMARY KEY (timestamp)
+);
+
+INSERT INTO actordirector (actor_id, director_id, timestamp)
+VALUES
+    (1, 1, 0),
+    (1, 1, 1),
+    (1, 1, 2),
+    (1, 2, 3),
+    (1, 2, 4),
+    (2, 1, 5),
+    (2, 1, 6);
+
+Q42. Write a SQL query for a report that provides the pairs (actor_id, director_id) where the actor has cooperated with the director at least three times. Return the result table in 
+     any order.
+
+SELECT actor_id, director_id
+FROM actordirector
+GROUP BY actor_id, director_id
+HAVING COUNT(*) >= 3;
+
+# Question-43:
+Product4, Sales2 table
+
+CREATE TABLE product4 (
+    product_id INT,
+    product_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE sales2 (
+    sale_id INT,
+    product_id INT,
+    year INT,
+    quantity INT,
+    price INT,
+    CONSTRAINT pk PRIMARY KEY (sale_id, year),
+    CONSTRAINT fk5 FOREIGN KEY (product_id) REFERENCES product4 (product_id)
+);
+
+INSERT INTO sales2 (sale_id, product_id, year, quantity, price)
+VALUES
+    (1, 100, 2008, 10, 5000),
+    (2, 100, 2009, 12, 5000),
+    (7, 200, 2011, 15, 9000);
+
+INSERT INTO product4 (product_id, product_name)
+VALUES
+    (100, 'Nokia'),
+    (200, 'Apple'),
+    (300, 'Samsung');
+
+Q43. Write an SQL query that reports the product_name, year, and price for each sale_id in the Sales table. Return the resulting table in any order.
+    
+SELECT product_name, year, price
+FROM sales2 s INNER JOIN product4 p
+ON s.product_id = p.product_id;
+
+# Question-44:
+Employee2, Project1 table
+
+CREATE TABLE employee2 (
+    employee_id INT,
+    name VARCHAR(255),
+    experience_years INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+CREATE TABLE project1 (
+    project_id INT,
+    employee_id INT,
+    CONSTRAINT pk PRIMARY KEY (project_id, employee_id),
+    CONSTRAINT fk6 FOREIGN KEY (employee_id) REFERENCES employee2 (employee_id)
+); 
+
+INSERT INTO project1 (project_id, employee_id)
+VALUES (1, 1), (1, 2), (1, 3), (2, 1), (2, 4);
+
+INSERT INTO employee2 (employee_id, name, experience_years)
+VALUES
+    (1, 'Khaled', 3),
+    (2, 'Ali', 2),
+    (3, 'John', 1),
+    (4, 'Doe', 2);
+
+Q44. Write an SQL query that reports the average experience years of all the employees for each project, rounded to 2 digits. Return the result table in any order.
+
+SELECT p.project_id, 
+ROUND(AVG(e.experience_years),2) AS avg_experience
+FROM project1 p
+INNER JOIN employee2 e
+ON p.employee_id = e.employee_id
+GROUP BY p.project_id;
+
+# Question-45 to Question-46:
+Product_data, Sales_data table
+
+CREATE TABLE product_data (
+    product_id INT,
+    product_name VARCHAR(255),
+    unit_price INT,
+    CONSTRAINT pk PRIMARY KEY (product_id)
+);
+
+CREATE TABLE sales_data (
+    seller_id INT,
+    product_id INT,
+    buyer_id INT,
+    sale_date DATE,
+    quantity INT,
+    price INT,
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product_data (product_id)
+);
+
+INSERT INTO product_data (product_id, product_name, unit_price)
+VALUES
+    (1, 'S8', 1000),
+    (2, 'G4', 800),
+    (3, 'iPhone', 1400);
+    
+INSERT INTO sales_data (seller_id, product_id, buyer_id, sale_date, quantity, price)
+VALUES
+    (1, 1, 1, '2019-01-21', 2, 2000),
+    (1, 2, 2, '2019-02-17', 1, 800),
+    (2, 2, 3, '2019-06-02', 1, 800),
+    (3, 3, 4, '2019-05-13', 2, 2800);
+
+
+Q45. Write an SQL query that reports the best seller by total sales price, If there is a tie, report them all. Return the result table in any order.
+    
+SELECT seller_id
+FROM (SELECT s.seller_id, 
+      SUM(s.price) AS total_sales_price,
+      RANK() OVER(ORDER BY SUM(s.price) DESC) AS seller_rank_by_total_sales
+      FROM sales_data s
+      GROUP BY seller_id) tmp
+WHERE seller_rank_by_total_sales = 1;
+
+Q46. Write an SQL query that reports the buyers who have bought S8 but not iPhone. Note that S8and iPhone are products present in the Product table. Return the result table in any 
+     order.
+
+SELECT DISTINCT(buyer_id)
+FROM sales_data
+WHERE product_id = ALL(SELECT product_id FROM product_data WHERE product_name = 'S8')
+AND buyer_id 
+NOT IN (SELECT DISTINCT(buyer_id)
+FROM sales_data
+WHERE product_id = ALL(SELECT product_id FROM product_data WHERE product_name = 'iPhone'));
+
+# Question-47:
+Customer2 table
+
+CREATE TABLE customer2 (
+    customer_id INT,
+    name VARCHAR(255),
+    visited_on DATE,
+    amount INT,
+    CONSTRAINT pk PRIMARY KEY (customer_id, visited_on)
+);
+
+INSERT INTO customer2 (customer_id, name, visited_on, amount)
+VALUES
+    (1, 'Jhon', '2019-01-01', 100),
+    (2, 'Daniel', '2019-01-02', 110),
+    (3, 'Jade', '2019-01-03', 120),
+    (4, 'Khaled', '2019-01-04', 130),
+    (5, 'Winston', '2019-01-05', 110),
+    (6, 'Elvis', '2019-01-06', 140),
+    (7, 'Anna', '2019-01-07', 150),
+    (8, 'Maria', '2019-01-08', 80),
+    (9, 'Jaze', '2019-01-09', 110),
+    (1, 'Jhon', '2019-01-10', 130),
+    (3, 'Jade', '2019-01-10', 150);
+
+
+Q47. You are the restaurant owner and you want to analyse a possible expansion (there will be at least one customer every day). Write an SQL query to compute the moving average of how 
+     much the customer paid in a seven days window (i.e., current day + 6 days before). average_amount should be rounded to two decimal places. Return result table ordered by 
+     visited_on in ascending order.
+
+WITH daily_visitors AS (SELECT visited_on, 
+						SUM(amount) AS daily_revenue,
+                        COUNT(customer_id) AS num_customers_per_day
+						FROM customer2
+						GROUP BY visited_on
+						HAVING num_customers_per_day >= 1)
+                        
+SELECT visited_on, daily_revenue,
+ROUND(AVG(daily_revenue) OVER(ORDER BY visited_on ASC
+				       RANGE BETWEEN INTERVAL '6' DAY PRECEDING AND CURRENT ROW),2) AS weekly_avg_spending
+FROM daily_visitors dv;
+
+# Question-48:
+Scores table
+
+CREATE TABLE scores (
+    player_name VARCHAR(255),
+    gender VARCHAR(10),
+    day DATE,
+    score_points INT,
+    CONSTRAINT pk PRIMARY KEY (gender, day)
+);
+
+INSERT INTO scores (player_name, gender, day, score_points)
+VALUES
+    ('Aron', 'F', '2020-01-01', 17),
+    ('Alice', 'F', '2020-01-07', 23),
+    ('Bajrang', 'M', '2020-01-07', 7),
+    ('Khali', 'M', '2019-12-25', 11),
+    ('Slaman', 'M', '2019-12-30', 13),
+    ('Joe', 'M', '2019-12-31', 3),
+    ('Jose', 'M', '2019-12-18', 2),
+    ('Priya', 'F', '2019-12-31', 23),
+    ('Priyanka', 'F', '2019-12-30', 17);
+
+Q48. Write an SQL query to find the total score for each gender on each day. Return the result table ordered by gender and day in ascending order.
+
+SELECT gender, day,
+	   SUM(score_points) OVER(PARTITION BY gender ORDER BY gender, day) AS total_score_each_day
+FROM scores;
+
+# Question-49:
+Logs table
+
+CREATE TABLE logs (
+    log_id INT,
+    CONSTRAINT pk PRIMARY KEY (log_id)
+
+);
+
+INSERT INTO logs (log_id)
+VALUES (1), (2), (3), (7), (8), (10);
+
+Q49. Write an SQL query to find the start and end number of continuous ranges in the table Logs. Return the result table ordered by start_id.
+
+SELECT MIN(log_id) AS start_id, MAX(log_id) AS end_id
+FROM 
+	(SELECT log_id, log_id - ROW_NUMBER() OVER (ORDER BY log_id) AS grp
+	FROM logs) tmp
+GROUP BY grp
+ORDER BY start_id;
+
+# Question-50:
+Students_data, Subjects, Examinations table
+
+CREATE TABLE students_data (
+    student_id INT,
+    student_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (student_id)
+);
+
+CREATE TABLE subjects (
+    subject_name VARCHAR(255),
+    CONSTRAINT pk PRIMARY KEY (subject_name)
+);
+
+CREATE TABLE examinations (
+    student_id INT,
+    subject_name VARCHAR(255)
+);
+
+INSERT INTO students_data (student_id, student_name)
+VALUES (1, 'Alice'),
+       (2, 'Bob'),
+       (13, 'John'),
+       (6, 'Alex');
+
+INSERT INTO subjects (subject_name)
+VALUES ('Math'),
+       ('Physics'),
+       ('Programming');
+       
+INSERT INTO examinations (student_id, subject_name)
+VALUES (1, 'Math'),
+       (1, 'Physics'),
+       (1, 'Programming'),
+       (2, 'Programming'),
+       (1, 'Physics'),
+       (1, 'Math'),
+       (13, 'Math'),
+       (13, 'Programming'),
+       (13, 'Physics'),
+       (2, 'Math'),
+       (1, 'Math');
+
+Q50. Write an SQL query to find the number of times each student attended each exam. Return the result table ordered by student_id and subject_name.
+
+SELECT tmp.student_id, tmp.student_name, tmp.subject_name,
+		COUNT(e.subject_name) AS attended_exams
+FROM examinations e
+RIGHT JOIN 
+		      (SELECT *
+					 FROM students_data
+					 CROSS JOIN subjects) tmp
+ON e.student_id = tmp.student_id AND e.subject_name = tmp.subject_name
+GROUP BY tmp.student_id, tmp.student_name, tmp.subject_name
+ORDER BY tmp.student_id, tmp.student_name;
+
+# Question-51:
+Employee3 table
+
+CREATE TABLE employee3 (
+    employee_id INT,
+    employee_name VARCHAR(255),
+    manager_id INT,
+    CONSTRAINT pk PRIMARY KEY (employee_id)
+);
+
+INSERT INTO employee3 (employee_id, employee_name, manager_id)
+VALUES (1, 'Boss', 1),
+       (3, 'Alice', 3),
+       (2, 'Bob', 1),
+       (4, 'Daniel', 2),
+       (7, 'Luis', 4),
+       (8, 'Jhon', 3),
+       (9, 'Angela', 8),
+       (77, 'Robert', 1);
+
+Q51. Write an SQL query to find employee_id of all employees that directly or indirectly report their work tothe head of the company. The indirect relation between managers will not 
+     exceed three managers as the company is small. Return the result table in any order.
+
+WITH RECURSIVE org_emp_hir AS
+(	SELECT employee_id, employee_name, manager_id FROM employee3 WHERE employee_id = 1
+	UNION
+	SELECT emp.employee_id, emp.employee_name, emp.manager_id
+  FROM org_emp_hir oeh
+  INNER JOIN 
+  employee3 emp
+  ON oeh.employee_id = emp.manager_id
+)
+
+SELECT DISTINCT(employee_id)
+FROM
+		(SELECT *,
+		(manager_lvl - CAST(FIRST_VALUE(manager_lvl) OVER(ORDER BY manager_id) AS UNSIGNED)) AS manager_level_diff
+		 FROM
+				 (SELECT *,
+					CAST(DENSE_RANK() OVER(ORDER BY manager_id) AS UNSIGNED) AS manager_lvl
+					FROM org_emp_hir) tmp) tmp2
+WHERE employee_id != 1 AND manager_level_diff < 3;
+       
+# Question-52: 
+Transactions table
+
+CREATE TABLE transactions (
+    id INT,
+    country VARCHAR(255),
+    state ENUM('Declined', 'Approved'),
+    amount INT,
+    trans_date DATE,
+    CONSTRAINT pk PRIMARY KEY (id)
+);
+
+INSERT INTO transactions (id, country, state, amount, trans_date)
+VALUES (121, 'US', 'approved', 1000, '2018-12-18'),
+       (122, 'US', 'declined', 2000, '2018-12-19'),
+       (123, 'US', 'approved', 2000, '2019-01-01'),
+       (124, 'DE', 'approved', 2000, '2019-01-07');
+
+Q52. Write an SQL query to find for each month and country, the number of transactions and their total amount, the number of approved transactions and their total amount.
+	 	 Return the result table in any order.
+
+WITH cte1 AS (SELECT CONCAT(YEAR(trans_date), '-', moNTH(trans_date)) AS month, country,
+		      COUNT(id) AS total_transactions, SUM(amount) AS total_trans_amt
+			  FROM transactions
+			  GROUP BY CONCAT(YEAR(trans_date), '-', moNTH(trans_date)), country),
+	cte2 AS (SELECT CONCAT(YEAR(trans_date), '-', MONTH(trans_date)) AS month, country,
+			 COUNT(id) AS approved_transactions, SUM(amount) AS total_approved_amt
+			 FROM transactions 
+			 WHERE state = 'approved'
+			 GROUP BY CONCAT(YEAR(trans_date), '-', MONTH(trans_date)), country)
+            
+SELECT cte1.*, cte2.approved_transactions, cte2.total_approved_amt
+FROM cte1
+INNER JOIN cte2
+ON cte1.month = cte2.month AND cte1.country = cte2.country;
+
+# Question-53:
+Activities table
+
+CREATE TABLE activities (
+    player_id INT,
+    device_id INT,
+    event_date DATE,
+    games_played INT,
+    CONSTRAINT pk PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO activities (player_id, device_id, event_date, games_played)
+VALUES
+    (1, 2, '2016-03-01', 5),
+    (1, 2, '2016-03-02', 6),
+    (2, 3, '2017-06-25', 1),
+    (3, 1, '2016-03-02', 0),
+    (3, 4, '2018-07-03', 5);
+
+Q53. Write an SQL query to report the fraction of players that logged in again on the day after the day theyfirst logged in, rounded to 2 decimal places. In other words, you need to 
+     count the number of players that logged in for at least two consecutive days starting from their first login date, then divide that number by the total number of players.
+
+WITH player_login_details AS (SELECT player_id, event_date,
+							  DATEDIFF(event_date, (LAG(event_date, 1) OVER(PARTITION BY player_id ORDER BY event_date ASC))) AS day_diff1,
+							  DATEDIFF((LEAD(event_date, 1) OVER(PARTITION BY player_id ORDER BY event_date ASC)), event_date) AS day_diff2
+							  FROM activities)
+   
+SELECT
+ROUND(((SELECT COUNT(DISTINCT(player_id))
+FROM player_login_details
+WHERE (day_diff1 = 1 AND day_diff2 IS NULL) OR (day_diff1 IS NULL AND day_diff2 = 1))/
+(SELECT count(DISTINCT(player_id)) FROM activities)),2) AS fraction;
+
+# Question-54:
+Salaries table
+
+CREATE TABLE Salaries (
+    company_id INT,
+    employee_id INT,
+    employee_name VARCHAR(255),
+    salary INT,
+    CONSTRAINT pk PRIMARY KEY (company_id, employee_id)
+);
+
+
+INSERT INTO Salaries (company_id, employee_id, employee_name, salary)
+VALUES
+    (1, 1, 'Tony', 2000),
+    (1, 2, 'Pronub', 21300),
+    (1, 3, 'Tyrrox', 10800),
+    (2, 1, 'Pam', 300),
+    (2, 7, 'Bassem', 450),
+    (2, 9, 'Hermione', 700),
+    (3, 7, 'Bocaben', 100),
+    (3, 2, 'Ognjen', 2200),
+    (3, 13, 'Nyan Cat', 3300),
+    (3, 15, 'Morning Cat', 7777);
+
+
+Q54. Write an SQL query to find the salaries of the employees after applying taxes. Round the salary to the nearest integer.
+     The tax rate is calculated for each company based on the following criteria:
+		● 0% If the max salary of any employee in the company is less than $1000.
+        ● 24% If the max salary of any employee in the company is in the range [1000, 10000] inclusive. 
+        ● 49% If the max salary of any employee in the company is greater than $10000.
+     Return the result table in any order.
+
+SELECT company_id, employee_id, employee_name,
+ROUND(CASE 
+	      WHEN company_max_salary < 1000 THEN salary
+	      WHEN company_max_salary BETWEEN 1000 AND 10000 THEN (salary * 0.76)
+	      ELSE (salary * 0.51)
+      END) AS post_tax_salary
+FROM
+	(SELECT *,
+	MAX(salary) OVER(PARTITION BY company_id) AS company_max_salary
+	FROM salaries) tmp;
+
+# 	Question-55:
+Variables, Expressions table
+
+CREATE TABLE Variables (
+  name VARCHAR(255) PRIMARY KEY,
+  value INT
+);
+
+CREATE TABLE Expressions (
+  left_operand VARCHAR(255),
+  operator ENUM('<', '>', '='),
+  right_operand VARCHAR(255),
+  PRIMARY KEY (left_operand, operator, right_operand)
+);
+
+INSERT INTO Variables (name, value)
+VALUES ('x', 66),
+('y', 77);
+
+INSERT INTO Expressions (left_operand, operator, right_operand)
+VALUES 
+    ('x', '>', 'y'),
+    ('x', '<', 'y'),
+    ('x', '=', 'y'),
+    ('y', '>', 'x'),
+    ('y', '<', 'x'),
+    ('x', '=', 'x');
+
+Q55. Write an SQL query to evaluate the boolean expressions in Expressions table.
+
+WITH cte AS (SELECT 
+			 CASE 
+				 WHEN left_operand = 'x' THEN (SELECT value FROM variables WHERE name = 'x')
+				 ELSE (SELECT value FROM variables WHERE name = 'y') 
+			 END AS left_operand,
+			 operator,
+			 CASE 
+   				 WHEN right_operand = 'x' THEN (SELECT value FROM variables WHERE name = 'x')
+				 ELSE (SELECT value FROM variables WHERE name = 'y') 
+			END AS right_operand
+			FROM expressions)
+
+SELECT cte.*, 
+CASE WHEN cte.operator = "<" THEN IF((cte.left_operand < cte.right_operand), "True", "False")
+	 WHEN cte.operator = ">" THEN IF((cte.left_operand > cte.right_operand), "True", "False")
+     ELSE IF((cte.left_operand = cte.right_operand), "True", "False")
+END AS expr_evaluation
+FROM cte;
+
+# Question-56:
+Employee4 table
+
+CREATE TABLE employee4
+(	employee_id INT,
+	name VARCHAR(255),
+    months INT,
+    salary INT
+);
+
+INSERT INTO employee4 (employee_id, name, months, salary)
+VALUES (12228, 'Rose', 15, 1968),
+		(33645, 'Angela', 1, 3443),
+        (45692, 'Frank', 17, 1608),
+        (56118, 'Patrick', 7, 1345),
+        (59725, 'Lisa', 11, 2330),
+        (74197, 'Kimberly', 16, 4372),
+        (78454, 'Bonnie', 8, 1771),
+        (83565, 'Michael', 6, 2017),
+        (98607, 'Todd', 5, 3396),
+        (99989, 'Joe', 9, 3573);
+
+Q56. Write a query that prints a list of employee names (i.e.: the name attribute) from the Employee table in alphabetical order.
+
+SELECT name AS employee_name 
+FROM employee4
+ORDER BY employee_name;
+
+# Question-57:
+User_transactions table
+
+CREATE TABLE user_transactions (
+  transaction_id INTEGER,
+  product_id INTEGER,
+  spend DECIMAL(10, 2),
+  transaction_date DATETIME
+);
+
+INSERT INTO user_transactions (transaction_id, product_id, spend, transaction_date)
+VALUES
+  (1341, 123424, 1500.60, '2019-12-31 12:00:00'),
+  (1423, 123424, 1000.20, '2020-12-31 12:00:00'),
+  (1623, 123424, 1246.44, '2021-12-31 12:00:00'),
+  (1322, 123424, 2145.32, '2022-12-31 12:00:00');
+
+Q57. Write a query to obtain the year-on-year growth rate for the total spend of each product for each year. Output the year (in ascending order) partitioned by product id, current 		 year's spend, previous year's spend and year-on-year growth rate (percentage rounded to 2 decimal places).
+
+SELECT *,
+ROUND(((current_year_spend - prev_year_spend)/prev_year_spend)*100,2) AS year_on_year_growth_rate
+FROM
+	(SELECT YEAR(transaction_date) AS year, product_id, 
+		   SUM(spend) AS current_year_spend,
+	LAG(SUM(spend), 1) OVER (ORDER BY YEAR(transaction_date)) AS prev_year_spend
+	FROM user_transactions
+	GROUP BY YEAR(transaction_date), product_id) tmp;
+
+# Question-58:
+Inventory table
+
+CREATE TABLE inventory (
+  item_id INTEGER,
+  item_type VARCHAR(255),
+  item_category VARCHAR(255),
+  square_footage DECIMAL(10, 2)
+);
+
+INSERT INTO inventory (item_id, item_type, item_category, square_footage)
+VALUES
+  (1374, 'prime_eligible', 'mini refrigerator', 68.00),
+  (4245, 'not_prime', 'standing lamp', 26.40),
+  (2452, 'prime_eligible', 'television', 85.00),
+  (3255, 'not_prime', 'side table', 22.60),
+  (1672, 'prime_eligible', 'laptop', 8.50);
+
+Q58. Amazon wants to maximise the number of items it can stock in a 500,000 square feet warehouse. It wants to stock as many prime items as possible, and afterwards use the remaining 
+     square footage to stock the most number of non-prime items.
+     Write a SQL query to find the number of prime and non-prime items that can be stored in the 500,000 square feet warehouse. Output the item type and number of items to be stocked.
+
+WITH products AS (SELECT item_type, 
+                  COUNT(item_category) AS num_items,
+				  SUM(square_footage) AS total_sqft, 500000 AS warehouse_area
+				  FROM inventory
+				  GROUP BY item_type)
+
+SELECT item_type,
+FLOOR((area - LAG(area, 1,0) OVER())/total_sqft) * num_items AS item_count
+FROM
+	(SELECT *,
+	 CASE 
+         WHEN item_type = 'prime_eligible' THEN (FLOOR(warehouse_area/total_sqft) * total_sqft)
+	     ELSE warehouse_area 
+     END AS area
+	 FROM products) tmp;
+
+# Question-59:
+User_actions table
+
+CREATE TABLE user_actions (
+  user_id INTEGER,
+  event_id INTEGER,
+  event_type ENUM('sign-in', 'like', 'comment'),
+  event_date DATETIME
+);
+
+INSERT INTO user_actions (user_id, event_id, event_type, event_date)
+VALUES
+  (445, 7765, 'sign-in', '2022-05-31 12:00:00'),
+  (742, 6458, 'sign-in', '2022-06-03 12:00:00'),
+  (445, 3634, 'like', '2022-06-05 12:00:00'),
+  (742, 1374, 'comment', '2022-06-05 12:00:00'),
+  (648, 3124, 'like', '2022-06-18 12:00:00');
+
+Q59. Assume you have the table below containing information on Facebook user actions. Write a query to obtain the active user retention in July 2022. Output the month (in numerical 	 	 format 1, 2, 3) and the number of monthly active users (MAUs).
+
+WITH user_activity AS (SELECT MONTH(event_date) AS month, user_id,
+							  COUNT(*) AS user_activity,
+					   LAG(COUNT(*),1) OVER(PARTITiON BY user_id ORDER BY MONTH(event_date)) AS user_activity_prev_month
+					   FROM user_actions 
+					   GROUP BY MONTH(event_date), user_id
+					   ORDER BY user_id)
+
+SELECT month, 
+       COUNT(user_id) AS monthly_active_user
+FROM user_activity
+WHERE user_activity_prev_month IS NOT NULL
+GROUP BY month;
+
+# Question-60: 
+Search_frequency table
+
+CREATE TABLE search_frequency (
+  searches INTEGER,
+  num_users INTEGER
+);
+
+INSERT INTO search_frequency (searches, num_users)
+VALUES
+  (1, 2),
+  (2, 2),
+  (3, 3),
+  (4, 1);
+
+Q60. Google's marketing team is making a Superbowl commercial and needs a simple statistic to put on their TV ad: the median number of searches a person made last year. However, at 		 Google scale, querying the 2 trillion searches is too costly. Luckily, you have access to the summary table which tells you the number of searches made last year and how many 		 Google users fall into that bucket.
+	 Write a query to report the median of searches made by a user. Round the median to one decimal point
+
+SELECT
+PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY searches) AS median
+FROM search_frequency;
+
+
+CREATE DATABASE demo_db2;
+
+USE demo_db2;
+
+# Question-61:
+Advertiser, daily_pay table
+
+CREATE TABLE advertiser (
+  user_id VARCHAR(255),
+  status VARCHAR(20)
+);
+
+CREATE TABLE daily_pay (
+  user_id VARCHAR(255),
+  paid DECIMAL(10, 2)
+);
+
+INSERT INTO advertiser (user_id, status)
+VALUES
+  ('bing', 'NEW'),
+  ('yahoo', 'NEW'),
+  ('alibaba', 'EXISTING');
+  
+INSERT INTO daily_pay (user_id, paid)
+VALUES
+  ('yahoo', 45.00),
+  ('alibaba', 100.00),
+  ('target', 13.00);
+
+Q61. Write a query to update the Facebook advertiser's status using the daily_pay table. Advertiser is a two-column table containing the user id and their payment status based on the        last payment and daily_pay table has current information about their payment. Only advertisers who paid will show up in this table. Output the user id and current payment status        sorted by the user id.
+
+SELECT user_id, 
+CASE 
+    WHEN user_id IN (SELECT DISTINCT(user_id) FROM daily_pay) THEN 'Existing'
+	  ELSE 'Churn'
+END AS current_status
+FROM advertiser;
+
+# Question-62:
+Server_utilization table
+
+CREATE TABLE server_utilization (
+  server_id INTEGER,
+  status_time TIMESTAMP,
+  session_status VARCHAR(255)
+);
+
+INSERT INTO server_utilization (server_id, status_time, session_status)
+VALUES
+  (1, '2022-08-02 10:00:00', 'start'),
+  (1, '2022-08-04 10:00:00', 'stop'),
+  (2, '2022-08-17 10:00:00', 'start'),
+  (2, '2022-08-24 10:00:00', 'stop');
+
+
+Q62. Amazon Web Services (AWS) is powered by fleets of servers. Senior management has requested data-driven solutions to optimise server usage.
+     Write a query that calculates the total time that the fleet of servers was running. The output should be in units of full days
+
+WITH server_data AS (SELECT server_id, status_time AS server_start_time, 
+          					 LEAD(status_time, 1) OVER(PARTITION BY server_id ORDER BY status_time ASC) as server_stop_time
+                     FROM server_utilization)
+
+SELECT 
+SUM(ROUND((HOUR(TIMEDIFF(server_stop_time, server_start_time)))/24)) AS total_uptime
+FROM server_data
+WHERE server_stop_time IS NOT NULL;
+  
+# Question-63: 
+Merchant_transactions table
+
+CREATE TABLE merchant_transactions (
+  transaction_id INTEGER,
+  merchant_id INTEGER,
+  credit_card_id INTEGER,
+  amount INTEGER,
+  transaction_timestamp DATETIME
+);
+
+INSERT INTO merchant_transactions (transaction_id, merchant_id, credit_card_id, amount, transaction_timestamp)
+VALUES
+  (1, 101, 1, 100, '2022-09-25 12:00:00'),
+  (2, 101, 1, 100, '2022-09-25 12:08:00'),
+  (3, 101, 1, 100, '2022-09-25 12:28:00'),
+  (4, 102, 2, 300, '2022-09-25 12:00:00'),
+  (6, 102, 2, 400, '2022-09-25 14:00:00');
+
+Q63. Sometimes, payment transactions are repeated by accident; it could be due to user error, API failure or a retry error that causes a credit card to be charged twice. Using the           transactions table, identify any payments made at the same merchant with the same credit card for the same amount within 10 minutes of each other. Count such repeated payments.
+
+WITH transaction_record AS (SELECT transaction_id, 
+                                   merchant_id, 
+                                   credit_card_id,
+              							MINUTE(transaction_timestamp - (LEAD(transaction_timestamp,1) 
+                            OVER(PARTITION BY merchant_id, credit_card_id ORDER BY transaction_timestamp ASC))) AS time_diff_between_two_transactions 
+                            FROM merchant_transactions)
+
+SELECT COUNT(*) AS payment_count
+FROM transaction_record
+WHERE time_diff_between_two_transactions > 0  AND time_diff_between_two_transactions <= 10;
+
+# Question-64:
+Orders5, Customers_data, Trips table
+
+CREATE TABLE orders5 (
+  order_id INTEGER,
+  customer_id INTEGER,
+  trip_id INTEGER,
+  status ENUM('completed successfully', 'completed incorrectly', 'never received'),
+  order_timestamp TIMESTAMP
+);
+
+INSERT INTO orders5 (order_id, customer_id, trip_id, status, order_timestamp)
+VALUES
+  (727424, 8472, 100463, 'completed successfully', '2022-06-05 09:12:00'),
+  (242513, 2341, 100482, 'completed incorrectly', '2022-06-05 14:40:00'),
+  (141367, 1314, 100362, 'completed incorrectly', '2022-06-07 15:03:00'),
+  (582193, 5421, 100657, 'never received', '2022-07-07 15:22:00'),
+  (253613, 1314, 100213, 'completed successfully', '2022-06-12 13:43:00');
+
+CREATE TABLE trips (
+  dasher_id INTEGER,
+  trip_id INTEGER,
+  estimated_delivery_timestamp TIMESTAMP,
+  actual_delivery_timestamp TIMESTAMP
+);
+
+INSERT INTO trips (dasher_id, trip_id, estimated_delivery_timestamp, actual_delivery_timestamp)
+VALUES
+  (101, 100463, '2022-06-05 09:42:00', '2022-06-05 09:38:00'),
+  (102, 100482, '2022-06-05 15:10:00', '2022-06-05 15:46:00'),
+  (101, 100362, '2022-06-07 15:33:00', '2022-06-07 16:45:00'),
+  (102, 100657, '2022-07-07 15:52:00', NULL),
+  (103, 100213, '2022-06-12 14:13:00', '2022-06-12 14:10:00');
+
+CREATE TABLE customers_data (
+  customer_id INTEGER,
+  signup_timestamp TIMESTAMP
+);
+
+INSERT INTO customers_data (customer_id, signup_timestamp)
+VALUES
+  (8472, '2022-05-30 00:00:00'),
+  (2341, '2022-06-01 00:00:00'),
+  (1314, '2022-06-03 00:00:00'),
+  (1435, '2022-06-05 00:00:00'),
+  (5421, '2022-06-07 00:00:00');
+
+Q64. DoorDash's Growth Team is trying to make sure new users (those who are making orders in their first14 days) have a great experience on all their orders in their 2 weeks on the 
+     platform. Unfortunately, many deliveries are being messed up because:
+      ● the orders are being completed incorrectly (missing items, wrong order, etc.)
+      ● the orders aren't being received (wrong address, wrong drop off spot)
+      ● the orders are being delivered late (the actual delivery time is 30 minutes later than when the order was placed). 
+     Note that the estimated_delivery_timestamp is automatically set to 30 minutes after the order_timestamp.
+    
+    Write a query to find the bad experience rate in the first 14 days for new users who signed up in June 2022. Output the percentage of bad experience rounded to 2 decimal places
+
+WITH order_details AS (SELECT c.*, o.order_id, o.status,
+					   ROUND(TIME_TO_SEC(TIMEDIFF(t.actual_delivery_timestamp, o.order_timestamp))/60) AS time_taken_for_delivery_in_mins
+					   FROM customers_data c
+					   INNER JOIN orders5 o
+					   ON c.customer_id = o.customer_id
+					   INNER JOIN trips t
+					   ON o.trip_id = t.trip_id
+					   WHERE MONTHNAME(signup_timestamp) = 'June' AND YEAR(signup_timestamp) = 2022
+					   AND DATEDIFF(o.order_timestamp, c.signup_timestamp) <= 14)
+
+SELECT 
+ROUND((SUM(CASE 
+               WHEN status in ('completed incorrectly', 'never received') OR time_taken_for_delivery_in_mins > 30 THEN 1
+	           ELSE 0
+           END)/COUNT(*))*100,2
+     ) AS bad_experience_pct
+FROM order_details o;
+
+# Question-65: 
+Salary, Employee5 table
+
+CREATE TABLE Salary (
+    id INT PRIMARY KEY,
+    employee_id INT,
+    amount INT,
+    pay_date DATE
+);
+
+CREATE TABLE Employee5 (
+    employee_id INT PRIMARY KEY,
+    department_id INT
+);
+
+INSERT INTO Salary (id, employee_id, amount, pay_date)
+VALUES
+    (1, 1, 9000, '2017-03-31'),
+    (2, 2, 6000, '2017-03-31'),
+    (3, 3, 10000, '2017-03-31'),
+    (4, 1, 7000, '2017-02-28'),
+    (5, 2, 6000, '2017-02-28'),
+    (6, 3, 8000, '2017-02-28');
+
+INSERT INTO Employee5 (employee_id, department_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 2);
+
+Q65. Write an SQL query to report the comparison result (higher/lower/same) of the average salary of employees in a department to the company's average salary.
+
+WITH salary_details AS (SELECT s.employee_id, s.amount, s.pay_date, e.department_id
+						FROM salary s
+						INNER JOIN 
+						employee5 e
+						ON s.employee_id = e.employee_id)
+
+SELECT distinct pay_date, department_id,
+CASE WHEN monthly_dept_avg_salary = monthly_company_avg_salary THEN 'same'
+     WHEN monthly_dept_avg_salary < monthly_company_avg_salary THEN 'lower'
+     ELSE 'higher'
+END AS comparison
+FROM
+	(SELECT pay_date, department_id, amount,
+	AVG(amount) OVER(PARTITION BY pay_date, department_id) AS monthly_dept_avg_salary,
+	AVG(amount) OVER(PARTITION by pay_date) AS monthly_company_avg_salary
+	FROM salary_details) tmp
+ORDER BY department_id ASC;
+
+# Question-66:
+Activity2 table
+
+CREATE TABLE Activity2 (
+    player_id INT,
+    device_id INT,
+    event_date DATE,
+    games_played INT,
+    PRIMARY KEY (player_id, event_date)
+);
+
+INSERT INTO Activity2 (player_id, device_id, event_date, games_played)
+VALUES
+    (1, 2, '2016-03-01', 5),
+    (1, 2, '2016-03-02', 6),
+    (2, 3, '2017-06-25', 1),
+    (3, 1, '2016-03-01', 0),
+    (3, 4, '2016-07-03', 5);
+
+Q66.The install date of a player is the first login day of that player. We define day one retention of some date x to be the number of players whose install date is x and they logged       back in on the day right after x, divided by the number of players whose install date is x, rounded to 2 decimal places.
+    Write an SQL query to report for each install date, the number of players that installed the game on that day, and the day one retention.
+
+WITH login_data AS (SELECT player_id, event_date,
+					LAG(event_date,1,0) OVER(PARTITION BY player_id) AS prev_login_date, 
+					MIN(event_date) OVER(PARTITION BY player_id) AS installation_date
+					FROM activity2)
+   
+SELECT tmp2.*, 
+       ROUND(tmp1.players_login_next_day/tmp2.no_of_installs,2) AS one_day_retention
+FROM
+	(SELECT installation_date, 
+		   SUM(IF((DATEDIFF(event_date, prev_login_date) = 1), 1,0)) AS players_login_next_day
+	FROM login_data
+	GROUP BY installation_date) tmp1
+	INNER JOIN
+	(SELECT installation_date, COUNT(DISTINCT(player_id)) AS no_of_installs
+	FROM login_data
+	GROUP BY installation_date) tmp2
+ON tmp1.installation_date = tmp2.installation_date;
+
+# Question-67:
+Players, Matches table
+
+CREATE TABLE Players (
+    player_id INT PRIMARY KEY,
+    group_id INT
+);
+
+CREATE TABLE Matches (
+    match_id INT PRIMARY KEY,
+    first_player INT,
+    second_player INT,
+    first_score INT,
+    second_score INT
+);
+
+INSERT INTO Players (player_id, group_id)
+VALUES
+    (15, 1),
+    (25, 1),
+    (30, 1),
+    (45, 1),
+    (10, 2),
+    (35, 2),
+    (50, 2),
+    (20, 3),
+    (40, 3);
+
+INSERT INTO Matches (match_id, first_player, second_player, first_score, second_score)
+VALUES
+    (1, 15, 45, 3, 0),
+    (2, 30, 25, 1, 2),
+    (3, 30, 15, 2, 0),
+    (4, 40, 20, 5, 2),
+    (5, 35, 50, 1, 1);
+
+Q67. The winner in each group is the player who scored the maximum total points within the group. In the case of a tie, the lowest player_id wins.
+     Write an SQL query to find the winner in each group.
+
+WITH group_player_scores AS (
+							(SELECT p.group_id, tmp.*
+							FROM 
+								(SELECT second_player AS player,  SUM(second_score) AS total_score
+								FROM matches
+								GROUP BY player) tmp
+								INNER JOIN players p
+								ON p.player_id = tmp.player)
+							UNION
+							(SELECT p.group_id, tmp.*
+							FROM 
+								(SELECT first_player,  SUM(first_score) AS total_score
+								FROM matches
+								GROUP BY first_player) tmp
+								INNER JOIN 
+								players p
+								ON p.player_id = tmp.first_player)
+                                )
+                                
+SELECT group_id, player
+FROM 
+	(SELECT group_id, player,
+	ROW_NUMBER() OVER(PARTITION BY group_id) AS row_val
+	FROM
+		(SELECT group_id, player, SUM(total_score) AS player_score
+		FROM group_player_scores
+		GROUP BY group_id, player
+		ORDER BY group_id ASC, player_score DESC, player ASC) t1) t2
+WHERE row_val = 1;
+
+# Question-68:
+Student2, Exam table
+
+CREATE TABLE Student2 (
+  student_id int PRIMARY KEY,
+  student_name varchar(255)
+);
+
+CREATE TABLE Exam (
+  exam_id int,
+  student_id int,
+  score int,
+  PRIMARY KEY (exam_id, student_id)
+);
+
+INSERT INTO Student2 (student_id, student_name)
+VALUES
+  (1, 'Daniel'),
+  (2, 'Jade'),
+  (3, 'Stella'),
+  (4, 'Jonathan'),
+  (5, 'Will');
+
+INSERT INTO Exam (exam_id, student_id, score)
+VALUES
+  (10, 1, 70),
+  (10, 2, 80),
+  (10, 3, 90),
+  (20, 1, 80),
+  (30, 1, 70),
+  (30, 3, 80),
+  (30, 4, 90),
+  (40, 1, 60),
+  (40, 2, 70),
+  (40, 4, 80);
+
+Q68. A quiet student is the one who took at least one exam and did not score the high or the low score. Write an SQL query to report the students (student_id, student_name) being quiet      in all exams. Do not return the student who has never taken any exam. Return the result table ordered by student_id.
+
+WITH topper_list AS (SELECT e.exam_id, e.score, s.*,
+					RANK() OVER(PARTITION BY exam_id ORDER BY score DESC) AS rank_value
+					FROM student2 s
+					INNER JOIN exam e
+					ON s.student_id = e.student_id) 
+                        
+SELECT student_id, student_name 
+FROM student2
+WHERE student_id NOT IN (SELECT DISTINCT(student_id) FROM topper_list
+                         WHERE rank_value = 1 OR rank_value = 3)
+	  AND student_id IN (SELECT DISTINCT(student_id) FROM exam);
+
+# Question-69:
+Songs_history,Songs_weekly table
+
+CREATE TABLE songs_history (
+    history_id INTEGER,
+    user_id INTEGER,
+    song_id INTEGER,
+    song_plays INTEGER
+);
+
+CREATE TABLE songs_weekly (
+    user_id INTEGER,
+    song_id INTEGER,
+    listen_time DATETIME
+);
+
+INSERT INTO songs_history (history_id, user_id, song_id, song_plays)
+VALUES (10011, 777, 1238, 11),
+       (12452, 695, 4520, 1);
+
+INSERT INTO songs_weekly (user_id, song_id, listen_time)
+VALUES (777, 1238, '2022-08-01 12:00:00'),
+       (695, 4520, '2022-08-04 08:00:00'),
+       (125, 9630, '2022-08-04 16:00:00'),
+       (695, 9852, '2022-08-07 12:00:00');
+
+Q69. Write a query to output the user id, song id, and cumulative count of song plays as of 4 August 2022 sorted in descending order.
+
+WITH song_info AS ((SELECT user_id, song_id, COUNT(*) AS song_plays 
+					FROM songs_weekly
+					WHERE DATE(listen_time) < '2022-08-05'
+					GROUP BY user_id, song_id)
+					UNION ALL
+					(SELECT user_id, song_id, song_plays FROM songs_history))
+
+SELECT user_id, song_id, SUM(song_plays) AS cum_count
+FROM song_info
+GROUP BY user_id, song_id
+ORDER BY cum_count DESC;
+
+# Question-70:
+Emails, texts table
+
+CREATE TABLE emails (
+    email_id INTEGER,
+    user_id INTEGER,
+    signup_date DATETIME
+);
+
+INSERT INTO emails (email_id, user_id, signup_date)
+VALUES (125, 7771, '2022-06-14 00:00:00'),
+       (236, 6950, '2022-07-01 00:00:00'),
+       (433, 1052, '2022-07-09 00:00:00');
+
+CREATE TABLE texts (
+    text_id INTEGER,
+    email_id INTEGER,
+    signup_action VARCHAR(255)
+);
+
+INSERT INTO texts (text_id, email_id, signup_action)
+VALUES (6878, 125, 'Confirmed'),
+       (6920, 236, 'Not Confirmed'),
+       (6994, 236, 'Confirmed');
+
+Q70. New TikTok users sign up with their emails, so each signup requires a text confirmation to activate the new user's account.
+     Write a query to find the confirmation rate of users who confirmed their signups with text messages. Round the result to 2 decimal places.
+
+SELECT 
+ROUND((SUM(CASE WHEN signup_action = 'Confirmed' THEN 1 ELSE 0 END)/COUNT(*)), 2) AS confirmation_rate
+FROM emails e
+LEFT JOIN texts t
+ON e.email_id = t.email_id
+WHERE signup_action IS NOT NULL;
+
+# Question-71:
+Tweets table
+
+CREATE TABLE tweets (
+    tweet_id INTEGER,
+    user_id INTEGER,
+    tweet_date TIMESTAMP
+);
+
+INSERT INTO tweets (tweet_id, user_id, tweet_date)
+VALUES (214252, 111, '2022-06-01 12:00:00'),
+       (739252, 111, '2022-06-01 12:00:00'),
+       (846402, 111, '2022-06-02 12:00:00'),
+       (241425, 254, '2022-06-02 12:00:00'),
+       (137374, 111, '2022-06-04 12:00:00');
+
+Q71. Calculate the 3-day rolling average of tweets published by each user for each date that a tweet was posted. Output the user id, tweet date, and rolling averages rounded to 2            decimal places.
+
+SELECT DATE(tweet_date) AS tweet_date, user_id, 
+ROUND(AVG(COUNT(tweet_id)) OVER(PARTITION BY user_id ORDER BY DATE(tweet_date) AS RANGE BETWEEN INTERVAL '3' DAY PRECEDING AND CURRENT ROW), 2) AS rolling_average
+FROM tweets
+GROUP BY tweet_date, user_id;
+
+# Question-72: 
+Activities2, age_breakdown table
+
+CREATE TABLE activities2 (
+    activity_id INTEGER,
+    user_id INTEGER,
+    activity_type VARCHAR(10),
+    time_spent FLOAT,
+    activity_date DATETIME
+);
+
+INSERT INTO activities2 (activity_id, user_id, activity_type, time_spent, activity_date)
+VALUES (7274, 123, 'open', 4.50, '2022-06-22 12:00:00'),
+       (2425, 123, 'send', 3.50, '2022-06-22 12:00:00'),
+       (1413, 456, 'send', 5.67, '2022-06-23 12:00:00'),
+       (1414, 789, 'chat', 11.00, '2022-06-25 12:00:00'),
+       (2536, 456, 'open', 3.00, '2022-06-25 12:00:00');
+
+CREATE TABLE age_breakdown (
+    user_id INTEGER,
+    age_bucket ENUM('21-25', '26-30', '31-35')
+);
+
+INSERT INTO age_breakdown (user_id, age_bucket)
+VALUES (123, '31-35'),
+       (456, '26-30'),
+       (789, '21-25');
+
+Q72. Assume you are given the tables below containing information on Snapchat users, their ages, and their time spent sending and opening snaps. Write a query to obtain a breakdown of       the time spent sending vs. opening snaps (as a percentage of total time spent on these activities) for each age group. Output the age bucket and percentage of sending and opening       snaps. Round the percentage to 2 decimal places.
+
+SELECT age_bucket,
+SUM(CASE WHEN activity_type = 'open' THEN ROUND((time_spent/total_time_spent)*100, 2) 
+    END) AS open_pct,
+SUM(CASE WHEN activity_type = 'send' THEN ROUND((time_spent/total_time_spent)*100, 2) 
+    END) AS send_pct
+FROM 
+	(SELECT ab.age_bucket, a.user_id, a.activity_type, a.time_spent,
+	SUM(time_spent) OVER(PARTITION BY age_bucket) AS total_time_spent
+	FROM activities2 a
+	INNER JOIN age_breakdown ab
+	ON a.user_id = ab.user_id
+	WHERE activity_type IN ('send', 'open')) tmp
+GROUP BY age_bucket;
+
+# Question-73:
+Personal_profiles, Employee_company, Company_pages table
+
+CREATE TABLE personal_profiles (
+    profile_id INTEGER,
+    name VARCHAR(255),
+    followers INTEGER
+);
+
+INSERT INTO personal_profiles (profile_id, name, followers)
+VALUES (1, 'Nick Singh', 92000),
+       (2, 'Zach Wilson', 199000),
+       (3, 'Daliana Liu', 171000),
+       (4, 'Ravit Jain', 107000),
+       (5, 'Vin Vashishta', 139000),
+       (6, 'Susan Wojcicki', 39000);
+
+CREATE TABLE employee_company (
+    personal_profile_id INTEGER,
+    company_id INTEGER
+);
+
+INSERT INTO employee_company (personal_profile_id, company_id)
+VALUES (1, 4),
+       (1, 9),
+       (2, 2),
+       (3, 1),
+       (4, 3),
+       (5, 6),
+       (6, 5);
+
+CREATE TABLE company_pages (
+    company_id INTEGER,
+    name VARCHAR(255),
+    followers INTEGER
+);
+
+INSERT INTO company_pages (company_id, name, followers)
+VALUES (1, 'The Data Science Podcast', 8000),
+       (2, 'Airbnb', 700000),
+       (3, 'The Ravit Show', 6000),
+       (4, 'DataLemur', 200),
+       (5, 'YouTube', 1600000),
+       (6, 'DataScience.Vin', 4500),
+       (9, 'Ace The Data Science Interview', 4479);
+
+Q73. The LinkedIn Creator team is looking for power creators who use their personal profile as a company or influencer page. This means that if someone's Linkedin page has more              followers than all the companies they work for, we can safely assume that person is a Power Creator. Keep in mind that if a person works at multiple companies, we should take into      account the company with the most followers. 
+     Write a query to return the IDs of these LinkedIn power creators in ascending order
+
+SELECT power_creators_id
+FROM
+	(SELECT 
+	CASE WHEN emp_followers > company_followers THEN profile_id END AS power_creators_id
+	FROM 
+		(SELECT profile_id, 
+			   MAX(pp.followers) AS emp_followers, MAX(cp.followers) AS company_followers
+		FROM employee_company ec
+		INNER JOIN 
+		company_pages cp
+		ON ec.company_id = cp.company_id
+		INNER JOIN 
+		personal_profiles pp
+		ON ec.personal_profile_id = pp.profile_id
+		GROUP BY profile_id) tmp) tmp2
+WHERE power_creators_id IS NOT NULL
+ORDER BY power_creators_id;
+
+# Question-74:
+UserActivity table
+
+CREATE TABLE UserActivity (
+  username VARCHAR(255),
+  activity VARCHAR(255),
+  startDate DATE,
+  endDate DATE
+);
+
+INSERT INTO UserActivity (username, activity, startDate, endDate)
+VALUES
+  ('Alice', 'Travel', '2020-02-12', '2020-02-20'),
+  ('Alice', 'Dancing', '2020-02-21', '2020-02-23'),
+  ('Alice', 'Travel', '2020-02-24', '2020-02-28'),
+  ('Bob', 'Travel', '2020-02-11', '2020-02-18');
+
+Q74. Write an SQL query to show the second most recent activity of each user. If the user only has one activity, return that one. A user cannot perform more than one activity at the
+     same time. Return the result table in any order
+
+SELECT username, activity, startDate, endDate
+FROM
+	(SELECT *,
+	RANK() OVER(PARTITION BY username ORDER BY startDate DESC) AS activity_sequence,
+	count(activity) over (partition by username) as num_of_activities_per_user
+	FROM useractivity) tmp
+WHERE (num_of_activities_per_user != 1 AND activity_sequence = 2) OR (num_of_activities_per_user = 1 AND activity_sequence = 1);
+
+# Question-75:
+Student table
+
+CREATE TABLE student
+(	id INT,
+	name VARCHAR(255),
+    marks INT
+);
+
+INSERT INTO student (id, name, marks)
+VALUES 
+	(1, 'Ashley', 81),
+    (2, 'Samantha', 75),
+    (4, 'Julia', 76),
+    (3, 'Belvet', 84);
+
+
+Q75. Query the Name of any student in STUDENTS who scored higher than 75 Marks. Order your output by the last three characters of each name. If two or more students both have names 		 ending in the same last three characters (i.e.: Bobby, Robby, etc.), secondary sort them by ascending ID
+
+SELECT name FROM student
+WHERE marks > 75
+ORDER BY RIGHT(name, 3), id ASC;
+		
+# Question-76:
+Employee table
+
+create table if not exists Employee
+(
+    employee_id int,
+    name VARCHAR(50),
+    months int,
+    salary int
+);
+
+insert into Employee 
+	VALUES 
+    (12228,'Rose',15,1968),
+	(33645,'Angela',1,3443),
+    (45692,'Frank',17,1608),
+    (56118,'Patrick',7,1345),
+    (59725,'Lisa',11,2330),
+    (74197,'Kimberly',16,4372),
+    (78454,'Bonnie',8,1771),
+    (83565,'Michael',6,2017),
+    (98607,'Todd',5,3396),
+    (99989,'Joe',9,3573);
+
+Q76. Write a query that prints a list of employee names (i.e.: the name attribute) for employees in Employee having a salary greater than $2000 per month who have been employees for 	 	 less than 10 months. Sort your result by ascending employee_id.
+
+SELECT name AS employee_name
+FROM employee
+WHERE months < 10 AND salary > 2000
+ORDER BY employee_id;
+
+# Question-77: 
+Triangles table
+
+CREATE TABLE triangles
+(	A INT,
+	B INT,
+    C INT
+);
+
+INSERT INTO triangles (A, B ,C)
+VALUES (20, 20, 23), (20, 20, 20), (20, 21, 22), (13, 14, 30);
+
+Q77. Write a query identifying the type of each record in the TRIANGLES table using its three side lengths. Output one of the following statements for each record in the table:
+       ● Equilateral: It's a triangle with sides of equal length.
+       ● Isosceles: It's a triangle with sides of equal length.
+       ● Scalene: It's a triangle with sides of differing lengths.
+       ● Not A Triangle: The given values of A, B, and C don't form a triangle.
+
+SELECT 
+CASE 
+	 WHEN form_triangle_or_not = 'Yes' AND A = B AND B = C THEN 'Equilateral'
+	 WHEN form_triangle_or_not = 'Yes' AND (A <> B AND B <> C) THEN 'Scalene'
+     WHEN form_triangle_or_not = 'No' AND (A <> B <> C) THEN 'Not a Triangle'
+     ELSE 'Isosceles'
+END AS type_triangle
+FROM
+	(SELECT A, B, C, IF((A+B > C), 'Yes', 'No') AS form_triangle_or_not
+	 FROM triangles) tmp;
+
+# Question-78:
+Employees Table
+
+CREATE TABLE Employees
+(	id INT,
+	name VARCHAR(255),
+    salary INT CHECK(SALARY > 1000 AND SALARY < 100000)
+);
+
+INSERT INTO Employees (id, name, salary)
+VALUES(1, 'Kristeen', 1420), (2, 'Ashley', 2006), (3, 'Julia', 2210), (4, 'Maria', 3000);
+
+Q78. Samantha was tasked with calculating the average monthly salaries for all employees in the EMPLOYEES table, but did not realise her keyboard's 0 key was broken until after 			 completing the calculation. She wants your help finding the difference between her miscalculation (using salaries with any zeros removed), and the actual average salary.
+     Write a query calculating the amount of error (i.e.: actual - miscalculated average monthly salaries), and round it up to the next integer
+
+SELECT ROUND((AVG(salary) -  AVG(REPLACE(salary, '0', '')))) AS difference FROM employees;
+
+# Question-79:
+Employee table
+
+create table if not exists Employee
+(
+    employee_id int,
+    name VARCHAR(50),
+    months int,
+    salary int
+);
+
+insert into Employee 
+	VALUES 
+    (12228,'Rose',15,1968),
+	(33645,'Angela',1,3443),
+    (45692,'Frank',17,1608),
+    (56118,'Patrick',7,1345),
+    (59725,'Lisa',11,2330),
+    (74197,'Kimberly',16,4372),
+    (78454,'Bonnie',8,1771),
+    (83565,'Michael',6,2017),
+    (98607,'Todd',5,3396),
+    (99989,'Joe',9,3573);
+
+Q79. We define an employee's total earnings to be their monthly salary * months worked, and the maximum total earnings to be the maximum total earnings for any employee in the Employee 	 table.
+ 	 Write a query to find the maximum total earnings for all employees as well as the total number of employees who have maximum total earnings. Then print these values as 2 space-		 separated integers.
+
+SELECT total_earnings, COUNT(employee_id) AS emp_count_having_max_earnings
+FROM
+	(SELECT *, (months*salary) AS total_earnings,
+	 RANK() OVER(ORDER BY (months*salary) DESC) AS rank_by_total_earnings
+	 FROM employee) tmp
+WHERE rank_by_total_earnings = 1
+GROUP BY total_earnings;
+
+# Questions-80 to Questions-81:
+Occupations table
+
+CREATE TABLE occupations
+(	NAME VARCHAR(255),
+	OCCUPATION VARCHAR(255)
+);
+
+INSERT INTO occupations (NAME, OCCUPATION)
+VALUES ('Samantha', 'Doctor'),
+	   ('Julia', 'Actor'),
+       ('Maria', 'Actor'),
+       ('Meera', 'Singer'),
+       ('Ashley', 'Professor'),
+       ('Ketty', 'Professor'),
+       ('Christeen', 'Professor'),
+       ('Jane', 'Actor'),
+       ('Jenny', 'Doctor'),
+       ('Priya', 'Singer');
+
+Q80. Generate the following two result sets:
+
+A) Query an alphabetically ordered list of all names in OCCUPATIONS, immediately followed by the first letter of each profession as a parenthetical (i.e.: enclosed in parentheses). 
+   For example: AnActorName(A), ADoctorName(D), AProfessorName(P), and ASingerName(S).
+
+SELECT CONCAT(name, ' ', '(', LEFT(occupation, 1), ')') AS name_plus_profession
+FROM occupations
+ORDER BY name;
+
+B) Query the number of occurrences of each occupation in OCCUPATIONS. Sort the occurrences in ascending order, and output them in the following format: 
+   There are a total of [occupation_count] [occupation]s, 
+   where [occupation_count] is the number of occurrences of an occupation in OCCUPATIONS and [occupation] is the lowercase occupation name. 
+   If more than one Occupation has the same [occupation_count], they should be ordered alphabetically.
+   Note: There will be at least two entries in the table for each type of occupation.
+
+SELECT CONCAT('There are a total of', ' ', occupation_count, ' ', occupation, 's') AS output
+FROM
+	(SELECT occupation, COUNT(name) AS occupation_count 
+	FROM occupations
+	GROUP BY occupation
+	HAVING occupation_count >= 2
+	ORDER BY occupation_count, occupation) tmp;
+    
+Q81. Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. The output column headers should be 		 Doctor, Professor, Singer, and Actor, respectively.
+     Note: Print NULL when there are no more names corresponding to an occupation
+
+SELECT Doctor, Professor, Singer,  Actor
+FROM
+	(SELECT name_order,
+	MAX(CASE WHEN occupation = 'Doctor' THEN name END) AS 'Doctor',
+	MAX(CASE WHEN occupation = 'Professor' THEN name END) AS 'Professor',
+	MAX(CASE WHEN occupation = 'Singer' THEN name END) AS 'Singer',
+	MAX(CASE WHEN occupation = 'Actor' THEN name END) AS 'Actor'
+	FROM
+		(SELECT occupation, name,
+				ROW_NUMBER() OVER(PARTITION BY occupation ORDER BY name ASC) AS name_order
+		FROM occupations) tmp
+    GROUP BY name_order) tmp2;
+
+# Question-82:
+BST table
+
+CREATE TABLE IF NOT EXISTS BST
+(   N int,
+    P int
+);
+
+INSERT INTO BST VALUES(1,2),(3,2),(6,8),(9,8),(2,5),(8,5),(5,null);
+
+Q82. Write a query to find the node type of Binary Tree ordered by the value of the node. Output one of the following for each node:
+	  Root: If node is root node.
+	  Leaf: If node is leaf node.
+      Inner: If node is neither root nor leaf node
+
+SELECT N AS node,
+CASE WHEN N NOT IN (SELECT DISTINCT(P) FROM bst WHERE P IS NOT NULL) THEN 'Leaf'
+	 WHEN p IS NULL THEN 'Root'
+     ELSE 'Inner'
+END AS node_type
+FROM bst;
+
+# Question-83:
+Company, Lead_manager, Senior_manager, Manager, Employee2 table
+
+CREATE TABLE IF NOT EXISTS Company
+(
+    company_code VARCHAR(50),
+    founder VARCHAR(50)
+);
+
+INSERT INTO Company VALUES ('C1','Monika'),('C2','Samantha');
+
+CREATE TABLE IF NOT EXISTS Lead_Manager
+(
+    lead_manager_code VARCHAR(50),
+    company_code VARCHAR(50)
+);
+
+INSERT INTO Lead_Manager VALUES ('LM1','C1'),('LM2','C2');
+
+CREATE TABLE IF NOT EXISTS Senior_Manager
+(
+    senior_manager_code VARCHAR(50),
+    lead_manager_code VARCHAR(50),
+    company_code VARCHAR(50)
+);
+
+INSERT INTO Senior_Manager VALUES ('SM1','LM1','C1'),('SM2','LM1','C1'),('SM3','LM2','C2');
+
+SELECT * FROM Senior_Manager;
+
+CREATE TABLE IF NOT EXISTS Manager
+(
+    manager_code VARCHAR(50),
+    senior_manager_code VARCHAR(50),
+    lead_manager_code VARCHAR(50),
+    company_code VARCHAR(50)
+);
+
+INSERT INTO Manager VALUES ('M1','SM1','LM1','C1'),('M2','SM3','LM2','C2'),('M3','SM3','LM2','C2');
+
+CREATE TABLE IF NOT EXISTS Employee2
+(
+    employee_code VARCHAR(50),
+    manager_code VARCHAR(50),
+    senior_manager_code VARCHAR(50),
+    lead_manager_code VARCHAR(50),
+    company_code VARCHAR(50)
+);
+
+INSERT INTO Employee2 VALUES ('E1','M1','SM1','LM1','C1'),('E2','M1','SM1','LM1','C1'),('E3','M2','SM3','LM2','C2'),('E4','M3','SM3','LM2','C2');
+
+Q83. Given the table schemas below, write a query to print the company_code, founder name, total number of lead managers, total number of senior managers, total number of managers, and 
+     total number of employees. Order your output by ascending company_code.
+
+SELECT c.company_code, c.founder, 
+	   COUNT(DISTINCT(lm.lead_manager_code)) AS lead_mgr_count,
+	   COUNT(DISTINCT(sm.senior_manager_code))  AS senior_mgr_count,
+	   COUNT(DISTINCT(m.manager_code)) AS mgr_count,
+	   COUNT(emp.employee_code) AS emp_count
+FROM company c
+INNER JOIN lead_manager lm
+ON c.company_code = lm.company_code
+INNER JOIN senior_manager sm
+ON lm.lead_manager_code = sm.lead_manager_code
+LEFT JOIN manager m
+ON m.senior_manager_code = sm.senior_manager_code
+LEFT JOIN employee2 emp
+ON emp.manager_code = m.manager_code 
+GROUP BY c.company_code, c.founder;
+
